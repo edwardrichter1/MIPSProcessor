@@ -59,10 +59,6 @@ module InstructionDecodeUnit(
         JumpLink    
     );
     
-    input [31:0] PCAddResultIn, Instruction, WriteData;
-    input [4:0] WriteRegister;
-    input RegWrite, Clk;
-    
     output [31:0] ReadData1, ReadData2, PCAddResultOut, SignExtendOut,
     SignExtendRegisterOut, NextPC;
     output [4:0] RT, RD, RS, ALUControl;
