@@ -3,8 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Team Members:
 // Overall percent effort of each team meber: 
-// Eddie Richter: 60%
-// Hugo Valdez: 40%
+// Eddie Richter: 50%
+// Hugo Valdez: 50%
 // 
 // ECE369 - Computer Architecture
 // Laboratory 3 (PostLab)
