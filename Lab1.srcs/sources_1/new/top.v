@@ -70,6 +70,7 @@ module top(out7, en_out, Clk, PCReset);
         .PCAddResultOut(IDPCAddResult)
     );
     InstructionDecodeUnit ID (
+        .Clk(Clk),
         .PCAddResultIn(IDPCAddResult), // inputs
         .Instruction(IDInstruction),
         .WriteRegister(WBWriteRegister),
@@ -361,16 +362,6 @@ module top(out7, en_out, Clk, PCReset);
         .inA(Instruction[20:16]),
         .inB(Instruction[15:11]),
         .sel(RegDst)
-    );
-    RegisterFile RF1(
-        .ReadRegister1(Instruction[25:21]),
-        .ReadRegister2(Instruction[20:16]),
-        .WriteRegister(MuxOutput16),
-        .WriteData(MuxOutput17),
-        .RegWrite( (Mov & CmpOut) | RegWrite),
-        .Clk(ClkOut),
-        .ReadData1(ReadData1),
-        .ReadData2(ReadData2)
     );
     ZeroCompSometimes ZCS(
         .in(ReadData2), 

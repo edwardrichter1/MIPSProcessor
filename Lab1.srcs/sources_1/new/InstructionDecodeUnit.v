@@ -17,6 +17,7 @@
 
 module InstructionDecodeUnit(
         PCAddResultIn, // inputs
+        Clk,
         Instruction,
         WriteRegister,
         RegWrite,
@@ -58,46 +59,34 @@ module InstructionDecodeUnit(
         JumpLink    
     );
     
-    input        PCAddResultIn, // inputs
-    Instruction,
-    WriteRegister,
-    RegWrite,
-    WriteData,
-    ReadData1, // outputs
-    ReadData2,
-    CAddResultOut,
-    SignExtendOut,
-    RT,
-    RD,
-    RS,
-    SignExtendRegisterOut,
-    NextPC,
-    Shift16,
-    Jump,
-    Instruction,
-    RegDst,
-    RegWrite,
-    ALUSrc,
-    MemWrite,
-    emRead,
-    MemtoReg,
-    ALUControl,
-    HiWriteEnable, 
-    LoWriteEnable,
-    SignExtendToReg,
-    Mov, 
-    CmpSel,
-    Size,
-    HiLoOp,
-    HiDst,
-    LoDst,
-    MoveHiLo,
-    MoveHi,
-    MoveLo,
-    ForceZero,
-    DataMem,
-    JumpReg,
-    JumpLink    
+    input [31:0] PCAddResultIn, Instruction, WriteData;
+    input [4:0] WriteRegister;
+    input RegWrite, Clk;
     
+    output [31:0] ReadData1, ReadData2, PCAddResultOut, SignExtendOut,
+    SignExtendRegisterOut, NextPC;
+    output [4:0] RT, RD, RS, ALUControl;
+    output [1:0] DataMem;
+    output Shift16, Jump, Instruction, RegDst, RegWrite, ALUSrc, MemWrite, MemRead,
+    MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, Size, HiLoOp,
+    HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, ForceZero, JumpReg, JumpLink;
+    
+    RegisterFile RF(
+        .ReadRegister1(Instruction[25:21]),
+        .ReadRegister2(Instruction[20:16]),
+        .WriteRegister(WriteRegister),
+        .WriteData(WriteData),
+        .RegWrite(RegWrite),
+        .Clk(Clk),
+        .ReadData1(ReadData1),
+        .ReadData2(ReadData2)
+    );
+    SignExtension SE1(
+        .in(Instruction[15:0]),
+        .out(SignExtendOut),
+        .ForceZero(ForceZero),
+        .Shift16(Shift16)
+    );
+
     
 endmodule
