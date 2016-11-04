@@ -31,14 +31,12 @@ module InstructionDecodeUnit(
         RS,
         SignExtendRegisterOut,
         NextPC,
-        Shift16,
-        Jump,
         Instruction,
         RegDst,
         RegWrite,
         ALUSrc,
         MemWrite,
-        emRead,
+        MemRead,
         MemtoReg,
         ALUControl,
         HiWriteEnable, 
@@ -46,26 +44,27 @@ module InstructionDecodeUnit(
         SignExtendToReg,
         Mov, 
         CmpSel,
-        Size,
         HiLoOp,
         HiDst,
         LoDst,
         MoveHiLo,
         MoveHi,
         MoveLo,
-        ForceZero,
         DataMem,
-        JumpReg,
         JumpLink    
     );
     
-    output [31:0] ReadData1, ReadData2, PCAddResultOut, SignExtendOut,
-    SignExtendRegisterOut, NextPC;
+    output [31:0] ReadData1, ReadData2, SignExtendOut,
+    SignExtendRegisterOut, NextPC, Instruction;
     output [4:0] RT, RD, RS, ALUControl;
     output [1:0] DataMem;
-    output Shift16, Jump, Instruction, RegDst, RegWrite, ALUSrc, MemWrite, MemRead,
-    MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, Size, HiLoOp,
-    HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, ForceZero, JumpReg, JumpLink;
+    output RegDst, RegWrite, ALUSrc, MemWrite, MemRead,
+    MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, HiLoOp,
+    HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, JumpLink;
+    
+    wire Shift16, ForceZero, Jump, JumpReg, JumpLink, Size, BranchControlOut, Equal;
+    wire [31:0] BranchMuxOutput, ReadData1, ReadData2;
+    wire [2:0] BranchControlIn;
     
     RegisterFile RF(
         .ReadRegister1(Instruction[25:21]),
@@ -77,12 +76,75 @@ module InstructionDecodeUnit(
         .ReadData1(ReadData1),
         .ReadData2(ReadData2)
     );
+    Comp32 RegComp(
+        .in1(ReadData1),
+        .in2(ReadData2),
+        .out(Equal)
+    );
+    BranchControl BC(
+        .ReadData1(ReadData1),
+        .ReadData2(ReadData2),
+        .Equal(Equal),
+        .BranchControlIn(BranchControlIn),
+        .BranchControlOut(BranchControlOut)
+    );
+    Mux32Bit2To1 BranchMux(
+        .out(BranchMuxOutput),
+        .inA(PCAddResultIn),
+        .inB((Instruction[15:0] << 2) + PCAddResultIn),
+        .sel(BranchControlOut)
+    );
+    Mux32Bit2To1 JumpMux(
+        .out(JumpMuxOutput),
+        .inA(BranchMuxOutput),
+        .inB({PCAddResult[31:28], Instruction[25:0], 2'b00}),
+        .sel(Jump | JumpLink)
+    );
+    Mux32Bit2To1 JumpRegMux(
+        .out(NextPC),
+        .inA(JumpMuxOutput),
+        .inB(ReadData1),
+        .sel(JumpReg)
+    );
     SignExtension SE1(
         .in(Instruction[15:0]),
         .out(SignExtendOut),
         .ForceZero(ForceZero),
         .Shift16(Shift16)
     );
+    SignExtendRegister SER(
+        .in(ReadData2),
+        .out(SignExtendRegisterOut),
+        .Size(Size)
+    );
+    Controller C1(
+        .BranchControlIn(BranchControlIn),
+        .Shift16(Shift16),
+        .Jump(Jump),
+        .Instruction(Instruction),
+        .RegDst(RegDst),
+        .RegWrite(RegWrite),
+        .ALUSrc(ALUSrc),
+        .MemWrite(MemWrite),
+        .MemRead(MemRead),
+        .MemtoReg(MemtoReg),
+        .ALUControl(ALUControl),
+        .HiWriteEnable(HiWriteEnable), 
+        .LoWriteEnable(LoWriteEnable),
+        .SignExtendToReg(SignExtendToReg),
+        .Mov(Mov), 
+        .CmpSel(CmpSel),
+        .Size(Size),
+        .HiLoOp(HiLoOp),
+        .HiDst(HiDst),
+        .LoDst(LoDst),
+        .MoveHiLo(MoveHiLo),
+        .MoveHi(MoveHi),
+        .MoveLo(MoveLo),
+        .ForceZero(ForceZero),
+        .DataMem(DataMem),
+        .JumpReg(JumpReg),
+        .JumpLink(JumpLink)
+    );
 
-    
 endmodule

@@ -23,18 +23,16 @@ module top(out7, en_out, Clk, PCReset);
     wire [31:0] IFInstruction, IFPCAddResult;
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
-    IDALUSrc, IDMemWrite, IDMemRead, IDMemtoReg, IDSize, IDSignExtendToReg,
-    IDCmpOut, IDMov, IDCmpSel, IDHiLoOp, IDHiDst, IDLoDst, IDMoveHiLo, IDMoveHi, IDMoveLo,
-    IDForceZero, IDBranchControlOut, IDJump, IDShift16, IDJumpReg, IDJumpLink;
+    IDALUSrc, IDMemWrite, IDMemRead, IDMemtoReg, IDSignExtendToReg,
+    IDCmpOut, IDMov, IDCmpSel, IDHiLoOp, IDHiDst, IDLoDst, IDMoveHiLo, IDMoveHi, IDMoveLo, IDJumpLink;
     wire [1:0] IDDataMem;
     wire [4:0] IDALUControl, IDRT, IDRS, IDRD;
     wire [31:0] IDInstruction, IDPCAddResult, IDReadData1, IDReadData2, IDSignExtendOut, 
     IDSignExtendRegisterOut;
 
     wire EXHiWriteEnable, EXLoWriteEnable, EXRegWrite, EXRegDst, 
-    EXALUSrc, EXMemWrite, EXMemRead, EXMemtoReg, EXSize, EXSignExtendToReg,
-    EXCmpOut, EXMov, EXCmpSel, EXHiLoOp, EXHiDst, EXLoDst, EXMoveHiLo, EXMoveHi, EXMoveLo,
-    EXForceZero, EXBranchControlOut, EXJump, EXShift16, EXJumpReg, EXJumpLink;
+    EXALUSrc, EXMemWrite, EXMemRead, EXMemtoReg, EXSignExtendToReg,
+    EXCmpOut, EXMov, EXCmpSel, EXHiLoOp, EXHiDst, EXLoDst, EXMoveHiLo, EXMoveHi, EXMoveLo, EXJumpLink;
     wire [1:0] EXDataMem;
     wire [4:0] EXALUControl, EXRT, EXRD, EXRS, EXWriteRegister;
     wire [31:0] EXPCAddResult, EXReadData1, EXReadData2, EXSignExtendOut, EXSignExtendRegisterOut,
@@ -78,14 +76,12 @@ module top(out7, en_out, Clk, PCReset);
         .WriteData(WBWriteData),
         .ReadData1(IDReadData1), // outputs
         .ReadData2(IDReadData2),
-        .PCAddResultOut(IDPCAddResult),
         .SignExtendOut(IDSignExtendOut),
         .RT(IDRT),
         .RD(IDRD),
         .RS(IDRS),
         .SignExtendRegisterOut(IDSignExtendRegisterOut),
         .NextPC(NextPC),
-        .Shift16(IDShift16),
         .Jump(IDJump),
         .Instruction(IDInstruction),
         .RegDst(IDRegDst),
@@ -100,14 +96,12 @@ module top(out7, en_out, Clk, PCReset);
         .SignExtendToReg(IDSignExtendToReg),
         .Mov(IDMov), 
         .CmpSel(IDCmpSel),
-        .Size(IDSize),
         .HiLoOp(IDHiLoOp),
         .HiDst(IDHiDst),
         .LoDst(IDLoDst),
         .MoveHiLo(IDMoveHiLo),
         .MoveHi(IDMoveHi),
         .MoveLo(IDMoveLo),
-        .ForceZero(IDForceZero),
         .DataMem(IDDataMem),
         .JumpReg(IDJumpReg),
         .JumpLink(IDJumpLink)    
@@ -310,47 +304,14 @@ module top(out7, en_out, Clk, PCReset);
         .CmpOut(WBCmpOut)
     );
     
-    /*BranchControl BC(
-        .Zero(Zero),
-        .BranchControlIn(BranchControlIn),
-        .ComparePort(ReadData1),
-        .BranchControlOut(BranchControlOut)
-    );
+    /*
     Mux32Bit2To1 M12(
         .out(MuxOutput12),
         .inA(PCAddResult),
         .inB( (Instruction32 << 2) + PCAddResult),
         .sel(BranchControlOut)
     );
-    Controller C1(
-        .BranchControlIn(BranchControlIn),
-        .Shift16(Shift16),
-        .Jump(Jump),
-        .Instruction(Instruction),
-        .RegDst(RegDst),
-        .RegWrite(RegWrite),
-        .ALUSrc(ALUSrc),
-        .MemWrite(MemWrite),
-        .MemRead(MemRead),
-        .MemtoReg(MemtoReg),
-        .ALUControl(ALUControl),
-        .HiWriteEnable(HiWriteEnable), 
-        .LoWriteEnable(LoWriteEnable),
-        .SignExtendToReg(SignExtendToReg),
-        .Mov(Mov), 
-        .CmpSel(CmpSel),
-        .Size(Size),
-        .HiLoOp(HiLoOp),
-        .HiDst(HiDst),
-        .LoDst(LoDst),
-        .MoveHiLo(MoveHiLo),
-        .MoveHi(MoveHi),
-        .MoveLo(MoveLo),
-        .ForceZero(ForceZero),
-        .DataMem(DataMem),
-        .JumpReg(JumpReg),
-        .JumpLink(JumpLink)
-    );
+    
     Mux32Bit2To1 M13(
         .out(MuxOutput13),
         .inA(MuxOutput12),
@@ -367,11 +328,6 @@ module top(out7, en_out, Clk, PCReset);
         .in(ReadData2), 
         .out(CmpOut),
         .sel(CmpSel)
-    );
-    SignExtendRegister SER(
-        .in(ReadData2),
-        .out(Data32),
-        .Size(Size)
     );
     SignExtension SE1(
         .in(Instruction[15:0]),
