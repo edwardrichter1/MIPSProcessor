@@ -1,0 +1,83 @@
+Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2015.2 (win64) Build 1266856 Fri Jun 26 16:35:25 MDT 2015
+| Date         : Wed Oct 26 11:58:46 2016
+| Host         : EddieRichter-PC running 64-bit Service Pack 1  (build 7601)
+| Command      : report_control_sets -verbose -file top_control_sets_placed.rpt
+| Design       : top
+| Device       : xc7a100t
+------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Flip-Flop Distribution
+3. Detailed Control Set Information
+
+1. Summary
+----------
+
++-------------------------------------------------------------------+-------+
+|                               Status                              | Count |
++-------------------------------------------------------------------+-------+
+| Number of unique control sets                                     |    30 |
+| Minimum Number of register sites lost to control set restrictions |    57 |
++-------------------------------------------------------------------+-------+
+
+
+2. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |             133 |           67 |
+| No           | No                    | Yes                    |               0 |            0 |
+| No           | Yes                   | No                     |              58 |           28 |
+| Yes          | No                    | No                     |               0 |            0 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |               0 |            0 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+3. Detailed Control Set Information
+-----------------------------------
+
++---------------------------------------+-----------------------+----------------------+------------------+----------------+
+|              Clock Signal             |     Enable Signal     |   Set/Reset Signal   | Slice Load Count | Bel Load Count |
++---------------------------------------+-----------------------+----------------------+------------------+----------------+
+|  C1/PCResult_reg[1]_0                 |                       |                      |                1 |              1 |
+|  ProgramCounter1/RegFile_reg_2_211    |                       |                      |                1 |              1 |
+|  ProgramCounter1/RegFile_reg_2_212    |                       |                      |                1 |              1 |
+|  ProgramCounter1/RegFile_reg_2_213    |                       |                      |                1 |              1 |
+|  ProgramCounter1/unamedDSP__1_2       |                       |                      |                1 |              2 |
+|  ProgramCounter1/E[0]                 |                       |                      |                1 |              2 |
+|  ProgramCounter1/PCResult_reg[1]_1[0] |                       |                      |                1 |              3 |
+|  ProgramCounter1/unamedDSP__2_0[0]    |                       |                      |                2 |              5 |
+|  Clk_IBUF_BUFG                        |                       |                      |                6 |             21 |
+|  Clk_IBUF_BUFG                        |                       | CD/DivCnt[0]_i_1_n_3 |                7 |             26 |
+|  ClkOut_BUFG                          |                       | PCReset_IBUF         |               21 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_9  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_8  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_7  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_6  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_5  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_4  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_3  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_2  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_15 |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_14 |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_13 |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_12 |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_11 |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_10 |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2_1  |                      |                8 |             32 |
+|  ClkOut_BUFG                          | ALU1/RegFile_reg_2    |                      |                8 |             32 |
+|  n_0_4720_BUFG                        |                       |                      |               23 |             32 |
+|  n_1_886_BUFG                         |                       |                      |               11 |             32 |
+|  n_2_1096_BUFG                        |                       |                      |               18 |             32 |
++---------------------------------------+-----------------------+----------------------+------------------+----------------+
+
+
