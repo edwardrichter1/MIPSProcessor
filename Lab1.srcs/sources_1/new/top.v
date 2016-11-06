@@ -195,8 +195,6 @@ module top(out7, en_out, Clk, PCReset);
     );
     Pipe3Reg EXtoM (
         .Clk(Clk), // inputs 
-        .WriteEnable(1),
-        .ReadEnable(1),
         .PCAddResultIn(EXPCAddResult),
         .HiIn(EXHi),
         .LoIn(EXLo),
@@ -305,21 +303,5 @@ module top(out7, en_out, Clk, PCReset);
         .WriteData(WBWriteData), // outputs
         .CmpOut(WBCmpOut)
     );
-    
-    /*
-    ZeroCompSometimes ZCS(
-        .in(ReadData2), 
-        .out(CmpOut),
-        .sel(CmpSel)
-    );
-   DataMemory DM1(
-        .Address(ALUResult),
-        .WriteData(ReadData2),
-        .Clk(ClkOut),
-        .MemWrite(MemWrite),
-        .MemRead(MemRead),
-        .ReadData(ReadData),
-        .DataMem(DataMem)
-    );
-    */
+   
 endmodule
