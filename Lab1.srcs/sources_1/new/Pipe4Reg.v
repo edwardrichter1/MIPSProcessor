@@ -21,6 +21,44 @@
 
 
 module Pipe4Reg(
-
+        Clk, // inputs 
+        PCAddResultIn, 
+        HiIn,
+        LoIn,
+        ALUResultIn,
+        MemWriteDataIn, //whats this for
+        WriteRegisterIn,
+        ReadData1In,
+        ReadData2In,
+        SignExtendRegisterIn,
+        RegWriteIn,
+        MemtoRegIn,
+        SignExtendToRegIn,
+        MovIn, 
+        CmpSelIn,
+        MoveHiIn,
+        MoveLoIn,
+        JumpLinkIn,
+        PCAddResultOut, // outputs 
+        HiOut,
+        LoOut,
+        ALUResultOut,
+        MemWriteDataOut,
+        WriteRegisterOut,
+        ReadData1Out,
+        ReadData2Out,
+        SignExtendRegisterOut,
+        RegWriteOut,
+        MemtoRegOut,
+        SignExtendToRegOut,
+        MovOut, 
+        CmpSelOut,
+        MoveHiOut,
+        MoveLoOut,
+        JumpLinkOut
     );
+    input Clk, RegWriteIn, MemtoRegIn, SignExtendToRegIn, MovIn, CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn;
+    input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn, ReadData1In, ReadData2In, SignExtendRegisterIn;
+    input [4:0] WriteRegisterIn;
+    
 endmodule
