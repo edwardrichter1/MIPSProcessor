@@ -34,7 +34,7 @@ module top(out7, en_out, Clk, PCReset);
     EXALUSrc, EXMemWrite, EXMemRead, EXMemtoReg, EXSignExtendToReg,
     EXCmpOut, EXMov, EXCmpSel, EXHiLoOp, EXHiDst, EXLoDst, EXMoveHiLo, EXMoveHi, EXMoveLo, EXJumpLink;
     wire [1:0] EXDataMem;
-    wire [4:0] EXALUControl, EXRT, EXRD, EXRS, EXWriteRegister;
+    wire [4:0] EXALUControl, EXRT, EXRD, EXRS, EXWriteRegister, EXShiftAmount;
     wire [31:0] EXPCAddResult, EXReadData1, EXReadData2, EXSignExtendOut, EXSignExtendRegisterOut,
     EXHi, EXLo, EXALUResult, EXMemWriteData;
 
@@ -104,7 +104,7 @@ module top(out7, en_out, Clk, PCReset);
         .MoveLo(IDMoveLo),
         .DataMem(IDDataMem),
         .JumpReg(IDJumpReg),
-        .JumpLink(IDJumpLink)    
+        .JumpLink(IDJumpLink)
     );
     Pipe2Reg IDtoEx (
         .Clk(Clk), 
@@ -115,6 +115,7 @@ module top(out7, en_out, Clk, PCReset);
         .RTIn(IDRT),
         .RDIn(IDRD),
         .RSIn(IDRS),
+        .ShiftAmountIn(IDInstruction[10:6]),
         .SignExtendRegisterIn(IDSignExtendRegisterOut),
         .RegDstIn(IDRegDst),
         .RegWriteIn(IDRegWrite),
@@ -143,6 +144,7 @@ module top(out7, en_out, Clk, PCReset);
         .RTOut(EXRT),
         .RDOut(EXRD),
         .RSOut(EXRS),
+        .ShiftAmountOut(EXShiftAmount),
         .SignExtendRegisterOut(EXSignExtendRegisterOut),
         .RegDstOut(EXRegDst),
         .RegWriteOut(EXRegWrite),
@@ -167,6 +169,7 @@ module top(out7, en_out, Clk, PCReset);
     );
     ExecuteUnit EX (
         .Clk(Clk), // inputs 
+        .ShiftAmount(EXShiftAmount),
         .PCAddResultIn(EXPCAddResult),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
@@ -174,7 +177,6 @@ module top(out7, en_out, Clk, PCReset);
         .RTIn(EXRT),
         .RDIn(EXRD),
         .RSIn(EXRS),
-        .SignExtendRegisterIn(EXSignExtendRegisterOut),
         .RegDstIn(EXRegDst),
         .ALUSrcIn(EXALUSrc),
         .ALUControlIn(EXALUControl),
@@ -185,7 +187,7 @@ module top(out7, en_out, Clk, PCReset);
         .LoDstIn(EXLoDst),
         .MoveHiLoIn(EXMoveHiLo),
         .JumpLinkIn(EXJumpLink),
-        .HiOut(EXHi),
+        .HiOut(EXHi), // outputs
         .LoOut(EXLo),
         .ALUResultOut(EXALUResult),
         .MemWriteDataOut(EXMemWriteData),
@@ -193,8 +195,6 @@ module top(out7, en_out, Clk, PCReset);
     );
     Pipe3Reg EXtoM (
         .Clk(Clk), // inputs 
-        .WriteEnable(1),
-        .ReadEnable(1),
         .PCAddResultIn(EXPCAddResult),
         .HiIn(EXHi),
         .LoIn(EXLo),
@@ -303,163 +303,5 @@ module top(out7, en_out, Clk, PCReset);
         .WriteData(WBWriteData), // outputs
         .CmpOut(WBCmpOut)
     );
-    
-    /*
-    Mux32Bit2To1 M12(
-        .out(MuxOutput12),
-        .inA(PCAddResult),
-        .inB( (Instruction32 << 2) + PCAddResult),
-        .sel(BranchControlOut)
-    );
-    
-    Mux32Bit2To1 M13(
-        .out(MuxOutput13),
-        .inA(MuxOutput12),
-        .inB({PCAddResult[31:28], Instruction[25:0], 2'b00}),
-        .sel(Jump)
-    );
-    Mux5Bit2To1 M1(
-        .out(MuxOutput1),
-        .inA(Instruction[20:16]),
-        .inB(Instruction[15:11]),
-        .sel(RegDst)
-    );
-    ZeroCompSometimes ZCS(
-        .in(ReadData2), 
-        .out(CmpOut),
-        .sel(CmpSel)
-    );
-    SignExtension SE1(
-        .in(Instruction[15:0]),
-        .out(Instruction32),
-        .ForceZero(ForceZero),
-        .Shift16(Shift16)
-    );
-    Mux32Bit2To1 M2(
-        .out(MuxOutput2),
-        .inA(ReadData2),
-        .inB(Instruction32),
-        .sel(ALUSrc)
-    );
-    ALU32Bit ALU1(
-        .ALUControl(ALUControl),
-        .ShiftAmount(Instruction[10:6]),
-        .A(ReadData1),
-        .B(MuxOutput2),
-        .ALUResult(ALUResult),
-        .ALUResultHi(ALUResultHi),
-        .Zero(Zero)
-    );
-    Mux32Bit2To1 M6(
-        .out(MuxOutput6),
-        .inA(ALUResultHi),
-        .inB(HiResult),
-        .sel(HiDst)
-    );
-    Mux32Bit2To1 M7(
-        .out(MuxOutput7),
-        .inA(ALUResult),
-        .inB(LoResult),
-        .sel(LoDst)
-    );
-    Mux32Bit2To1 M8(
-        .out(MuxOutput8),
-        .inA(MuxOutput6),
-        .inB(ReadData1),
-        .sel(MoveHiLo)
-    );
-    Mux32Bit2To1 M9(
-        .out(MuxOutput9),
-        .inA(MuxOutput7),
-        .inB(ReadData1),
-        .sel(MoveHiLo)
-    );    
-    Reg32Bit HR (
-        .in(MuxOutput8),
-        .out(ALUResultHi2),
-        .Clk(ClkOut),
-        .WriteEnable(HiWriteEnable)
-    );
-    Reg32Bit LR (
-        .in(MuxOutput9),
-        .out(ALUResultLo2),
-        .Clk(ClkOut),
-        .WriteEnable(LoWriteEnable)
-   );
-   HiLoArith HLA(
-       .A({ALUResultHi2, ALUResultLo2}), 
-       .B({ALUResultHi, ALUResult}), 
-       .outHi(HiResult),
-       .outLo(LoResult), 
-       .op(HiLoOp)
-   );
-   DataMemory DM1(
-        .Address(ALUResult),
-        .WriteData(ReadData2),
-        .Clk(ClkOut),
-        .MemWrite(MemWrite),
-        .MemRead(MemRead),
-        .ReadData(ReadData),
-        .DataMem(DataMem)
-    );
-    Mux32Bit2To1 M3(
-        .out(MuxOutput3),
-        .inA(ALUResult),
-        .inB(ReadData),
-        .sel(MemtoReg)
-    );
-    Mux32Bit2To1 M4(
-        .out(MuxOutput4),
-        .inA(MuxOutput3),
-        .inB(Data32),
-        .sel(SignExtendToReg)
-    );
-    Mux32Bit2To1 M5(
-        .out(MuxOutput5),
-        .inA(MuxOutput4),
-        .inB(ReadData1),
-        .sel(Mov)
-    );
-    Mux32Bit2To1 M10(
-        .out(MuxOutput10),
-        .inA(MuxOutput5),
-        .inB(ALUResultHi2),
-        .sel(MoveHi)
-    );
-    Mux32Bit2To1 M11(
-        .out(MuxOutput11),
-        .inA(MuxOutput10),
-        .inB(ALUResultLo2),
-        .sel(MoveLo)
-    );
-    Mux32Bit2To1 M14(
-        .out(MuxOutput14),
-        .inA(MuxOutput13),
-        .inB(ReadData1),
-        .sel(JumpReg)
-    );
-    Mux32Bit2To1 M15(
-        .out(MuxOutput15),
-        .inA(MuxOutput14),
-        .inB({PCAddResult[31:28], Instruction[25:0], 2'b00}),
-        .sel(JumpLink)
-    );
-    Mux5Bit2To1 M16(
-        .out(MuxOutput16),
-        .inA(MuxOutput1),
-        .inB(5'b11111),
-        .sel(JumpLink)    
-    );
-    Mux32Bit2To1 M17(
-        .out(MuxOutput17),
-        .inA(MuxOutput11),
-        .inB(PCAddResult),
-        .sel(JumpLink) 
-    );
-    Mux32Bit2To1 M18(
-        .out(MuxOutput18),
-        .inA(32'd0),
-        .inB(MuxOutput17),
-        .sel(RegWrite) 
-    );*/
+   
 endmodule

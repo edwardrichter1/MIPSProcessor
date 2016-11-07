@@ -21,6 +21,29 @@
 
 
 module MemoryUnit(
-
+        Clk, // inputs 
+        Address,
+        WriteData,
+        MemWrite,
+        MemReadOut,
+        DataMemOut,
+        ReadData // outputs
     );
+    
+    input Clk, MemWrite, MemReadOut;
+    input [31:0] Address, WriteData;
+    input [1:0] DataMemOut;
+    
+    output [31:0] ReadData;
+    
+    DataMemory DM1(
+         .Address(Address),
+         .WriteData(WriteData),
+         .Clk(Clk),
+         .MemWrite(MemWrite),
+         .MemRead(MemReadOut),
+         .ReadData(ReadData),
+         .DataMem(DataMemOut)
+     );
+
 endmodule
