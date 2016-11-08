@@ -39,6 +39,7 @@ module Pipe4Reg(
         MoveHiIn,
         MoveLoIn,
         JumpLinkIn,
+        DataMemReadIn,
         PCAddResultOut, // outputs 
         HiOut,
         LoOut,
@@ -55,25 +56,26 @@ module Pipe4Reg(
         CmpSelOut,
         MoveHiOut,
         MoveLoOut,
-        JumpLinkOut
+        JumpLinkOut,
+        DataMemReadOut
     );
     
     input Clk, RegWriteIn, MemToRegIn, SignExtendToRegIn, MovIn,
     CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn;
     input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn,
-    ReadData1In, ReadData2In, SignExtendRegisterIn;
+    ReadData1In, ReadData2In, SignExtendRegisterIn, DataMemReadIn;
     input [4:0] WriteRegisterIn;
     
     output RegWriteOut, MemToRegOut, SignExtendToRegOut, MovOut,
     CmpSelOut, MoveHiOut, MoveLoOut, JumpLinkOut;
     output [31:0] PCAddResultOut, HiOut, LoOut, ALUResultOut, MemWriteDataOut,
-    ReadData1Out, ReadData2Out, SignExtendRegisterOut;
+    ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut;
     output [4:0] WriteRegisterOut;
 
     reg RegWriteTemp, MemToRegTemp, SignExtendToRegTemp, MovTemp,
     CmpSelTemp, MoveHiTemp, MoveLoTemp, JumpLinkTemp;
     reg [31:0] PCAddResultTemp, HiTemp, LoTemp, ALUResultTemp, MemWriteDataTemp,
-    ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp;
+    ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp, DataMemReadTemp;
     reg [4:0] WriteRegisterTemp;
     
     always@(posedge Clk) begin
@@ -94,6 +96,7 @@ module Pipe4Reg(
         MoveHiOut <= MoveHiTemp;
         MoveLoOut <= MoveLoTemp;
         JumpLinkOut <= JumpLinkTemp;
+        DataMemReadOut <= DataMemReadTemp;
     end
 
     always@(negedge Clk) begin
@@ -114,6 +117,7 @@ module Pipe4Reg(
         MoveHiTemp <= MoveHiIn;
         MoveLoTemp <= MoveLoIn;
         JumpLinkTemp <= JumpLinkIn;
+        DataMemReadTemp <= DataMemReadIn;
     end
 
 

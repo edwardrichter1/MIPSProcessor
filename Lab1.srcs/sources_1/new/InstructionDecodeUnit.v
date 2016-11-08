@@ -16,16 +16,16 @@
 
 
 module InstructionDecodeUnit(
-        PCAddResultIn, // inputs
-        Clk,
+        Clk, // inputs
+        PCAddResultIn,
         Instruction,
         WriteRegister,
-        RegWrite,
+        RegWriteIn,
         WriteData,
         ReadData1, // outputs
         ReadData2,
-        CAddResultOut,
         SignExtendOut,
+       // CAddResultOut,
         RT,
         RD,
         RS,
@@ -33,7 +33,7 @@ module InstructionDecodeUnit(
         NextPC,
         Instruction,
         RegDst,
-        RegWrite,
+        RegWriteOut,
         ALUSrc,
         MemWrite,
         MemRead,
@@ -53,12 +53,14 @@ module InstructionDecodeUnit(
         DataMem,
         JumpLink    
     );
-    
+    input Clk, RegWriteIn;
+    input [31:0] PCAddResultIn, Instruction, WriteData;
+    input [4:0] WriteRegister;
     output [31:0] ReadData1, ReadData2, SignExtendOut,
     SignExtendRegisterOut, NextPC, Instruction;
     output [4:0] RT, RD, RS, ALUControl;
     output [1:0] DataMem;
-    output RegDst, RegWrite, ALUSrc, MemWrite, MemRead,
+    output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
     MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, HiLoOp,
     HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, JumpLink;
     
@@ -71,7 +73,7 @@ module InstructionDecodeUnit(
         .ReadRegister2(Instruction[20:16]),
         .WriteRegister(WriteRegister),
         .WriteData(WriteData),
-        .RegWrite(RegWrite),
+        .RegWrite(RegWriteIn),
         .Clk(Clk),
         .ReadData1(ReadData1),
         .ReadData2(ReadData2)
@@ -123,7 +125,7 @@ module InstructionDecodeUnit(
         .Jump(Jump),
         .Instruction(Instruction),
         .RegDst(RegDst),
-        .RegWrite(RegWrite),
+        .RegWrite(RegWriteOut),
         .ALUSrc(ALUSrc),
         .MemWrite(MemWrite),
         .MemRead(MemRead),

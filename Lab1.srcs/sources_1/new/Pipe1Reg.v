@@ -21,7 +21,7 @@
 
 
 module Pipe1Reg(Clk, WriteEnable, ReadEnable, InstructionIn, InstructionOut, PCAddResultIn, PCAddResultOut);
-    input Clk, Rst, WriteEnable, ReadEnable;
+    input Clk, WriteEnable, ReadEnable;
     input [31:0] InstructionIn, PCAddResultIn;
     
     output reg [31:0] PCAddResultOut, InstructionOut;

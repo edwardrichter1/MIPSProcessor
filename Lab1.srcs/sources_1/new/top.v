@@ -43,13 +43,13 @@ module top(out7, en_out, Clk, PCReset);
     wire [1:0] MEMDataMem;
     wire [4:0] MEMWriteRegister;
     wire [31:0] MEMReadData1, MemReadData2, MEMWriteData, MEMALUResult, MEMHi,
-    MEMLo, MEMSignExtendRegisterOut, MEMPCAddResult;
+    MEMLo, MEMSignExtendRegisterOut, MEMPCAddResult, MEMMemWriteData, MEMDataMemRead;
 
     wire WBRegWrite, WBRegDst, WBMemtoReg, WBSignExtendToReg, WBCmpOut, WBMov, 
     WBCmpSel, WBMoveHi, WBMoveLo, WBJumpLink;
     wire [4:0] WBWriteRegister;
     wire [31:0] WBReadData1, WBReadData2, WBPCAddResult, WBHi, WBLo, WBALUResult, WBMemWriteData,
-    WBSignExtendRegisterOut;
+    WBSignExtendRegisterOut, WBWriteData, WBDataMemRead;
 
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
@@ -63,8 +63,8 @@ module top(out7, en_out, Clk, PCReset);
         .WriteEnable(1),
         .ReadEnable(1),
         .InstructionIn(IFInstruction),
+        .PCADDResultIn(IFPCAddResult),
         .InstructionOut(IDInstruction),
-        .PCAddResultIn(IFPCAddResult),
         .PCAddResultOut(IDPCAddResult)
     );
     InstructionDecodeUnit ID (
@@ -72,7 +72,7 @@ module top(out7, en_out, Clk, PCReset);
         .PCAddResultIn(IDPCAddResult), // inputs
         .Instruction(IDInstruction),
         .WriteRegister(WBWriteRegister),
-        .RegWrite(WBRegWrite | (WBCmpOut & WBMov)),
+        .RegWriteIn(WBRegWrite | (WBCmpOut & WBMov)),
         .WriteData(WBWriteData),
         .ReadData1(IDReadData1), // outputs
         .ReadData2(IDReadData2),
@@ -83,9 +83,9 @@ module top(out7, en_out, Clk, PCReset);
         .SignExtendRegisterOut(IDSignExtendRegisterOut),
         .NextPC(NextPC),
         .Jump(IDJump),
-        .Instruction(IDInstruction),
+       // .Instruction(IDInstruction),
         .RegDst(IDRegDst),
-        .RegWrite(IDRegWrite),
+        .RegWriteOut(IDRegWrite),
         .ALUSrc(IDALUSrc),
         .MemWrite(IDMemWrite),
         .MemRead(IDMemRead),
@@ -103,7 +103,7 @@ module top(out7, en_out, Clk, PCReset);
         .MoveHi(IDMoveHi),
         .MoveLo(IDMoveLo),
         .DataMem(IDDataMem),
-        .JumpReg(IDJumpReg),
+       // .JumpReg(IDJumpReg),
         .JumpLink(IDJumpLink)
     );
     Pipe2Reg IDtoEx (
@@ -112,9 +112,9 @@ module top(out7, en_out, Clk, PCReset);
         .ReadData1In(IDReadData1),
         .ReadData2In(IDReadData2),
         .SignExtendIn(IDSignExtendOut),
-        .RTIn(IDRT),
-        .RDIn(IDRD),
-        .RSIn(IDRS),
+        .RTIn(IDInstruction[20:16]),
+        .RDIn(IDInstruction[15:11]),
+        .RSIn(IDInstruction[25:21]),
         .ShiftAmountIn(IDInstruction[10:6]),
         .SignExtendRegisterIn(IDSignExtendRegisterOut),
         .RegDstIn(IDRegDst),
@@ -170,7 +170,7 @@ module top(out7, en_out, Clk, PCReset);
     ExecuteUnit EX (
         .Clk(Clk), // inputs 
         .ShiftAmount(EXShiftAmount),
-        .PCAddResultIn(EXPCAddResult),
+        //.PCAddResultIn(EXPCAddResult),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
         .SignExtendIn(EXSignExtendOut),
@@ -190,7 +190,7 @@ module top(out7, en_out, Clk, PCReset);
         .HiOut(EXHi), // outputs
         .LoOut(EXLo),
         .ALUResultOut(EXALUResult),
-        .MemWriteDataOut(EXMemWriteData),
+        //.MemWriteDataOut(EXMemWriteData),
         .WriteRegisterOut(EXWriteRegister)
     );
     Pipe3Reg EXtoM (
@@ -199,7 +199,7 @@ module top(out7, en_out, Clk, PCReset);
         .HiIn(EXHi),
         .LoIn(EXLo),
         .ALUResultIn(EXALUResult),
-        .MemWriteDataIn(EXMemWriteData),
+        .MemWriteDataIn(EXReadData2),
         .WriteRegisterIn(EXWriteRegister),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
@@ -243,7 +243,7 @@ module top(out7, en_out, Clk, PCReset);
         .MemWrite(MEMMemWrite),
         .MemReadOut(MEMMemRead),
         .DataMemOut(MEMDataMem),
-        .ReadData(MemReadData) // outputs
+        .ReadData(MEMReadData) // outputs
     );
     Pipe4Reg MEMtoWB (
         .Clk(Clk), // inputs 
@@ -264,6 +264,7 @@ module top(out7, en_out, Clk, PCReset);
         .MoveHiIn(MEMMoveHi),
         .MoveLoIn(MEMMoveLo),
         .JumpLinkIn(MEMJumpLink),
+        .DataMemReadIn(MEMDataMemRead),
         .PCAddResultOut(WBPCAddResult), // outputs 
         .HiOut(WBHi),
         .LoOut(WBLo),
@@ -281,6 +282,7 @@ module top(out7, en_out, Clk, PCReset);
         .MoveHiOut(WBMoveHi),
         .MoveLoOut(WBMoveLo),
         .JumpLinkOut(WBJumpLink),
+        .DataMemReadOut(WBDataMemRead)
     );
     WriteBackUnit WB (
         .PCAddResult(WBPCAddResult), // inputs
@@ -288,11 +290,11 @@ module top(out7, en_out, Clk, PCReset);
         .Lo(WBLo),
         .ALUResult(WBALUResult),
         .DataMemRead(WBDataMemRead),
-        .WriteRegister(WBWriteRegister),
+        //.WriteRegister(WBWriteRegister),
         .ReadData1(WBReadData1),
         .ReadData2(WBReadData2),
         .SignExtendRegisterOut(WBSignExtendRegisterOut),
-        .RegWriteOut(WBRegWrite),
+        //.RegWriteOut(WBRegWrite),
         .MemtoRegOut(WBMemtoReg),
         .SignExtendToRegOut(WBSignExtendToReg),
         .MovOut(WBMov), 

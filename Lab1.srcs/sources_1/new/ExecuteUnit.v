@@ -23,7 +23,7 @@
 module ExecuteUnit(
         Clk, // inputs
         ShiftAmount, 
-        PCAddResultIn,
+       //PCAddResultIn,
         ReadData1In,
         ReadData2In,
         SignExtendIn,
@@ -43,7 +43,7 @@ module ExecuteUnit(
         HiOut, // outputs
         LoOut,
         ALUResultOut,
-        MemWriteDataOut,
+       // MemWriteDataOut,
         WriteRegisterOut
     );
     
@@ -52,12 +52,12 @@ module ExecuteUnit(
     input [31:0] PCAddResultIn, ReadData1In, ReadData2In, SignExtendIn;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
     
-    output reg [31:0] HiOut, LoOut, ALUResultOut, MemWriteDataOut, WriteRegsiterOut;
+    output reg [31:0] HiOut, LoOut, ALUResultOut, WriteRegisterOut;
     
     wire Zero;
-    wire [4:0] RDRTMuxOutput, WriteRegisterJumpLink; 
+    wire [4:0] RDRTMuxOutput, WriteRegisterOut; 
     wire [31:0] RTMuxOutput, RSMuxOutput, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
-    LoALUorOPMuxOutput, HiRegisterOut, LoRegisterOut, HiResult, LoResult;
+    LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult;
     
     Mux32Bit3To1 RSMux(
         .out(RSMuxOutput), 
@@ -95,10 +95,10 @@ module ExecuteUnit(
         .sel(RegDstIn)
     );
     Mux5Bit2To1 WriteRegisterJumpLink(
-        .out(WriteRegisterJumpLink),
+        .out(WriteRegisterOut),
         .inA(RDRTMuxOutput),
         .inB(5'd31),
-        .sel(RegDstIn)
+        .sel(JumpLinkIn)
     );
     Mux32Bit2To1 HiALUorOPMux(
         .out(HiALUorOPMuxOutput),
@@ -126,22 +126,22 @@ module ExecuteUnit(
     );
     Reg32Bit HiRegister(
         .in(MoveHiMuxOutput),
-        .out(HiRegisterOut),
+        .out(HiOut),
         .Clk(Clk),
         .WriteEnable(HiWriteEnableIn)
     );
     Reg32Bit LoRegister(
         .in(MoveLoMuxOutput),
-        .out(LoRegisterOut),
+        .out(LoOut),
         .Clk(Clk),
         .WriteEnable(LoWriteEnableIn)
    );
    HiLoArith HiLoOp(
-       .A({HiRegisterOut, LoRegisterOut}), 
+       .A({HiOut, LoOut}), 
        .B({ALUResultHi, ALUResultOut}), 
        .outHi(HiResult),
        .outLo(LoResult), 
-       .op(HiLoOp)
+       .op(HiLoOpIn)
    );
 
 endmodule
