@@ -57,7 +57,7 @@ module InstructionDecodeUnit(
     input [31:0] PCAddResultIn, Instruction, WriteData;
     input [4:0] WriteRegister;
     output [31:0] ReadData1, ReadData2, SignExtendOut,
-    SignExtendRegisterOut, NextPC, Instruction;
+    SignExtendRegisterOut, NextPC/*, Instruction*/;
     output [4:0] RT, RD, RS, ALUControl;
     output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
@@ -99,7 +99,7 @@ module InstructionDecodeUnit(
     Mux32Bit2To1 JumpMux(
         .out(JumpMuxOutput),
         .inA(BranchMuxOutput),
-        .inB({PCAddResult[31:28], Instruction[25:0], 2'b00}),
+        .inB({PCAddResultIn[31:28], Instruction[25:0], 2'b00}),
         .sel(Jump | JumpLink)
     );
     Mux32Bit2To1 JumpRegMux(

@@ -20,7 +20,15 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Pipe1Reg(Clk, WriteEnable, ReadEnable, InstructionIn, InstructionOut, PCAddResultIn, PCAddResultOut);
+module Pipe1Reg(
+        Clk, 
+        WriteEnable, 
+        ReadEnable, 
+        InstructionIn, 
+        InstructionOut, 
+        PCAddResultIn, 
+        PCAddResultOut
+    );
     input Clk, WriteEnable, ReadEnable;
     input [31:0] InstructionIn, PCAddResultIn;
     
@@ -37,7 +45,7 @@ module Pipe1Reg(Clk, WriteEnable, ReadEnable, InstructionIn, InstructionOut, PCA
     always@(negedge Clk) begin
         if(WriteEnable == 1) begin
             InstructionTemp <= InstructionIn;
-            PCAddResutTemp <= PCAddResultIn;
+            PCAddResultTemp <= PCAddResultIn;
         end
     end
     

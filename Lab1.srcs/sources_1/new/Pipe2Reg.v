@@ -126,7 +126,7 @@ module Pipe2Reg(
         ALUControlOut <= ALUControlTemp;
         HiWriteEnableOut <= HiWriteEnableTemp;
         LoWriteEnableOut <= LoWriteEnableTemp;
-        SignExtendToRegOut <= SignExtendtToRegTemp;
+        SignExtendToRegOut <= SignExtendToRegTemp;
         MovOut <= MovTemp;
         CmpSelOut <= CmpSelTemp;
         HiLoOpOut <= HiLoOpTemp;
@@ -158,7 +158,7 @@ module Pipe2Reg(
         ALUControlTemp <= ALUControlIn;
         HiWriteEnableTemp <= HiWriteEnableIn;
         LoWriteEnableTemp <= LoWriteEnableIn;
-        SignExtendToRegTemp <= SignExtendtToRegIn;
+        SignExtendToRegTemp <= SignExtendToRegIn;
         MovTemp <= MovIn;
         CmpSelTemp <= CmpSelIn;
         HiLoOpTemp <= HiLoOpIn;

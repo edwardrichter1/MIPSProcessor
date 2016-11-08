@@ -60,19 +60,19 @@ module Pipe4Reg(
         DataMemReadOut
     );
     
-    input Clk, RegWriteIn, MemToRegIn, SignExtendToRegIn, MovIn,
+    input Clk, RegWriteIn, MemtoRegIn, SignExtendToRegIn, MovIn,
     CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn;
     input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn,
     ReadData1In, ReadData2In, SignExtendRegisterIn, DataMemReadIn;
     input [4:0] WriteRegisterIn;
     
-    output RegWriteOut, MemToRegOut, SignExtendToRegOut, MovOut,
+    output reg RegWriteOut, MemtoRegOut, SignExtendToRegOut, MovOut,
     CmpSelOut, MoveHiOut, MoveLoOut, JumpLinkOut;
-    output [31:0] PCAddResultOut, HiOut, LoOut, ALUResultOut, MemWriteDataOut,
+    output reg [31:0] PCAddResultOut, HiOut, LoOut, ALUResultOut, MemWriteDataOut,
     ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut;
-    output [4:0] WriteRegisterOut;
+    output reg [4:0] WriteRegisterOut;
 
-    reg RegWriteTemp, MemToRegTemp, SignExtendToRegTemp, MovTemp,
+    reg RegWriteTemp, MemtoRegTemp, SignExtendToRegTemp, MovTemp,
     CmpSelTemp, MoveHiTemp, MoveLoTemp, JumpLinkTemp;
     reg [31:0] PCAddResultTemp, HiTemp, LoTemp, ALUResultTemp, MemWriteDataTemp,
     ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp, DataMemReadTemp;

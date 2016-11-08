@@ -47,15 +47,15 @@ module ExecuteUnit(
         WriteRegisterOut
     );
     
-    input Clk, RegDstIn, ALUSrcIn, HiWriteEnable, HiWriteEnableIn, LoWriteEnableIn,
+    input Clk, RegDstIn, ALUSrcIn, /*HiWriteEnable,*/ HiWriteEnableIn, LoWriteEnableIn,
     HiLoOpIn, HiDstIn, LoDstIn, MoveHiLoIn, JumpLinkIn;
-    input [31:0] PCAddResultIn, ReadData1In, ReadData2In, SignExtendIn;
+    input [31:0] /*PCAddResultIn,*/ ReadData1In, ReadData2In, SignExtendIn;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
     
-    output reg [31:0] HiOut, LoOut, ALUResultOut, WriteRegisterOut;
+    output /*reg*/ [31:0] HiOut, LoOut, ALUResultOut, WriteRegisterOut;
     
     wire Zero;
-    wire [4:0] RDRTMuxOutput, WriteRegisterOut; 
+    wire [4:0] RDRTMuxOutput; 
     wire [31:0] RTMuxOutput, RSMuxOutput, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
     LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult;
     

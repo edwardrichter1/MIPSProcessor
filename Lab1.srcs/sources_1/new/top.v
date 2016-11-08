@@ -15,7 +15,7 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module top(out7, en_out, Clk, PCReset);
+module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
     input Clk, PCReset;
     output [31:0] S1RegVal, S2RegVal, S3RegVal, S4RegVal;
     output wire [31:0] NextPC;
@@ -63,7 +63,7 @@ module top(out7, en_out, Clk, PCReset);
         .WriteEnable(1),
         .ReadEnable(1),
         .InstructionIn(IFInstruction),
-        .PCADDResultIn(IFPCAddResult),
+        .PCAddResultIn(IFPCAddResult),
         .InstructionOut(IDInstruction),
         .PCAddResultOut(IDPCAddResult)
     );
@@ -82,7 +82,7 @@ module top(out7, en_out, Clk, PCReset);
         .RS(IDRS),
         .SignExtendRegisterOut(IDSignExtendRegisterOut),
         .NextPC(NextPC),
-        .Jump(IDJump),
+       // .Jump(IDJump),
        // .Instruction(IDInstruction),
         .RegDst(IDRegDst),
         .RegWriteOut(IDRegWrite),

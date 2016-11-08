@@ -21,20 +21,17 @@
 
 module top_tb();
 
-    reg PCReset, CDReset;
-    reg Clk;
-    wire [7:0] en_out;
-    wire [6:0] out7;
-	//wire [31:0] PCResult;
-	//wire [31:0] MuxOutput18;
+    reg Clk, PCReset;
+    wire [31:0] S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC;
+	
 	top u0(
+        .S1RegVal(S1RegVal),
+        .S2RegVal(S2RegVal),
+        .S3RegVal(S3RegVal),
+        .S4RegVal(S4RegVal),
+        .NextPC(NextPC),
         .PCReset(PCReset),
-        .CDReset(CDReset),
-        .Clk(Clk),
-        .en_out(en_out),
-        .out7(out7)
-        //.PCResult(PCResult),
-        //.MuxOutput18(MuxOutput18)
+        .Clk(Clk)
 	);
 	
     always begin
@@ -45,10 +42,8 @@ module top_tb();
     
 	initial begin
         PCReset <= 1;
-        CDReset <= 1;
         #250;
         PCReset <= 0;
-	    CDReset <= 1;
 	end
 
 endmodule
