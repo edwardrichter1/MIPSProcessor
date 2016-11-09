@@ -57,7 +57,7 @@ module ExecuteUnit(
     wire Zero;
     wire [4:0] RDRTMuxOutput; 
     wire [31:0] RTMuxOutput, RSMuxOutput, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
-    LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult;
+    LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult, ALUSrcMuxOutput;
     
     Mux32Bit3To1 RSMux(
         .out(RSMuxOutput), 

@@ -31,7 +31,7 @@ module InstructionDecodeUnit(
         RS,
         SignExtendRegisterOut,
         NextPC,
-        Instruction,
+        /*Instruction,*/
         RegDst,
         RegWriteOut,
         ALUSrc,
@@ -65,7 +65,7 @@ module InstructionDecodeUnit(
     HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, JumpLink;
     
     wire Shift16, ForceZero, Jump, JumpReg, JumpLink, Size, BranchControlOut, Equal;
-    wire [31:0] BranchMuxOutput, ReadData1, ReadData2;
+    wire [31:0] BranchMuxOutput, ReadData1, ReadData2, JumpMuxOutput;
     wire [2:0] BranchControlIn;
     
     RegisterFile RF(
