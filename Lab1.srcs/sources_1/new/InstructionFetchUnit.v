@@ -39,16 +39,35 @@
 // which generates a continuous clock pulse into the module.
 ////////////////////////////////////////////////////////////////////////////////
 
-module InstructionFetchUnit(Instruction, PCIn, PCAddResult, Reset, Clk);
-    input Reset, Clk;
-    input [31:0] PCIn;
+module InstructionFetchUnit(Instruction, /*PCIn,*/ PCAddResult, Reset, Clk, JumpLink, JumpReg, Jump, Branch, BranchAddress, ReadData1);
+    input Reset, Clk, JumpLink, JumpReg, Jump, Branch;
+    input [31:0] ReadData1, BranchAddress;
     output [31:0] Instruction;
     
-    output wire[31:0] PCAddResult;
-    wire[31:0] PCResult;
+    output wire [31:0] PCAddResult;
+    wire[31:0] PCResult, BranchMuxOutput, JumpMuxOutput,
+    JumpRegMuxOutput;
     
     PCAdder PCAdder1(PCResult, PCAddResult);
-    ProgramCounter ProgramCounter1(PCIn, PCResult, Reset, Clk);
+    ProgramCounter ProgramCounter1(JumpRegMuxOutput, PCResult, Reset, Clk);
     InstructionMemory InstructionMemory1(PCResult, Instruction);
+    Mux32Bit2To1 BranchMux(
+        .out(BranchMuxOutput),
+        .inA(PCAddResult),
+        .inB(BranchAddress),
+        .sel(Branch)
+    );
+    Mux32Bit2To1 JumpMux(
+        .out(JumpMuxOutput),
+        .inA(BranchMuxOutput),
+        .inB({PCAddResult[31:28], Instruction[25:0], 2'b00}),
+        .sel(Jump | JumpLink)
+    );
+    Mux32Bit2To1 JumpRegMux(
+        .out(JumpRegMuxOutput),
+        .inA(JumpMuxOutput),
+        .inB(ReadData1),
+        .sel(JumpReg)
+    );
     
 endmodule

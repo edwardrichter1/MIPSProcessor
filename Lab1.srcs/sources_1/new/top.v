@@ -24,11 +24,12 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
     IDALUSrc, IDMemWrite, IDMemRead, IDMemtoReg, IDSignExtendToReg,
-    IDCmpOut, IDMov, IDCmpSel, IDHiLoOp, IDHiDst, IDLoDst, IDMoveHiLo, IDMoveHi, IDMoveLo, IDJumpLink;
+    IDCmpOut, IDMov, IDCmpSel, IDHiLoOp, IDHiDst, IDLoDst, IDMoveHiLo, IDMoveHi, IDMoveLo, IDJumpLink,
+    IDJump, IDJumpReg, IDBranchControlOut;
     wire [1:0] IDDataMem;
     wire [4:0] IDALUControl, IDRT, IDRS, IDRD;
     wire [31:0] IDInstruction, IDPCAddResult, IDReadData1, IDReadData2, IDSignExtendOut, 
-    IDSignExtendRegisterOut;
+    IDSignExtendRegisterOut, IDBranchOut;
 
     wire EXHiWriteEnable, EXLoWriteEnable, EXRegWrite, EXRegDst, 
     EXALUSrc, EXMemWrite, EXMemRead, EXMemtoReg, EXSignExtendToReg,
@@ -53,10 +54,16 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
 
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
-        .PCIn(NextPC),
+        //.PCIn(NextPC),
         .PCAddResult(IFPCAddResult),
         .Reset(PCReset),
-        .Clk(Clk)
+        .Clk(Clk),
+        .ReadData1(IDReadData1),
+        .JumpLink(IDJumpLink),
+        .JumpReg(IDJumpReg),
+        .Jump(IDJump),
+        .Branch(IDBranchControlOut),
+        .BranchAddress(IDBranchOut)
     );
     Pipe1Reg IFtoID(
         .Clk(Clk), 
@@ -81,7 +88,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
         .RD(IDRD),
         .RS(IDRS),
         .SignExtendRegisterOut(IDSignExtendRegisterOut),
-        .NextPC(NextPC),
+        //.NextPC(NextPC),
        // .Jump(IDJump),
        // .Instruction(IDInstruction),
         .RegDst(IDRegDst),
@@ -104,7 +111,15 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
         .MoveLo(IDMoveLo),
         .DataMem(IDDataMem),
        // .JumpReg(IDJumpReg),
-        .JumpLink(IDJumpLink)
+        .JumpLink(IDJumpLink),
+        .Jump(IDJump),
+        .JumpReg(IDJumpReg),
+        .BranchControlOut(IDBranchControlOut),
+        .BranchOut(IDBranchOut),
+        .S1(S1RegVal),
+        .S2(S2RegVal),
+        .S3(S3RegVal),
+        .S4(S4RegVal)
     );
     Pipe2Reg IDtoEx (
         .Clk(Clk), 

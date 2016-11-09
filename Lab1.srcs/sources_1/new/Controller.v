@@ -26,6 +26,14 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
     output reg [2:0] BranchControlIn;
     output reg[4:0] ALUControl;
     
+    initial begin
+        Jump <= 0;
+        JumpReg <= 0;
+        JumpLink <= 0;
+        BranchControlIn <= 3'b000;
+        RegWrite <= 0;                
+    end
+    
     always@(Instruction) begin // Datapath Controller
         RegWrite <= 0;
         
