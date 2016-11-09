@@ -43,8 +43,7 @@ module InstructionMemory(Address, Instruction);
     output reg [31:0] Instruction;    // Instruction at memory location Address
     
     initial begin
-        InstructionReg[0] <= 32'b00100000000010010000000000001001;  // addi    $t1, $zero, 9
-        InstructionReg[1] <= 32'b00100000000100000000000000000111;  // addi    $s0, $zero, 7
+        InstructionReg[0] <= 32'b00100000000100010000000000001010; // addi    $s1, $zero, 10
         /*InstructionReg[0] = 32'h34040000;	//	main:		ori	$a0, $zero, 0
         InstructionReg[1] = 32'h08000004;    //            j    start
         InstructionReg[2] = 32'h2004000a;    //            addi    $a0, $zero, 10

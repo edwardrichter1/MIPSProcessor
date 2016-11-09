@@ -107,7 +107,7 @@ module Pipe2Reg(
     reg [4:0] RTTemp, RDTemp, RSTemp, ALUControlTemp, ShiftAmountTemp;
     reg [1:0] DataMemTemp;
     
-   always@(posedge Clk) begin
+   always@(negedge Clk) begin
         PCAddResultOut <= PCAddResultTemp;
         ShiftAmountOut <= ShiftAmountTemp;
         ReadData1Out <= ReadData1Temp;
@@ -139,7 +139,7 @@ module Pipe2Reg(
         JumpLinkOut <= JumpLinkTemp;
     end
     
-    always@(negedge Clk) begin
+    always@(posedge Clk) begin
         PCAddResultTemp <= PCAddResultIn;
         ShiftAmountTemp <= ShiftAmountIn;
         ReadData1Temp <= ReadData1In;

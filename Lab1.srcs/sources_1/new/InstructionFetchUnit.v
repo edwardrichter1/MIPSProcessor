@@ -39,10 +39,11 @@
 // which generates a continuous clock pulse into the module.
 ////////////////////////////////////////////////////////////////////////////////
 
-module InstructionFetchUnit(Instruction, /*PCIn,*/ PCAddResult, Reset, Clk, JumpLink, JumpReg, Jump, Branch, BranchAddress, ReadData1);
+module InstructionFetchUnit(Instruction, PCResult, PCAddResult, Reset, Clk, JumpLink, JumpReg, Jump, Branch, BranchAddress, ReadData1);
     input Reset, Clk, JumpLink, JumpReg, Jump, Branch;
     input [31:0] ReadData1, BranchAddress;
     output [31:0] Instruction;
+    output [31:0] PCResult;
     
     output wire [31:0] PCAddResult;
     wire[31:0] PCResult, BranchMuxOutput, JumpMuxOutput,

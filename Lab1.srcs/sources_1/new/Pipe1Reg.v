@@ -35,14 +35,14 @@ module Pipe1Reg(
     output reg [31:0] PCAddResultOut, InstructionOut;
     
     reg [31:0] PCAddResultTemp, InstructionTemp;
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         if(ReadEnable == 1) begin
             InstructionOut <= InstructionTemp;
             PCAddResultOut <= PCAddResultTemp;
         end
     end
     
-    always@(negedge Clk) begin
+    always@(posedge Clk) begin
         if(WriteEnable == 1) begin
             InstructionTemp <= InstructionIn;
             PCAddResultTemp <= PCAddResultIn;

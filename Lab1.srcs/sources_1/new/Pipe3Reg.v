@@ -85,7 +85,7 @@ module Pipe3Reg(
     reg [4:0] WriteRegisterTemp;
     reg [1:0] DataMemTemp;
 
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         PCAddResultOut <= PCAddResultTemp;
         HiOut <= HiTemp;
         LoOut <= LoTemp;
@@ -108,7 +108,7 @@ module Pipe3Reg(
         JumpLinkOut <= JumpLinkTemp;
     end
     
-    always@(negedge Clk) begin
+    always@(posedge Clk) begin
         PCAddResultTemp <= PCAddResultIn;
         HiTemp <= HiIn;
         LoTemp <= LoIn;

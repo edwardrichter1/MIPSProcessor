@@ -78,7 +78,7 @@ module Pipe4Reg(
     ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp, DataMemReadTemp;
     reg [4:0] WriteRegisterTemp;
     
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         PCAddResultOut <= PCAddResultTemp; 
         HiOut <= HiTemp;
         LoOut <= LoTemp;
@@ -99,7 +99,7 @@ module Pipe4Reg(
         DataMemReadOut <= DataMemReadTemp;
     end
 
-    always@(negedge Clk) begin
+    always@(posedge Clk) begin
         PCAddResultTemp <= PCAddResultIn; 
         HiTemp <= HiIn;
         LoTemp <= LoIn;

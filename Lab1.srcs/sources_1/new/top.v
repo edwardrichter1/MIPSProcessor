@@ -15,10 +15,10 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
+module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     input Clk, PCReset;
     output [31:0] S1RegVal, S2RegVal, S3RegVal, S4RegVal;
-    output wire [31:0] NextPC;
+    output wire [31:0] CurrentPC;
 
     wire [31:0] IFInstruction, IFPCAddResult;
     
@@ -54,7 +54,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
 
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
-        //.PCIn(NextPC),
+        .PCResult(CurrentPC),
         .PCAddResult(IFPCAddResult),
         .Reset(PCReset),
         .Clk(Clk),
@@ -88,9 +88,6 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
         .RD(IDRD),
         .RS(IDRS),
         .SignExtendRegisterOut(IDSignExtendRegisterOut),
-        //.NextPC(NextPC),
-       // .Jump(IDJump),
-       // .Instruction(IDInstruction),
         .RegDst(IDRegDst),
         .RegWriteOut(IDRegWrite),
         .ALUSrc(IDALUSrc),
@@ -110,7 +107,6 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
         .MoveHi(IDMoveHi),
         .MoveLo(IDMoveLo),
         .DataMem(IDDataMem),
-       // .JumpReg(IDJumpReg),
         .JumpLink(IDJumpLink),
         .Jump(IDJump),
         .JumpReg(IDJumpReg),
@@ -185,7 +181,6 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
     ExecuteUnit EX (
         .Clk(Clk), // inputs 
         .ShiftAmount(EXShiftAmount),
-        //.PCAddResultIn(EXPCAddResult),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
         .SignExtendIn(EXSignExtendOut),
@@ -205,16 +200,16 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
         .HiOut(EXHi), // outputs
         .LoOut(EXLo),
         .ALUResultOut(EXALUResult),
-        //.MemWriteDataOut(EXMemWriteData),
+        .MemWriteDataOut(EXMemWriteData),
         .WriteRegisterOut(EXWriteRegister)
     );
     Pipe3Reg EXtoM (
         .Clk(Clk), // inputs 
         .PCAddResultIn(EXPCAddResult),
+        .MemWriteDataIn(EXMemWriteData),
         .HiIn(EXHi),
         .LoIn(EXLo),
         .ALUResultIn(EXALUResult),
-        .MemWriteDataIn(EXReadData2),
         .WriteRegisterIn(EXWriteRegister),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
@@ -305,11 +300,9 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, NextPC, Clk, PCReset);
         .Lo(WBLo),
         .ALUResult(WBALUResult),
         .DataMemRead(WBDataMemRead),
-        //.WriteRegister(WBWriteRegister),
         .ReadData1(WBReadData1),
         .ReadData2(WBReadData2),
         .SignExtendRegisterOut(WBSignExtendRegisterOut),
-        //.RegWriteOut(WBRegWrite),
         .MemtoRegOut(WBMemtoReg),
         .SignExtendToRegOut(WBSignExtendToReg),
         .MovOut(WBMov), 

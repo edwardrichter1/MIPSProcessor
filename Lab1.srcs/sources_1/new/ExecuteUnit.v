@@ -23,7 +23,6 @@
 module ExecuteUnit(
         Clk, // inputs
         ShiftAmount, 
-       //PCAddResultIn,
         ReadData1In,
         ReadData2In,
         SignExtendIn,
@@ -43,20 +42,20 @@ module ExecuteUnit(
         HiOut, // outputs
         LoOut,
         ALUResultOut,
-       // MemWriteDataOut,
+        MemWriteDataOut,
         WriteRegisterOut
     );
     
-    input Clk, RegDstIn, ALUSrcIn, /*HiWriteEnable,*/ HiWriteEnableIn, LoWriteEnableIn,
+    input Clk, RegDstIn, ALUSrcIn, HiWriteEnableIn, LoWriteEnableIn,
     HiLoOpIn, HiDstIn, LoDstIn, MoveHiLoIn, JumpLinkIn;
-    input [31:0] /*PCAddResultIn,*/ ReadData1In, ReadData2In, SignExtendIn;
+    input [31:0]  ReadData1In, ReadData2In, SignExtendIn;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
     
-    output /*reg*/ [31:0] HiOut, LoOut, ALUResultOut, WriteRegisterOut;
+    output [31:0] HiOut, LoOut, ALUResultOut, WriteRegisterOut, MemWriteDataOut;
     
     wire Zero;
     wire [4:0] RDRTMuxOutput; 
-    wire [31:0] RTMuxOutput, RSMuxOutput, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
+    wire [31:0] RSMuxOutput, MemWriteDataOut, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
     LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult, ALUSrcMuxOutput;
     
     Mux32Bit3To1 RSMux(
@@ -67,7 +66,7 @@ module ExecuteUnit(
         .sel(0)
     );
     Mux32Bit3To1 RTMux(
-        .out(RTMuxOutput), 
+        .out(MemWriteDataOut), 
         .inA(ReadData2In), 
         .inB(32'b0), // placeholders, will be populated with forwarding unit 
         .inC(32'b0), 
@@ -75,7 +74,7 @@ module ExecuteUnit(
     );
     Mux32Bit2To1 ALUSrcMux(
         .out(ALUSrcMuxOutput),
-        .inA(RTMuxOutput),
+        .inA(MemWriteDataOut),
         .inB(SignExtendIn),
         .sel(ALUSrcIn)
     );

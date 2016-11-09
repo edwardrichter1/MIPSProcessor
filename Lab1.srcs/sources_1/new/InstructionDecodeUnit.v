@@ -65,8 +65,7 @@ module InstructionDecodeUnit(
     input [31:0] PCAddResultIn, Instruction, WriteData;
     input [4:0] WriteRegister;
     output [31:0] ReadData1, ReadData2, SignExtendOut,
-    SignExtendRegisterOut, /*NextPC,*/ BranchOut,/*, Instruction*/
-    S1, S2, S3, S4;
+    SignExtendRegisterOut, BranchOut, S1, S2, S3, S4;
     output [4:0] RT, RD, RS, ALUControl;
     output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
@@ -89,7 +88,7 @@ module InstructionDecodeUnit(
         .S1(S1),
         .S2(S2),
         .S3(S3),
-        .S4(S3)        
+        .S4(S4)        
     );
     Comp32 RegComp(
         .in1(ReadData1),

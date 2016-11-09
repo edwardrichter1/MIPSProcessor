@@ -62,18 +62,11 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	
 	reg [31:0] RegFile [31:0]; // contents of the reg file
 	
-	always@(*)begin
-	   S1 <= RegFile[17];
-	   S2 <= RegFile[18];
-	   S3 <= RegFile[19];
-	   S4 <= RegFile[20];
-	end
-	
 	initial begin // initializing $0 register equal to zero
 	   RegFile[0] = 0;
 	end
 	
-	always@(posedge Clk) begin // write procedure
+	always@(posedge Clk, RegWrite) begin // write procedure
 	   if(RegWrite == 1) begin
 	       RegFile[WriteRegister] = WriteData;
 	   end
@@ -82,6 +75,13 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	always@(*) begin // read procedure
         ReadData1 = RegFile[ReadRegister1];
         ReadData2 = RegFile[ReadRegister2];    
+    end
+    
+	always@(*)begin
+       S1 = RegFile[5'd17];
+       S2 = RegFile[5'd18];
+       S3 = RegFile[5'd19];
+       S4 = RegFile[5'd20];
     end
     
 endmodule
