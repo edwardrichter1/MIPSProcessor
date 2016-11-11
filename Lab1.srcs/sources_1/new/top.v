@@ -67,6 +67,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     );
     Pipe1Reg IFtoID(
         .Clk(Clk), 
+        .Reset(PCReset),
         .WriteEnable(1),
         .ReadEnable(1),
         .InstructionIn(IFInstruction),
@@ -118,7 +119,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .S4(S4RegVal)
     );
     Pipe2Reg IDtoEx (
-        .Clk(Clk), 
+        .Clk(Clk),
+        .Reset(PCReset),
         .PCAddResultIn(IDPCAddResult), // inputs
         .ReadData1In(IDReadData1),
         .ReadData2In(IDReadData2),
@@ -205,6 +207,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     );
     Pipe3Reg EXtoM (
         .Clk(Clk), // inputs 
+        .Reset(PCReset),
         .PCAddResultIn(EXPCAddResult),
         .MemWriteDataIn(EXMemWriteData),
         .HiIn(EXHi),
@@ -257,6 +260,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     );
     Pipe4Reg MEMtoWB (
         .Clk(Clk), // inputs 
+        .Reset(PCReset),
         .PCAddResultIn(MEMPCAddResult), 
         .HiIn(MEMHi),
         .LoIn(MEMLo),

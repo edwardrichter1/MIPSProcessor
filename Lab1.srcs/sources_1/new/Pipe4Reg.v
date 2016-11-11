@@ -22,6 +22,7 @@
 
 module Pipe4Reg(
         Clk, // inputs 
+        Reset,
         PCAddResultIn, 
         HiIn,
         LoIn,
@@ -61,7 +62,7 @@ module Pipe4Reg(
     );
     
     input Clk, RegWriteIn, MemtoRegIn, SignExtendToRegIn, MovIn,
-    CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn;
+    CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn, Reset;
     input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn,
     ReadData1In, ReadData2In, SignExtendRegisterIn, DataMemReadIn;
     input [4:0] WriteRegisterIn;
@@ -72,13 +73,13 @@ module Pipe4Reg(
     ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut;
     output reg [4:0] WriteRegisterOut;
 
-    reg RegWriteTemp, MemtoRegTemp, SignExtendToRegTemp, MovTemp,
+/*    reg RegWriteTemp, MemtoRegTemp, SignExtendToRegTemp, MovTemp,
     CmpSelTemp, MoveHiTemp, MoveLoTemp, JumpLinkTemp;
     reg [31:0] PCAddResultTemp, HiTemp, LoTemp, ALUResultTemp, MemWriteDataTemp,
     ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp, DataMemReadTemp;
     reg [4:0] WriteRegisterTemp;
-    
-    always@(negedge Clk) begin
+*/    
+/*    always@(negedge Clk) begin
         PCAddResultOut <= PCAddResultTemp; 
         HiOut <= HiTemp;
         LoOut <= LoTemp;
@@ -98,26 +99,48 @@ module Pipe4Reg(
         JumpLinkOut <= JumpLinkTemp;
         DataMemReadOut <= DataMemReadTemp;
     end
-
+*/
     always@(posedge Clk) begin
-        PCAddResultTemp <= PCAddResultIn; 
-        HiTemp <= HiIn;
-        LoTemp <= LoIn;
-        ALUResultTemp <= ALUResultIn;
-        MemWriteDataTemp <= MemWriteDataIn;
-        WriteRegisterTemp <= WriteRegisterIn;
-        ReadData1Temp <= ReadData1In;
-        ReadData2Temp <= ReadData2In;
-        SignExtendRegisterTemp <= SignExtendRegisterIn;
-        RegWriteTemp <= RegWriteIn;
-        MemtoRegTemp <= MemtoRegIn;
-        SignExtendToRegTemp <= SignExtendToRegIn;
-        MovTemp <= MovIn;
-        CmpSelTemp <= CmpSelIn;
-        MoveHiTemp <= MoveHiIn;
-        MoveLoTemp <= MoveLoIn;
-        JumpLinkTemp <= JumpLinkIn;
-        DataMemReadTemp <= DataMemReadIn;
+        if(Reset == 1) begin
+            PCAddResultOut <= 0; 
+            HiOut <= 0;
+            LoOut <= 0;
+            ALUResultOut <= 0;
+            MemWriteDataOut <= 0;
+            WriteRegisterOut <= 0;
+            ReadData1Out <= 0;
+            ReadData2Out <= 0;
+            SignExtendRegisterOut <= 0;
+            RegWriteOut <= 0;
+            MemtoRegOut <= 0;
+            SignExtendToRegOut <= 0;
+            MovOut <= 0;
+            CmpSelOut <= 0;
+            MoveHiOut <= 0;
+            MoveLoOut <= 0;
+            JumpLinkOut <= 0;
+            DataMemReadOut <= 0;        
+        end
+        else begin
+            PCAddResultOut <= PCAddResultIn; 
+            HiOut <= HiIn;
+            LoOut <= LoIn;
+            ALUResultOut <= ALUResultIn;
+            MemWriteDataOut <= MemWriteDataIn;
+            WriteRegisterOut <= WriteRegisterIn;
+            ReadData1Out <= ReadData1In;
+            ReadData2Out <= ReadData2In;
+            SignExtendRegisterOut <= SignExtendRegisterIn;
+            RegWriteOut <= RegWriteIn;
+            MemtoRegOut <= MemtoRegIn;
+            SignExtendToRegOut <= SignExtendToRegIn;
+            MovOut <= MovIn;
+            CmpSelOut <= CmpSelIn;
+            MoveHiOut <= MoveHiIn;
+            MoveLoOut <= MoveLoIn;
+            JumpLinkOut <= JumpLinkIn;
+            DataMemReadOut <= DataMemReadIn;
+        end
     end
 
 

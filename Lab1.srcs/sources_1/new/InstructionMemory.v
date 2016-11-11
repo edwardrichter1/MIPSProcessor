@@ -44,6 +44,9 @@ module InstructionMemory(Address, Instruction);
     
     initial begin
         InstructionReg[0] <= 32'b00100000000100010000000000001010; // addi    $s1, $zero, 10
+        InstructionReg[1] <= 32'b00100000000100100000000000001011; // addi    $s2, $zero, 10
+        InstructionReg[2] <= 32'b00100000000100110000000000001100; // addi    $s3, $zero, 10
+        InstructionReg[3] <= 32'b00100000000101000000000000001101; // addi    $s4, $zero, 10
         /*InstructionReg[0] = 32'h34040000;	//	main:		ori	$a0, $zero, 0
         InstructionReg[1] = 32'h08000004;    //            j    start
         InstructionReg[2] = 32'h2004000a;    //            addi    $a0, $zero, 10
@@ -261,9 +264,9 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[62] = 32'b00000010100100011000100001000110;
         InstructionReg[63] = 32'b00110100000100010000111111110000;
         InstructionReg[64] = 32'b01111100000100011010010000100000;
-        InstructionReg[65] = 32'b01111100000100011010011000100000;
+        InstructionReg[65] = 32'b01111100000100011010011000100000;*/
 
-        InstructionReg[0] = 32'b00100000000010000000000000000110; // addi $t0, $zero, 6
+        /*InstructionReg[0] = 32'b00100000000010000000000000000110; // addi $t0, $zero, 6
         InstructionReg[1] = 32'b00100000000010010000000000000111; // addi $t1, $zero, 7
         InstructionReg[2] = 32'b00000001000010010101000000100000; // add $t2, $t0, $t1
         InstructionReg[3] = 32'b00000001010010010101100000100010; // sub $t3, $t2, $t1
@@ -298,8 +301,8 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[32] = 32'b00000010111010110110000000001011; // movn $t4, $s7, $t3
         InstructionReg[33] = 32'b00000010110100110110100000001011; // movn $t5, $s6, $s3
         InstructionReg[34] = 32'b01110001110100110000000000000000; // madd $t6, $s3
-        InstructionReg[35] = 32'b01110001110100110000000000000100; // msub $t6, $s3
-*/
+        InstructionReg[35] = 32'b01110001110100110000000000000100; // msub $t6, $s3*/
+
     end
  
     
