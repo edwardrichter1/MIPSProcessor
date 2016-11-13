@@ -52,6 +52,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     wire [31:0] WBReadData1, WBReadData2, WBPCAddResult, WBHi, WBLo, WBALUResult, WBMemWriteData,
     WBSignExtendRegisterOut, WBWriteData, WBDataMemRead;
 
+    wire [1:0] RTMuxControl, RSMuxControl;
+
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
         .PCResult(CurrentPC),
@@ -199,11 +201,25 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .LoDstIn(EXLoDst),
         .MoveHiLoIn(EXMoveHiLo),
         .JumpLinkIn(EXJumpLink),
+        .MEMAddress(MEMALUResult),
+        .WBWriteData(WBWriteData),
+        .RSMuxControl(RSMuxControl),
+        .RTMuxControl(RTMuxControl),
         .HiOut(EXHi), // outputs
         .LoOut(EXLo),
         .ALUResultOut(EXALUResult),
         .MemWriteDataOut(EXMemWriteData),
         .WriteRegisterOut(EXWriteRegister)
+    );
+    ForwardingUnit FU (
+        .MEMWBRegWrite(WBRegWrite),
+        .EXMEMRegWrite(MEMRegWrite),
+        .EXMEMRegisterRD(MEMWriteRegister),
+        .MEMWBRegisterRD(WBWriteRegister),
+        .IDEXRegisterRS(EXRS),
+        .IDEXRegisterRT(EXRT),
+        .RSMuxControl(RSMuxControl),
+        .RTMuxControl(RTMuxControl)
     );
     Pipe3Reg EXtoM (
         .Clk(Clk), // inputs 

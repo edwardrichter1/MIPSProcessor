@@ -43,10 +43,10 @@ module InstructionMemory(Address, Instruction);
     output reg [31:0] Instruction;    // Instruction at memory location Address
     
     initial begin
-        InstructionReg[0] <= 32'b00100000000100010000000000001010; // addi    $s1, $zero, 10
-        InstructionReg[1] <= 32'b00100000000100100000000000001011; // addi    $s2, $zero, 10
-        InstructionReg[2] <= 32'b00100000000100110000000000001100; // addi    $s3, $zero, 10
-        InstructionReg[3] <= 32'b00100000000101000000000000001101; // addi    $s4, $zero, 10
+        //InstructionReg[0] <= 32'b00100000000100010000000000001010; // addi    $s1, $zero, 10
+        //InstructionReg[1] <= 32'b00100000000100100000000000001011; // addi    $s2, $zero, 11
+        //InstructionReg[2] <= 32'b00100000000100110000000000001100; // addi    $s3, $zero, 12
+        //InstructionReg[3] <= 32'b00100000000101000000000000001101; // addi    $s4, $zero, 13
         /*InstructionReg[0] = 32'h34040000;	//	main:		ori	$a0, $zero, 0
         InstructionReg[1] = 32'h08000004;    //            j    start
         InstructionReg[2] = 32'h2004000a;    //            addi    $a0, $zero, 10
@@ -266,10 +266,10 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[64] = 32'b01111100000100011010010000100000;
         InstructionReg[65] = 32'b01111100000100011010011000100000;*/
 
-        /*InstructionReg[0] = 32'b00100000000010000000000000000110; // addi $t0, $zero, 6
+        InstructionReg[0] = 32'b00100000000010000000000000000110; // addi $t0, $zero, 6
         InstructionReg[1] = 32'b00100000000010010000000000000111; // addi $t1, $zero, 7
         InstructionReg[2] = 32'b00000001000010010101000000100000; // add $t2, $t0, $t1
-        InstructionReg[3] = 32'b00000001010010010101100000100010; // sub $t3, $t2, $t1
+        /*InstructionReg[3] = 32'b00000001010010010101100000100010; // sub $t3, $t2, $t1
         InstructionReg[4] = 32'b01110001011010010110000000000010; // mul $t4, $t3, $t1
         InstructionReg[5] = 32'b00000001010010110110100000100100; // and $t5, $t2, $t3
         InstructionReg[6] = 32'b00110001001011100000000000101010; // andi $t6, $t1, 42

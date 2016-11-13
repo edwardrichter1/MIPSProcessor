@@ -16,12 +16,12 @@ module Mux32Bit3To1(out, inA, inB, inC, sel);
     input [31:0] inC;
     input [1:0] sel;
 
-    always@(inA, inB, sel) begin
-        if(sel == 2'd0)
+    always@(*) begin
+        if(sel == 2'b00)
             out <= inA;
-        else if(sel == 2'd1)
+        else if(sel == 2'b01)
             out <= inB;
-        else if(sel == 2'd2)
+        else if(sel == 2'b10)
             out <= inC;
     end 
 
