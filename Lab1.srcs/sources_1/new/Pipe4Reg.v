@@ -73,33 +73,6 @@ module Pipe4Reg(
     ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut;
     output reg [4:0] WriteRegisterOut;
 
-/*    reg RegWriteTemp, MemtoRegTemp, SignExtendToRegTemp, MovTemp,
-    CmpSelTemp, MoveHiTemp, MoveLoTemp, JumpLinkTemp;
-    reg [31:0] PCAddResultTemp, HiTemp, LoTemp, ALUResultTemp, MemWriteDataTemp,
-    ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp, DataMemReadTemp;
-    reg [4:0] WriteRegisterTemp;
-*/    
-/*    always@(negedge Clk) begin
-        PCAddResultOut <= PCAddResultTemp; 
-        HiOut <= HiTemp;
-        LoOut <= LoTemp;
-        ALUResultOut <= ALUResultTemp;
-        MemWriteDataOut <= MemWriteDataTemp;
-        WriteRegisterOut <= WriteRegisterTemp;
-        ReadData1Out <= ReadData1Temp;
-        ReadData2Out <= ReadData2Temp;
-        SignExtendRegisterOut <= SignExtendRegisterTemp;
-        RegWriteOut <= RegWriteTemp;
-        MemtoRegOut <= MemtoRegTemp;
-        SignExtendToRegOut <= SignExtendToRegTemp;
-        MovOut <= MovTemp;
-        CmpSelOut <= CmpSelTemp;
-        MoveHiOut <= MoveHiTemp;
-        MoveLoOut <= MoveLoTemp;
-        JumpLinkOut <= JumpLinkTemp;
-        DataMemReadOut <= DataMemReadTemp;
-    end
-*/
     always@(posedge Clk) begin
         if(Reset == 1) begin
             PCAddResultOut <= 0; 

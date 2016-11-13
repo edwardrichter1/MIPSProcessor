@@ -66,9 +66,9 @@ module Pipe3Reg(
     );
     
     input Clk, RegWriteIn, MemWriteIn, MemReadIn, MemtoRegIn,
-    SignExtendToRegIn, MovIn, CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn;
+    SignExtendToRegIn, MovIn, CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn, Reset;
     input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn, 
-    ReadData1In, ReadData2In, SignExtendRegisterIn, Reset;
+    ReadData1In, ReadData2In, SignExtendRegisterIn;
     input [4:0] WriteRegisterIn;
     input [1:0] DataMemIn;
     
@@ -79,35 +79,6 @@ module Pipe3Reg(
     output reg [4:0] WriteRegisterOut;
     output reg [1:0] DataMemOut;
     
-    /*reg RegWriteTemp, MemWriteTemp, MemReadTemp, MemtoRegTemp,
-    SignExtendToRegTemp, MovTemp, CmpSelTemp, MoveHiTemp, MoveLoTemp, JumpLinkTemp;
-    reg [31:0] PCAddResultTemp, HiTemp, LoTemp, ALUResultTemp, MemWriteDataTemp, 
-    ReadData1Temp, ReadData2Temp, SignExtendRegisterTemp;
-    reg [4:0] WriteRegisterTemp;
-    reg [1:0] DataMemTemp;*/
-
-    /*always@(negedge Clk) begin
-        PCAddResultOut <= PCAddResultTemp;
-        HiOut <= HiTemp;
-        LoOut <= LoTemp;
-        ALUResultOut <= ALUResultTemp;
-        MemWriteDataOut <= MemWriteDataTemp;
-        WriteRegisterOut <= WriteRegisterTemp;
-        ReadData1Out <= ReadData1Temp;
-        ReadData2Out <= ReadData2Temp;
-        SignExtendRegisterOut <= SignExtendRegisterTemp;
-        RegWriteOut <= RegWriteTemp;
-        MemWriteOut <= MemWriteTemp;
-        MemReadOut <= MemReadTemp;
-        MemtoRegOut <= MemtoRegTemp;
-        SignExtendToRegOut <= SignExtendToRegTemp;
-        MovOut <= MovTemp;
-        CmpSelOut <= CmpSelTemp;
-        MoveHiOut <= MoveHiTemp;
-        MoveLoOut <= MoveLoTemp;
-        DataMemOut <= DataMemTemp;
-        JumpLinkOut <= JumpLinkTemp;
-    end*/
     
     always@(posedge Clk) begin
         if(Reset == 1) begin

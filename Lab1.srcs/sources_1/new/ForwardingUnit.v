@@ -38,16 +38,16 @@ module ForwardingUnit(
     
     always@(*) begin
         if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (EXMEMRegisterRD == IDEXRegisterRS))
-            RSMuxControl <= 2'b10;
-        else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRS))
             RSMuxControl <= 2'b01;
+        else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRS))
+            RSMuxControl <= 2'b10;
         else
             RSMuxControl <= 2'b00;
         
         if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (EXMEMRegisterRD == IDEXRegisterRT))
-            RTMuxControl <= 2'b10;
-        else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRT))
             RTMuxControl <= 2'b01;
+        else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRT))
+            RTMuxControl <= 2'b10;
         else
             RTMuxControl <= 2'b00;
     end

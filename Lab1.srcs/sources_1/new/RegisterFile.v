@@ -67,7 +67,7 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	end
 	
 	always@(posedge Clk) begin // write procedure
-	   if(RegWrite == 1) begin
+	   if(RegWrite) begin
 	       RegFile[WriteRegister] = WriteData;
 	   end
 	end

@@ -23,25 +23,16 @@
 module Pipe1Reg(
         Clk,
         Reset, 
-        WriteEnable, 
-        ReadEnable, 
+        WriteEnable,
         InstructionIn, 
         InstructionOut, 
         PCAddResultIn, 
         PCAddResultOut
     );
-    input Clk, WriteEnable, ReadEnable, Reset;
+    input Clk, WriteEnable, Reset;
     input [31:0] InstructionIn, PCAddResultIn;
     
     output reg [31:0] PCAddResultOut, InstructionOut;
-    
-    //reg [31:0] PCAddResultTemp, InstructionTemp;
-    /*always@(negedge Clk) begin
-        if(ReadEnable == 1) begin
-            InstructionOut <= InstructionTemp;
-            PCAddResultOut <= PCAddResultTemp;
-        end
-    end*/
     
     always@(posedge Clk) begin
         if(Reset == 1) begin

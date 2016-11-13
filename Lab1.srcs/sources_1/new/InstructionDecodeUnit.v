@@ -25,7 +25,7 @@ module InstructionDecodeUnit(
         ReadData1, // outputs
         ReadData2,
         SignExtendOut,
-       // CAddResultOut,
+       // PCAddResultOut,
         RT,
         RD,
         RS,
@@ -143,7 +143,7 @@ module InstructionDecodeUnit(
         .JumpLink(JumpLink)
     );
     Adder32Bit adder(
-        .A(SignEdtendOut << 2),
+        .A(SignExtendOut << 2),
         .B(PCAddResultIn),
         .C(BranchOut)
     );

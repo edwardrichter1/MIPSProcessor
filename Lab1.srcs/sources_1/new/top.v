@@ -43,7 +43,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     MEMCmpOut, MEMMov, MEMCmpSel, MEMMoveHi, MEMMoveLo, MEMJumpLink;
     wire [1:0] MEMDataMem;
     wire [4:0] MEMWriteRegister;
-    wire [31:0] MEMReadData1, MemReadData2, MEMWriteData, MEMALUResult, MEMHi,
+    wire [31:0] MEMReadData1, MEMReadData2, MEMWriteData, MEMALUResult, MEMHi,
     MEMLo, MEMSignExtendRegisterOut, MEMPCAddResult, MEMMemWriteData, MEMDataMemRead;
 
     wire WBRegWrite, WBRegDst, WBMemtoReg, WBSignExtendToReg, WBCmpOut, WBMov, 
@@ -52,7 +52,9 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     wire [31:0] WBReadData1, WBReadData2, WBPCAddResult, WBHi, WBLo, WBALUResult, WBMemWriteData,
     WBSignExtendRegisterOut, WBWriteData, WBDataMemRead;
 
+    wire IFIDReset, IFIDReadEnable, PCEnable, BubbleMuxControl;
     wire [1:0] RTMuxControl, RSMuxControl;
+    wire [31:0] BubbleMuxOutput;
 
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
@@ -65,13 +67,13 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .JumpReg(IDJumpReg),
         .Jump(IDJump),
         .Branch(IDBranchControlOut),
-        .BranchAddress(IDBranchOut)
+        .BranchAddress(IDBranchOut),
+        .PCEnable(PCEnable)
     );
     Pipe1Reg IFtoID(
         .Clk(Clk), 
         .Reset(PCReset),
-        .WriteEnable(1),
-        .ReadEnable(1),
+        .WriteEnable(1'b1),
         .InstructionIn(IFInstruction),
         .PCAddResultIn(IFPCAddResult),
         .InstructionOut(IDInstruction),
@@ -221,6 +223,23 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .RSMuxControl(RSMuxControl),
         .RTMuxControl(RTMuxControl)
     );
+    HazardDetectionUnit HU(
+        .IDEXMEMRead(EXMemRead),
+        .IDEXRegisterRT(EXRT),
+        .IFIDRegisterRS(IDRS),
+        .IFIDRegisterRT(IDRT),
+        .Branch(IDBranchControlOut),
+        .BubbleMuxControl(),
+        .PCWrite(PCEnable),
+        .IFIDReadEnable(IFIDReadEnable),
+        .IFIDReset(IFIDReset)
+    );
+    Mux32Bit2To1 BubbleMux(
+        .out(BubbleMuxOutput),
+        .inA(IDInstruction),
+        .inB(32'b0),
+        .sel(BubbleMuxControl)
+    );
     Pipe3Reg EXtoM (
         .Clk(Clk), // inputs 
         .Reset(PCReset),
@@ -272,7 +291,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .MemWrite(MEMMemWrite),
         .MemReadOut(MEMMemRead),
         .DataMemOut(MEMDataMem),
-        .ReadData(MEMReadData) // outputs
+        .ReadData(MEMDataMemRead) // outputs
     );
     Pipe4Reg MEMtoWB (
         .Clk(Clk), // inputs 

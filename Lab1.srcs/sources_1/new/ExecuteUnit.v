@@ -53,14 +53,14 @@ module ExecuteUnit(
     input Clk, RegDstIn, ALUSrcIn, HiWriteEnableIn, LoWriteEnableIn,
     HiLoOpIn, HiDstIn, LoDstIn, MoveHiLoIn, JumpLinkIn;
     input [31:0]  ReadData1In, ReadData2In, SignExtendIn, MEMAddress, WBWriteData;
-    input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
+    input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount, WriteRegisterOut;
     input [1:0] RTMuxControl, RSMuxControl;
-    output [31:0] HiOut, LoOut, ALUResultOut, WriteRegisterOut, MemWriteDataOut;
+    output [31:0] HiOut, LoOut, ALUResultOut, MemWriteDataOut;
     
     wire Zero;
     wire [4:0] RDRTMuxOutput; 
     wire [31:0] RSMuxOutput, MemWriteDataOut, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
-    LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult, ALUSrcMuxOutput;
+    LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult, ALUSrcMuxOutput, MoveLoMuxOutput, MoveHiMuxOutput;
     
     Mux32Bit3To1 RSMux(
         .out(RSMuxOutput), 
@@ -111,7 +111,7 @@ module ExecuteUnit(
     );
     Mux32Bit2To1 LoALUorOPMux(
         .out(LoALUorOPMuxOutput),
-        .inA(ALUResult),
+        .inA(ALUResultOut),
         .inB(LoResult),
         .sel(LoDstIn)
     );

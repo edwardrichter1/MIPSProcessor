@@ -51,7 +51,7 @@ module WriteBackUnit(
     output CmpOut;
     
     wire [31:0] ReadDataMuxOutput, SignExtendMuxOutput, MovMuxOutput,
-    HiMuxOutput, JumpLinkMuxOutput, LoMuxOutput; 
+    HiMuxOutput, LoMuxOutput; 
     
     ZeroCompSometimes ZCS(
         .in(ReadData2), 

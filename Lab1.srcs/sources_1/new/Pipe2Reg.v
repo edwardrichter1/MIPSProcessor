@@ -100,47 +100,8 @@ module Pipe2Reg(
     output reg [4:0] RTOut, RDOut, RSOut, ALUControlOut, ShiftAmountOut;
     output reg [1:0] DataMemOut;
     
-    /*reg RegDstTemp, RegWriteTemp, ALUSrcTemp, MemWriteTemp, MemReadTemp,
-    MemtoRegTemp, LoWriteEnableTemp, HiWriteEnableTemp, SignExtendToRegTemp,
-    MovTemp, CmpSelTemp, HiLoOpTemp, HiDstTemp, LoDstTemp, MoveHiLoTemp,
-    MoveHiTemp, MoveLoTemp, JumpLinkTemp;
-    reg [31:0] SignExtendRegisterTemp, PCAddResultTemp, ReadData1Temp, ReadData2Temp, SignExtendTemp;
-    reg [4:0] RTTemp, RDTemp, RSTemp, ALUControlTemp, ShiftAmountTemp;
-    reg [1:0] DataMemTemp;*/
     
-   /*always@(negedge Clk) begin
-        PCAddResultOut <= PCAddResultTemp;
-        ShiftAmountOut <= ShiftAmountTemp;
-        ReadData1Out <= ReadData1Temp;
-        ReadData2Out <= ReadData2Temp;
-        SignExtendOut <= SignExtendTemp;
-        RTOut <= RTTemp;
-        RDOut <= RDTemp;
-        RSOut <= RSTemp;
-        SignExtendRegisterOut <= SignExtendRegisterTemp;
-        RegDstOut <= RegDstTemp;
-        RegWriteOut <= RegWriteTemp;
-        ALUSrcOut <= ALUSrcTemp;
-        MemWriteOut <= MemWriteTemp;
-        MemReadOut <= MemReadTemp;
-        MemtoRegOut <= MemtoRegTemp;
-        ALUControlOut <= ALUControlTemp;
-        HiWriteEnableOut <= HiWriteEnableTemp;
-        LoWriteEnableOut <= LoWriteEnableTemp;
-        SignExtendToRegOut <= SignExtendToRegTemp;
-        MovOut <= MovTemp;
-        CmpSelOut <= CmpSelTemp;
-        HiLoOpOut <= HiLoOpTemp;
-        HiDstOut <= HiDstTemp;
-        LoDstOut <= LoDstTemp;
-        MoveHiLoOut <= MoveHiLoTemp;
-        MoveHiOut <= MoveHiTemp;
-        MoveLoOut <= MoveLoTemp;
-        DataMemOut <= DataMemTemp;
-        JumpLinkOut <= JumpLinkTemp;
-    end*/
-    
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         if (Reset == 1) begin
             PCAddResultOut <= 0;
             ShiftAmountOut <= 0;

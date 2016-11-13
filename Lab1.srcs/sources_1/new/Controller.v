@@ -31,7 +31,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
         JumpReg <= 0;
         JumpLink <= 0;
         BranchControlIn <= 3'b000;
-        RegWrite <= 0;                
+        RegWrite <= 0;       
     end
     
     always@(Instruction) begin // Datapath Controller
@@ -43,10 +43,11 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
             MemRead <= 0;
             HiWriteEnable <= 0;
             LoWriteEnable <= 0;
-            //HiLoOp
             Jump <= 0;
             JumpReg <= 0;
             JumpLink <= 0;
+            MoveHi <= 0;
+            MoveLo <= 0;
             BranchControlIn <= 3'b000;
         end
         else begin
