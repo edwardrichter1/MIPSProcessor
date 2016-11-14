@@ -533,7 +533,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MoveLo <= 0;
                         end       
              6'b101011: begin //SW
-                                //RegDst <= 1;
+                                RegDst <= 0;
                                 ForceZero <= 0;
                                 Shift16 <= 0;
                                 Jump <= 0;
@@ -605,7 +605,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 JumpLink <= 0;
                         end
              6'b101000: begin //SB
-                                //RegDst <= 1;
+                                RegDst <= 0;
                                 ForceZero <= 0;
                                 ALUSrc <= 1;
                                 Mov <= 0;
@@ -653,7 +653,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 JumpLink <= 0;
                         end
              6'b101001: begin //sh
-                                //RegDst <= 1;
+                                RegDst <= 0;
                                 ForceZero <= 0;
                                 ALUSrc <= 1;
                                 Mov <= 0;

@@ -44,7 +44,7 @@ module HazardDetectionUnit(
             PCWrite <= 1;
             IFIDReadEnable <= 1;
         end
-        else if(IDEXMEMRead && (IDEXRegisterRT == IFIDRegisterRS) && (IDEXRegisterRT == IFIDRegisterRT) ) begin
+        else if(IDEXMEMRead && ((IDEXRegisterRT == IFIDRegisterRS) || (IDEXRegisterRT == IFIDRegisterRT)) ) begin
             BubbleMuxControl <= 1;
             PCWrite <= 0;
             IFIDReadEnable <= 0;

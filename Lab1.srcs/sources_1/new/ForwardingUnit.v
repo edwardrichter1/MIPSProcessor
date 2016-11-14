@@ -25,31 +25,62 @@ module ForwardingUnit(
         EXMEMRegWrite,
         EXMEMRegisterRD,
         MEMWBRegisterRD,
+        IDEXRegisterRD,
         IDEXRegisterRS,
+        IFIDRegisterRS,
+        IFIDRegisterRT,
         IDEXRegisterRT,
-        RSMuxControl,
-        RTMuxControl
+        IDEXRegWrite,
+        EXRSMuxControl,
+        EXRTMuxControl,
+        IDRSMuxControl,
+        IDRTMuxControl,
+        MEMRTMuxControl,
+        WBMemRead,
+        MEMMemWrite,
+        MEMWBRegisterRT,
+        EXMEMRegisterRT
     );
     
-    input MEMWBRegWrite, EXMEMRegWrite;
-    input [4:0] MEMWBRegisterRD, EXMEMRegisterRD, IDEXRegisterRS, IDEXRegisterRT;
+    input MEMWBRegWrite, EXMEMRegWrite, IDEXRegWrite, WBMemRead, MEMMemWrite;
+    input [4:0] MEMWBRegisterRD, EXMEMRegisterRD, IDEXRegisterRS, IFIDRegisterRS, IFIDRegisterRT, 
+    IDEXRegisterRD, IDEXRegisterRT, MEMWBRegisterRT, EXMEMRegisterRT;
     
-    output reg [1:0] RSMuxControl, RTMuxControl;
+    output reg [1:0] EXRSMuxControl, EXRTMuxControl, IDRSMuxControl, IDRTMuxControl;
+    output reg MEMRTMuxControl;
     
     always@(*) begin
         if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (EXMEMRegisterRD == IDEXRegisterRS))
-            RSMuxControl <= 2'b01;
+            EXRSMuxControl <= 2'b01;
         else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRS))
-            RSMuxControl <= 2'b10;
+            EXRSMuxControl <= 2'b10;
         else
-            RSMuxControl <= 2'b00;
+            EXRSMuxControl <= 2'b00;
         
         if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (EXMEMRegisterRD == IDEXRegisterRT))
-            RTMuxControl <= 2'b01;
+            EXRTMuxControl <= 2'b01;
         else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRT))
-            RTMuxControl <= 2'b10;
+            EXRTMuxControl <= 2'b10;
         else
-            RTMuxControl <= 2'b00;
+            EXRTMuxControl <= 2'b00;
+            
+        if(IDEXRegWrite && (IDEXRegisterRD != 0) && (IFIDRegisterRS == IDEXRegisterRD))
+            IDRSMuxControl <= 2'b01;
+        else if(IDEXRegWrite && (EXMEMRegisterRD != 0) && (IFIDRegisterRS == EXMEMRegisterRD))
+            IDRSMuxControl <= 2'b10;
+        else
+            IDRSMuxControl <= 2'b00;
+        
+        if(IDEXRegWrite && (IDEXRegisterRD != 0) && (IFIDRegisterRT == IDEXRegisterRD))
+            IDRTMuxControl <= 2'b01;
+        else if(IDEXRegWrite && (EXMEMRegisterRD != 0) && (IFIDRegisterRT == EXMEMRegisterRD))
+            IDRTMuxControl <= 2'b10;
+        else
+            IDRTMuxControl <= 2'b00;    
+        
+        if(WBMemRead && MEMMemWrite && (MEMWBRegisterRT == EXMEMRegisterRT))
+            MEMRTMuxControl <= 1;
+            
     end
     
 endmodule

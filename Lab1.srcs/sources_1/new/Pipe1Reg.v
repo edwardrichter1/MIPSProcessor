@@ -34,7 +34,7 @@ module Pipe1Reg(
     
     output reg [31:0] PCAddResultOut, InstructionOut;
     
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         if(Reset == 1) begin
             InstructionOut <= 32'd0;
             PCAddResultOut <= 32'd0;

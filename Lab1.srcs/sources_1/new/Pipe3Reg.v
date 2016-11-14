@@ -80,7 +80,7 @@ module Pipe3Reg(
     output reg [1:0] DataMemOut;
     
     
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         if(Reset == 1) begin
             PCAddResultOut <= 0;
             HiOut <= 0;

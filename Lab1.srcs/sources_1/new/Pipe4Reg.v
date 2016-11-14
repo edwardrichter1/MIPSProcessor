@@ -41,6 +41,7 @@ module Pipe4Reg(
         MoveLoIn,
         JumpLinkIn,
         DataMemReadIn,
+        MemReadIn,
         PCAddResultOut, // outputs 
         HiOut,
         LoOut,
@@ -58,22 +59,23 @@ module Pipe4Reg(
         MoveHiOut,
         MoveLoOut,
         JumpLinkOut,
-        DataMemReadOut
+        DataMemReadOut,
+        MemReadOut
     );
     
     input Clk, RegWriteIn, MemtoRegIn, SignExtendToRegIn, MovIn,
-    CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn, Reset;
+    CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn, Reset, MemReadIn;
     input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn,
     ReadData1In, ReadData2In, SignExtendRegisterIn, DataMemReadIn;
     input [4:0] WriteRegisterIn;
     
     output reg RegWriteOut, MemtoRegOut, SignExtendToRegOut, MovOut,
-    CmpSelOut, MoveHiOut, MoveLoOut, JumpLinkOut;
+    CmpSelOut, MoveHiOut, MoveLoOut, JumpLinkOut, MemReadOut;
     output reg [31:0] PCAddResultOut, HiOut, LoOut, ALUResultOut, MemWriteDataOut,
     ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut;
     output reg [4:0] WriteRegisterOut;
 
-    always@(posedge Clk) begin
+    always@(negedge Clk) begin
         if(Reset == 1) begin
             PCAddResultOut <= 0; 
             HiOut <= 0;
@@ -92,7 +94,8 @@ module Pipe4Reg(
             MoveHiOut <= 0;
             MoveLoOut <= 0;
             JumpLinkOut <= 0;
-            DataMemReadOut <= 0;        
+            DataMemReadOut <= 0;
+            MemReadOut <= 0;        
         end
         else begin
             PCAddResultOut <= PCAddResultIn; 
@@ -113,6 +116,7 @@ module Pipe4Reg(
             MoveLoOut <= MoveLoIn;
             JumpLinkOut <= JumpLinkIn;
             DataMemReadOut <= DataMemReadIn;
+            MemReadOut <= MemReadIn;
         end
     end
 

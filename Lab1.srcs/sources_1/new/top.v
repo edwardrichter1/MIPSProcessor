@@ -47,13 +47,13 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     MEMLo, MEMSignExtendRegisterOut, MEMPCAddResult, MEMMemWriteData, MEMDataMemRead;
 
     wire WBRegWrite, WBRegDst, WBMemtoReg, WBSignExtendToReg, WBCmpOut, WBMov, 
-    WBCmpSel, WBMoveHi, WBMoveLo, WBJumpLink;
+    WBCmpSel, WBMoveHi, WBMoveLo, WBJumpLink, WBMemRead;
     wire [4:0] WBWriteRegister;
     wire [31:0] WBReadData1, WBReadData2, WBPCAddResult, WBHi, WBLo, WBALUResult, WBMemWriteData,
     WBSignExtendRegisterOut, WBWriteData, WBDataMemRead;
 
-    wire IFIDReset, IFIDReadEnable, PCEnable, BubbleMuxControl;
-    wire [1:0] RTMuxControl, RSMuxControl;
+    wire IFIDReset, IFIDReadEnable, PCEnable, BubbleMuxControl, MEMRTMuxControl;
+    wire [1:0] EXRTMuxControl, EXRSMuxControl, IDRTMuxControl, IDRSMuxControl;
     wire [31:0] BubbleMuxOutput;
 
     InstructionFetchUnit IF (
@@ -83,12 +83,16 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     InstructionDecodeUnit ID (
         .Clk(Clk),
         .PCAddResultIn(IDPCAddResult), // inputs
-        .Instruction(IDInstruction),
+        .Instruction(BubbleMuxOutput),
         .WriteRegister(WBWriteRegister),
         .RegWriteIn(WBRegWrite | (WBCmpOut & WBMov)),
         .WriteData(WBWriteData),
-        .ReadData1(IDReadData1), // outputs
-        .ReadData2(IDReadData2),
+        .MuxInputRS(IDRSMuxControl),
+        .MuxInputRT(IDRTMuxControl),
+        .ALUResult(EXALUResult),
+        .Address(MEMALUResult),
+        .RD1Output(IDReadData1), // outputs
+        .RD2Output(IDReadData2),
         .SignExtendOut(IDSignExtendOut),
         .RT(IDRT),
         .RD(IDRD),
@@ -206,8 +210,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .JumpLinkIn(EXJumpLink),
         .MEMAddress(MEMALUResult),
         .WBWriteData(WBWriteData),
-        .RSMuxControl(RSMuxControl),
-        .RTMuxControl(RTMuxControl),
+        .RSMuxControl(EXRSMuxControl),
+        .RTMuxControl(EXRTMuxControl),
         .HiOut(EXHi), // outputs
         .LoOut(EXLo),
         .ALUResultOut(EXALUResult),
@@ -221,8 +225,20 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .MEMWBRegisterRD(WBWriteRegister),
         .IDEXRegisterRS(EXRS),
         .IDEXRegisterRT(EXRT),
-        .RSMuxControl(RSMuxControl),
-        .RTMuxControl(RTMuxControl)
+        .EXRSMuxControl(EXRSMuxControl),
+        .EXRTMuxControl(EXRTMuxControl),
+        .IDRSMuxControl(IDRSMuxControl),
+        .IDRTMuxControl(IDRTMuxControl),
+        .IDEXRegWrite(EXRegWrite),
+        .IFIDRegisterRS(IDInstruction[25:21]),
+        .IFIDRegisterRT(IDInstruction[20:16]),
+        .IDEXRegisterRD(EXRD),
+        .MEMRTMuxControl(MEMRTMuxControl),
+        .WBMemRead(WBMemRead),
+        .MEMMemWrite(MEMMemWrite),
+        .MEMWBRegisterRT(WBWriteRegister),
+        .EXMEMRegisterRT(MEMWriteRegister)
+        
     );
     HazardDetectionUnit HU(
         .IDEXMEMRead(EXMemRead),
@@ -292,6 +308,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .MemWrite(MEMMemWrite),
         .MemReadOut(MEMMemRead),
         .DataMemOut(MEMDataMem),
+        .WBWriteData(WBWriteData),
+        .WBSel(MEMRTMuxControl),
         .ReadData(MEMDataMemRead) // outputs
     );
     Pipe4Reg MEMtoWB (
@@ -315,6 +333,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .MoveLoIn(MEMMoveLo),
         .JumpLinkIn(MEMJumpLink),
         .DataMemReadIn(MEMDataMemRead),
+        .MemReadIn(MEMMemRead),
         .PCAddResultOut(WBPCAddResult), // outputs 
         .HiOut(WBHi),
         .LoOut(WBLo),
@@ -332,7 +351,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .MoveHiOut(WBMoveHi),
         .MoveLoOut(WBMoveLo),
         .JumpLinkOut(WBJumpLink),
-        .DataMemReadOut(WBDataMemRead)
+        .DataMemReadOut(WBDataMemRead),
+        .MemReadOut(WBMemRead)
     );
     WriteBackUnit WB (
         .PCAddResult(WBPCAddResult), // inputs

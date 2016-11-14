@@ -27,23 +27,32 @@ module MemoryUnit(
         MemWrite,
         MemReadOut,
         DataMemOut,
+        WBWriteData,
+        WBSel,
         ReadData // outputs
     );
     
-    input Clk, MemWrite, MemReadOut;
-    input [31:0] Address, WriteData;
+    input Clk, MemWrite, MemReadOut, WBSel;
+    input [31:0] Address, WriteData, WBWriteData;
     input [1:0] DataMemOut;
     
+    wire WDOutput;
     output [31:0] ReadData;
     
     DataMemory DM1(
          .Address(Address),
-         .WriteData(WriteData),
+         .WriteData(WDOutput),
          .Clk(Clk),
          .MemWrite(MemWrite),
          .MemRead(MemReadOut),
          .ReadData(ReadData),
          .DataMem(DataMemOut)
+     );
+     Mux32Bit2To1 WDMux(
+        .inA(WriteData),
+        .inB(WBWriteData),
+        .out(WDOutput),
+        .sel(WBSel)
      );
 
 endmodule
