@@ -96,8 +96,7 @@ module InstructionDecodeUnit(
         .out(Equal)
     );
     BranchControl BC(
-        .ReadData1(ReadData1),
-        .ReadData2(ReadData2),
+        .ReadData2(ReadData1),
         .Equal(Equal),
         .BranchControlIn(BranchControlIn),
         .BranchControlOut(BranchControlOut)

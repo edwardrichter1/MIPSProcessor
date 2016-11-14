@@ -38,8 +38,11 @@ module HazardDetectionUnit(
     output reg BubbleMuxControl, PCWrite, IFIDReadEnable, IFIDReset;
     
     always@(*) begin
-        if(Branch) begin
+        if(Branch == 1) begin
             IFIDReset <= 1;
+            BubbleMuxControl <= 0;
+            PCWrite <= 1;
+            IFIDReadEnable <= 1;
         end
         else if(IDEXMEMRead && (IDEXRegisterRT == IFIDRegisterRS) && (IDEXRegisterRT == IFIDRegisterRT) ) begin
             BubbleMuxControl <= 1;

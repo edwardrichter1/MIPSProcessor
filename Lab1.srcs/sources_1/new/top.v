@@ -68,11 +68,12 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .Jump(IDJump),
         .Branch(IDBranchControlOut),
         .BranchAddress(IDBranchOut),
-        .PCEnable(PCEnable)
+        .PCEnable(PCEnable),
+        .OldInstruction(IDInstruction)
     );
     Pipe1Reg IFtoID(
         .Clk(Clk), 
-        .Reset(PCReset),
+        .Reset(IFIDReset),
         .WriteEnable(1'b1),
         .InstructionIn(IFInstruction),
         .PCAddResultIn(IFPCAddResult),
@@ -226,10 +227,10 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     HazardDetectionUnit HU(
         .IDEXMEMRead(EXMemRead),
         .IDEXRegisterRT(EXRT),
-        .IFIDRegisterRS(IDRS),
-        .IFIDRegisterRT(IDRT),
-        .Branch(IDBranchControlOut),
-        .BubbleMuxControl(),
+        .IFIDRegisterRS(IDInstruction[25:21]),
+        .IFIDRegisterRT(IDInstruction[20:16]),
+        .Branch(IDBranchControlOut | IDJumpLink | IDJump),
+        .BubbleMuxControl(BubbleMuxControl),
         .PCWrite(PCEnable),
         .IFIDReadEnable(IFIDReadEnable),
         .IFIDReset(IFIDReset)

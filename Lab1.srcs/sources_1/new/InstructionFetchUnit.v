@@ -51,11 +51,12 @@ module InstructionFetchUnit(
         Branch, 
         BranchAddress, 
         ReadData1,
-        PCEnable
+        PCEnable,
+        OldInstruction
     );
 
     input Reset, Clk, JumpLink, JumpReg, Jump, Branch, PCEnable;
-    input [31:0] ReadData1, BranchAddress;
+    input [31:0] ReadData1, BranchAddress, OldInstruction;
     output [31:0] Instruction;
     output [31:0] PCResult;
     
@@ -81,7 +82,7 @@ module InstructionFetchUnit(
     Mux32Bit2To1 JumpMux(
         .out(JumpMuxOutput),
         .inA(BranchMuxOutput),
-        .inB({PCAddResult[31:28], Instruction[25:0], 2'b00}),
+        .inB({PCAddResult[31:28], OldInstruction[25:0], 2'b00}),
         .sel(Jump | JumpLink)
     );
     Mux32Bit2To1 JumpRegMux(

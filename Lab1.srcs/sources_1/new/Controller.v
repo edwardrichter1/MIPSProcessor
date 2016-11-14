@@ -444,7 +444,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                     BranchControlIn <= 3'b011;
                                     end
                                 else // bltz
-                                    BranchControlIn <= 3'b101;
+                                    BranchControlIn <= 3'b110;
                                 ALUSrc <= 0;
                                 RegWrite <= 0;
                                 Mov <= 0;

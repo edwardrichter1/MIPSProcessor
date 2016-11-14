@@ -165,17 +165,17 @@ module InstructionMemory(Address, Instruction);
 
 
         
-        /*InstructionReg[0] <= 32'b00100000000010000000000000001001;  // main:	addi	$t0, $zero, 9
-        InstructionReg[1] <= 32'b00111100000010010000000000000001;  // lui	$t1, 1
+        InstructionReg[0] <= 32'b00100000000010000000000000001001;  // main:	addi	$t0, $zero, 9
+        //InstructionReg[1] <= 32'b00111100000010010000000000000001;  // lui	$t1, 1
         InstructionReg[1] <= 32'b00100000000010010000000000001001;  // addi    $t1, $zero, 9
         InstructionReg[2] <= 32'b00100000000100000000000000000111;  // addi    $s0, $zero, 7
         InstructionReg[3] <= 32'b00010001000010010000000000000001;  // beq    $t0, $t1, move
-        InstructionReg[4] <= 32'b00100000000010100000000000001001;  // addi    $t2, $zero, 9
+        InstructionReg[4] <= 32'b00100000000010100000000000001010;  // addi    $t2, $zero, 10  if t2 == 10 then failed
         InstructionReg[5] <= 32'b00100000000010110000000000001001;  // move:    addi    $t3, $zero, 9
         InstructionReg[6] <= 32'b00100000000011001111111111111011;  // addi    $t4, $zero, -5
         InstructionReg[7] <= 32'b00010010000010001111111111111111;  // beq    $s0, $t0, move
         InstructionReg[8] <= 32'b00010110000010000000000000000001;  // bne    $s0, $t0, move2
-        InstructionReg[9] <= 32'b00100000000100010000000000010101;  // addi    $s1, $zero, 21
+        InstructionReg[9] <= 32'b00100000000100010000000000010101;  // addi    $s1, $zero, 21  if s1 == 21 then failed, s2 == 21 if worked
         InstructionReg[10] <= 32'b00100000000100100000000000010101; // move2:    addi    $s2, $zero, 21
         InstructionReg[11] <= 32'b00000101100000010000000000000010; // bgez    $t4, move3
         InstructionReg[12] <= 32'b00000100000000010000000000000001; // bgez    $zero, move3
@@ -266,14 +266,14 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[64] = 32'b01111100000100011010010000100000;
         InstructionReg[65] = 32'b01111100000100011010011000100000;*/
 
-        InstructionReg[0] = 32'b00100000000010000000000000000110; // addi $t0, $zero, 6
-        InstructionReg[1] = 32'b00100000000010010000000000000111; // addi $t1, $zero, 7
-        InstructionReg[2] = 32'b00000001000010010101000000100000; // add $t2, $t0, $t1
-        InstructionReg[3] = 32'b00000001010010010101100000100010; // sub $t3, $t2, $t1
+        //InstructionReg[0] = 32'b00100000000010000000000000000110; // addi $t0, $zero, 6
+        //InstructionReg[1] = 32'b00100000000010010000000000000111; // addi $t1, $zero, 7
+        //InstructionReg[2] = 32'b00000001000010010101000000100000; // add $t2, $t0, $t1
+        //InstructionReg[3] = 32'b00000001010010010101100000100010; // sub $t3, $t2, $t1
         //InstructionReg[4] = 32'd0;
         //InstructionReg[5] = 32'd0;
         //InstructionReg[6] = 32'd0;
-        InstructionReg[4] = 32'b01110001011010010110000000000010; // mul $t4, $t3, $t1
+        //InstructionReg[4] = 32'b01110001011010010110000000000010; // mul $t4, $t3, $t1
         /*InstructionReg[8] = 32'b00000001010010110110100000100100; // and $t5, $t2, $t3
         InstructionReg[9] = 32'b00110001001011100000000000101010; // andi $t6, $t1, 42
         InstructionReg[10] = 32'b00110101011011110000000000001100; // ori $t7, $t3, 12
