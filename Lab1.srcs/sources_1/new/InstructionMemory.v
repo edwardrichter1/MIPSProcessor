@@ -43,6 +43,7 @@ module InstructionMemory(Address, Instruction);
     output reg [31:0] Instruction;    // Instruction at memory location Address
     
     initial begin
+        $readmemh("Instruction_memory.txt", InstructionReg);
         //InstructionReg[0] <= 32'b00100000000100010000000000001010; // addi    $s1, $zero, 10
         //InstructionReg[1] <= 32'b00100000000100100000000000001011; // addi    $s2, $zero, 11
         //InstructionReg[2] <= 32'b00100000000100110000000000001100; // addi    $s3, $zero, 12
@@ -164,7 +165,7 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[54] <= 32'b00110100000000100000000000001010;*/ //->            ori    $v0, $zero, 10
 
 
-        
+        /*
         InstructionReg[0] <= 32'b00100000000010000000000000001001;  // main:	addi	$t0, $zero, 9
         //InstructionReg[1] <= 32'b00111100000010010000000000000001;  // lui	$t1, 1
         InstructionReg[1] <= 32'b00100000000010010000000000001001;  // addi    $t1, $zero, 9
@@ -197,7 +198,7 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[28] <= 32'b00100000000101001111111110010001; // addi    $s4, $zero, -111
         InstructionReg[29] <= 32'b00100000000101011111111110010000; // addi    $s5, $zero, -112
         InstructionReg[30] <= 32'b00100000000101101111111110001111; // jumpthang:    addi    $s6, $zero, -113
-        InstructionReg[31] <= 32'b00111100000010010000000000000001;  // lui	$t1, 1*/
+        InstructionReg[31] <= 32'b00111100000010010000000000000001;  // lui	$t1, 1
         InstructionReg[32] <= 32'b10101100000010000000000000011000; // sw $t1 24($zero)
         InstructionReg[33] <= 32'b10100000000011000000000000011101; // sb $t4 29($zero)
         InstructionReg[34] <= 32'b10100100000011000000000000100010; // sh $t4 34($zero)
@@ -205,7 +206,7 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[36] <= 32'b10000000000011110000000000011101; // lb $t7 29($zero) 
         InstructionReg[37] <= 32'b10000100000011010000000000100010; // lh $t5 34($zero)
         //InstructionReg[38] <= 32'b0;
-        InstructionReg[38] <= 32'b00000000000011010100000000100000; // add $t0, $zero, $t5
+        InstructionReg[38] <= 32'b00000000000011010100000000100000; // add $t0, $zero, $t5*/
         /*InstructionReg[0] = 32'b00100000000100000000000000000001;
         InstructionReg[1] = 32'b00100000000100010000000000000001;
         InstructionReg[2] = 32'b00000010000100011000000000100100;

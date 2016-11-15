@@ -49,6 +49,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
             MoveHi <= 0;
             MoveLo <= 0;
             BranchControlIn <= 3'b000;
+            MemtoReg <= 0;
         end
         else begin
             case(Instruction[31:26])
@@ -531,6 +532,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MoveHiLo <= 0;
                                 MoveHi <= 0;
                                 MoveLo <= 0;
+                                MemtoReg <= 0;
+                                SignExtendToReg <= 0;
                         end       
              6'b101011: begin //SW
                                 RegDst <= 0;

@@ -36,7 +36,7 @@ module MemoryUnit(
     input [31:0] Address, WriteData, WBWriteData;
     input [1:0] DataMemOut;
     
-    wire WDOutput;
+    wire [31: 0] WDOutput;
     output [31:0] ReadData;
     
     DataMemory DM1(

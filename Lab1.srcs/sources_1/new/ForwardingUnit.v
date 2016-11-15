@@ -80,6 +80,8 @@ module ForwardingUnit(
         
         if(WBMemRead && MEMMemWrite && (MEMWBRegisterRT == EXMEMRegisterRT))
             MEMRTMuxControl <= 1;
+        else
+            MEMRTMuxControl <= 0;
             
     end
     
