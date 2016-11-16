@@ -21,15 +21,15 @@ module SignExtendRegister(in, out, Size);
     always@(in, Size) begin
         if(Size == 1) begin
             if (in[15] == 0)
-                out = {16'b0, in[15:0]};
+                out <= {16'b0, in[15:0]};
             else
-                out = {32'd65535, in[15:0]};
+                out <= {32'd65535, in[15:0]};
         end
         else begin
             if (in[7] == 0)
-                out = {24'b0, in[7:0]};
+                out <= {24'b0, in[7:0]};
             else
-                out = {32'd16777215, in[7:0]};
+                out <= {32'd16777215, in[7:0]};
         end
     end
 

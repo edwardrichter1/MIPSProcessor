@@ -15,12 +15,12 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module top(S1RegVal, S2RegVal, CurrentPC, Clk, PCReset);
+module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     input Clk, PCReset;
     output [31:0] S1RegVal, S2RegVal;//, S3RegVal, S4RegVal;
     output wire [31:0] CurrentPC;
     
-    (* mark_debug = "true" *) wire [31:0] S3RegVal, S4RegVal;
+    output [31:0] S3RegVal, S4RegVal;
     wire [31:0] IFInstruction, IFPCAddResult;
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 

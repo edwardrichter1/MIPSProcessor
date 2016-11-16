@@ -50,13 +50,11 @@ module HazardDetectionUnit(
             IFIDReadEnable <= 0;
             IFIDReset <= 0;        
         end
-        else if(EXMEMRead & ((EXMEMRegisterRT == IFIDRegisterRS) | (EXMEMRegisterRT == IFIDRegisterRT))) begin
-            if(Branch != 3'd0) begin
-                BubbleMuxControl <= 1;
-                PCWrite <= 0;
-                IFIDReadEnable <= 0;
-                IFIDReset <= 0;
-            end
+        else if(Branch != 3'd0 & EXMEMRead & ((EXMEMRegisterRT == IFIDRegisterRS) | (EXMEMRegisterRT == IFIDRegisterRT))) begin
+            BubbleMuxControl <= 0;
+            PCWrite <= 0;
+            IFIDReadEnable <= 0;
+            IFIDReset <= 0;
         end
         else begin
             BubbleMuxControl <= 0;
