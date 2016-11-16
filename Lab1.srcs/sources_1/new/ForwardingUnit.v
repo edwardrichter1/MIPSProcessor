@@ -21,6 +21,7 @@
 
 
 module ForwardingUnit(
+        MEMWBJumpLink,
         IDEXJumpLink,
         EXMEMJumpLink,
         EXMEMMemRead,
@@ -45,43 +46,62 @@ module ForwardingUnit(
         EXMEMRegisterRT
     );
     
-    input IDEXJumpLink, EXMEMJumpLink, MEMWBRegWrite, EXMEMRegWrite, IDEXRegWrite, WBMemRead, MEMMemWrite, EXMEMMemRead;
+    input MEMWBJumpLink, IDEXJumpLink, EXMEMJumpLink, MEMWBRegWrite, EXMEMRegWrite, IDEXRegWrite, WBMemRead, MEMMemWrite, EXMEMMemRead;
     input [4:0] MEMWBRegisterRD, EXMEMRegisterRD, IDEXRegisterRS, IFIDRegisterRS, IFIDRegisterRT, 
     IDEXRegisterRD, IDEXRegisterRT, MEMWBRegisterRT, EXMEMRegisterRT;
     
-    output reg [1:0] EXRSMuxControl, EXRTMuxControl, /*IDRSMuxControl, IDRTMuxControl*/;
-    output reg [2:0] IDRSMuxControl, IDRTMuxControl; // adding this
+    output reg [1:0] EXRSMuxControl, EXRTMuxControl;
+    output reg [2:0] IDRSMuxControl, IDRTMuxControl;
     output reg MEMRTMuxControl;
     
     always@(*) begin
-        // ALU
+        // Forwarding to EX stage
         if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (EXMEMRegisterRD == IDEXRegisterRS) && ~EXMEMMemRead) // RS MEM
-            EXRSMuxControl <= 2'b01;
+            EXRSMuxControl <= 3'd1;
         else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRS)) // RS WB
-            EXRSMuxControl <= 2'b10;
+            EXRSMuxControl <= 3'd2;
         else
-            EXRSMuxControl <= 2'b00;
+            EXRSMuxControl <= 3'd0;
         
         if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (EXMEMRegisterRD == IDEXRegisterRT) && ~EXMEMMemRead) // RT MEM
-            EXRTMuxControl <= 2'b01;
+            EXRTMuxControl <= 3'd1;
         else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (MEMWBRegisterRD == IDEXRegisterRT)) // RT WB
-            EXRTMuxControl <= 2'b10;
+            EXRTMuxControl <= 3'd2;
         else
-            EXRTMuxControl <= 2'b00;
-        // Branch
-        if(IDEXRegWrite && (IDEXRegisterRD != 0) && ((IFIDRegisterRS == IDEXRegisterRD) | (IDEXJumpLink) ) ) // RS EX
-            IDRSMuxControl <= 2'b01;
-        else if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && ((IFIDRegisterRS == EXMEMRegisterRD) | (EXMEMJumpLink)) && ~EXMEMMemRead)// RS MEM
-            IDRSMuxControl <= 2'b10;
-        else
-            IDRSMuxControl <= 2'b00;
+            EXRTMuxControl <= 3'd0;
         
-        if(IDEXRegWrite && (IDEXRegisterRD != 0) && ((IFIDRegisterRT == IDEXRegisterRD) | (IDEXJumpLink)) ) // RT EX
-            IDRTMuxControl <= 2'b01;
-        else if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && ((IFIDRegisterRT == EXMEMRegisterRD) | (EXMEMJumpLink)) && ~EXMEMMemRead)  // RT MEM
-            IDRTMuxControl <= 2'b10;
+        // MEMWBJumpLink
+        // Forwarding to ID stage
+        if(IDEXRegWrite && (IDEXRegisterRD != 0) && (IFIDRegisterRS == IDEXRegisterRD) & ~IDEXJumpLink) // ALUResult RS EX
+            IDRSMuxControl <= 3'd1;
+        else if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (IFIDRegisterRS == EXMEMRegisterRD) && ~EXMEMMemRead & ~EXMEMJumpLink)// Address RS EX
+            IDRSMuxControl <= 3'd2;
+        else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (IFIDRegisterRS == MEMWBRegisterRD) & ~MEMWBJumpLink) // WriteData RS WB
+            IDRSMuxControl <= 3'd3;
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && IDEXJumpLink ) // PCAddResult RS EX
+            IDRSMuxControl <= 3'd4;
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && EXMEMJumpLink ) // PCAddResult RS MEM
+            IDRSMuxControl <= 3'd5;
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && MEMWBJumpLink ) // PCAddResult RS WB
+            IDRSMuxControl <= 3'd6;
         else
-            IDRTMuxControl <= 2'b00;    
+            IDRSMuxControl <= 3'd0;
+        
+        if(IDEXRegWrite && (IDEXRegisterRD != 0) && (IFIDRegisterRT == IDEXRegisterRD) ) // ALUResult RT EX
+            IDRTMuxControl <= 3'd1;
+        else if(EXMEMRegWrite && (EXMEMRegisterRD != 0) && (IFIDRegisterRT == EXMEMRegisterRD) && ~EXMEMMemRead)// Address RT EX
+            IDRTMuxControl <= 3'd2;
+        else if(MEMWBRegWrite && (IDEXRegisterRD != 0) && (IFIDRegisterRT == MEMWBRegisterRD)) // WriteData RT WB
+            IDRTMuxControl <= 3'd3;
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && IDEXJumpLink ) // PCAddResult RT EX
+            IDRTMuxControl <= 3'd4;
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && EXMEMJumpLink ) // PCAddResult RT MEM
+            IDRTMuxControl <= 3'd5;
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && MEMWBJumpLink ) // PCAddResult RT WB
+            IDRTMuxControl <= 3'd6;
+        else
+            IDRTMuxControl <= 3'd0;
+
         // lw -> sw forwarding from wb to memory
         if(WBMemRead && MEMMemWrite && (MEMWBRegisterRT == EXMEMRegisterRT))
             MEMRTMuxControl <= 1;

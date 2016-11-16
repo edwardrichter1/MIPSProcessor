@@ -53,14 +53,14 @@ module ALU32Bit(ALUControl, ShiftAmount, A, B, ALUResult, ALUResultHi, Zero);
 	reg Zero;
 	reg signed [63:0] ALUResult64;
     
-    always @ (ALUControl, A, B, ShiftAmount) begin
+    always @ (ALUResult64, ALUControl, A, B, ShiftAmount) begin
         case (ALUControl)
             5'b00000  : ALUResult <= A + B; 
             5'b00001  : ALUResult <= A - B;
             5'b00010  : begin
-                            ALUResult64 = $signed(A) * $signed(B);
-                            ALUResultHi = ALUResult64[63:32];
-                            ALUResult = ALUResult64[31:0];
+                            ALUResult64 <= $signed(A) * $signed(B);
+                            ALUResultHi <= ALUResult64[63:32];
+                            ALUResult <= ALUResult64[31:0];
                        end
             5'b00011  : ALUResult <= B << A;
             5'b00100  : ALUResult <= B >> A;
@@ -87,9 +87,9 @@ module ALU32Bit(ALUControl, ShiftAmount, A, B, ALUResult, ALUResultHi, Zero);
                       end
             5'b10000  : ALUResult <= $signed(B) >>> A;
             5'b10001  : begin
-                          ALUResult64 = A * B;
-                          ALUResultHi = ALUResult64[63:32];
-                          ALUResult = ALUResult64[31:0];
+                          ALUResult64 <= A * B;
+                          ALUResultHi <= ALUResult64[63:32];
+                          ALUResult <= ALUResult64[31:0];
                      end
         endcase
     end

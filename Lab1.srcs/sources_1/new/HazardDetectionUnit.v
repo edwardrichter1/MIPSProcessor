@@ -21,8 +21,6 @@
 
 
 module HazardDetectionUnit(
-        MEMWBMEMRead, // testing
-        MEMWBRegisterRT, // testing
         IFIDMEMRead,
         IFIDMEMWrite,
         EXMEMRead,
@@ -41,14 +39,11 @@ module HazardDetectionUnit(
     input EXMEMRead, IDEXMEMRead, IFIDMEMRead, IFIDMEMWrite;
     input [4:0] IDEXRegisterRT, EXMEMRegisterRT, IFIDRegisterRS, IFIDRegisterRT;
     input [2:0] Branch;
-    
-    input MEMWBMEMRead; // testin this out
-    input [4:0] MEMWBRegisterRT;
-    
-    
+        
     output reg BubbleMuxControl, PCWrite, IFIDReadEnable, IFIDReset;
     
-    always@(/*EXMEMRead, EXMEMRegisterRT, IDEXRegisterRT, IFIDRegisterRS, IFIDRegisterRT, IDEXMEMRead, Branch, IFIDMEMRead, IFIDMEMWrite*/*) begin
+    always@(*) begin
+        BubbleMuxControl <= 0;
         if( (IDEXMEMRead & ~(IFIDMEMRead | IFIDMEMWrite)) & ((IDEXRegisterRT == IFIDRegisterRS) | (IDEXRegisterRT == IFIDRegisterRT)) ) begin
             BubbleMuxControl <= 1;
             PCWrite <= 0;
@@ -60,16 +55,8 @@ module HazardDetectionUnit(
                 BubbleMuxControl <= 1;
                 PCWrite <= 0;
                 IFIDReadEnable <= 0;
-                IFIDReset <= 0;                
+                IFIDReset <= 0;
             end
-        end
-        else if(MEMWBMEMRead & ((MEMWBRegisterRT == IFIDRegisterRS) | (MEMWBRegisterRT == IFIDRegisterRT))) begin // testing this out
-            if(Branch != 3'd0) begin
-                BubbleMuxControl <= 1;
-                PCWrite <= 0;
-                IFIDReadEnable <= 0;
-                IFIDReset <= 0;                
-            end        
         end
         else begin
             BubbleMuxControl <= 0;

@@ -36,6 +36,7 @@ module BranchControl(ReadData2, Equal, BranchControlIn, BranchControlOut);
             3'b100: BranchControlOut <= ~ReadData2[31] & ~Equal; // bgtz
             3'b101: BranchControlOut <= ReadData2[31] | Equal; // blez
             3'b110: BranchControlOut <= ReadData2[31]; // bltz
+            default: BranchControlOut <= 0;
         endcase
     end
 endmodule

@@ -26,11 +26,9 @@ module WriteBackUnit(
         Lo,
         ALUResult,
         DataMemRead,
-        WriteRegister,
         ReadData1,
         ReadData2,
         SignExtendRegisterOut,
-        RegWriteOut,
         MemtoRegOut,
         SignExtendToRegOut,
         MovOut, 
@@ -43,9 +41,8 @@ module WriteBackUnit(
     );
     input [31:0] PCAddResult, Hi, Lo, ALUResult, DataMemRead, ReadData1,
     ReadData2, SignExtendRegisterOut;
-    input RegWriteOut, MemtoRegOut, SignExtendToRegOut, MovOut,
+    input MemtoRegOut, SignExtendToRegOut, MovOut,
     CmpSelOut, MoveHiOut, MoveLoOut, JumpLinkOut;
-    input [4:0] WriteRegister; // don't think this is necessary
     
     output [31:0] WriteData;
     output CmpOut;

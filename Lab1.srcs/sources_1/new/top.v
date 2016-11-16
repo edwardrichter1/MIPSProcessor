@@ -15,11 +15,12 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
+module top(S1RegVal, S2RegVal, CurrentPC, Clk, PCReset);
     input Clk, PCReset;
-    output [31:0] S1RegVal, S2RegVal, S3RegVal, S4RegVal;
+    output [31:0] S1RegVal, S2RegVal;//, S3RegVal, S4RegVal;
     output wire [31:0] CurrentPC;
-
+    
+    (* mark_debug = "true" *) wire [31:0] S3RegVal, S4RegVal;
     wire [31:0] IFInstruction, IFPCAddResult;
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
@@ -27,7 +28,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     IDCmpOut, IDMov, IDCmpSel, IDHiLoOp, IDHiDst, IDLoDst, IDMoveHiLo, IDMoveHi, IDMoveLo, IDJumpLink,
     IDJump, IDJumpReg, IDBranchControlOut;
     wire [1:0] IDDataMem;
-    wire [4:0] IDALUControl, IDRT, IDRS, IDRD;
+    wire [4:0] IDALUControl;
     wire [31:0] IDInstruction, IDPCAddResult, IDReadData1, IDReadData2, IDSignExtendOut, 
     IDSignExtendRegisterOut, IDBranchOut;
 
@@ -53,7 +54,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     WBSignExtendRegisterOut, WBWriteData, WBDataMemRead;
 
     wire IFIDReset, IFIDReadEnable, PCEnable, BubbleMuxControl, MEMRTMuxControl;
-    wire [1:0] EXRTMuxControl, EXRSMuxControl, IDRTMuxControl, IDRSMuxControl;
+    wire [1:0] EXRTMuxControl, EXRSMuxControl;
+    wire [2:0] IDRTMuxControl, IDRSMuxControl;
     wire [31:0] BubbleMuxOutput;
     wire [2:0] IDBranchControlSignal;
 
@@ -92,12 +94,13 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .MuxInputRT(IDRTMuxControl),
         .ALUResult(EXALUResult),
         .Address(MEMALUResult),
+        .WriteBackData(WBWriteData),
+        .EXPCAddResult(EXPCAddResult),
+        .MEMPCAddResult(MEMPCAddResult),
+        .WBPCAddResult(WBPCAddResult),
         .RD1Output(IDReadData1), // outputs
         .RD2Output(IDReadData2),
         .SignExtendOut(IDSignExtendOut),
-        .RT(IDRT),
-        .RD(IDRD),
-        .RS(IDRS),
         .SignExtendRegisterOut(IDSignExtendRegisterOut),
         .RegDst(IDRegDst),
         .RegWriteOut(IDRegWrite),
@@ -222,6 +225,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     );
     ForwardingUnit FU (
         .IDEXJumpLink(EXJumpLink),
+        .MEMWBJumpLink(WBJumpLink),
         .EXMEMJumpLink(MEMJumpLink),
         .MEMWBRegWrite(WBRegWrite),
         .EXMEMMemRead(MEMMemRead),
@@ -237,7 +241,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .IDEXRegWrite(EXRegWrite),
         .IFIDRegisterRS(IDInstruction[25:21]),
         .IFIDRegisterRT(IDInstruction[20:16]),
-        .IDEXRegisterRD(EXWriteRegister), // changed from EXRD
+        .IDEXRegisterRD(EXWriteRegister),
         .MEMRTMuxControl(MEMRTMuxControl),
         .WBMemRead(WBMemRead),
         .MEMMemWrite(MEMMemWrite),
@@ -246,8 +250,6 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         
     );
     HazardDetectionUnit HU(
-        .MEMWBMEMRead(WBMemRead), // testing
-        .MEMWBRegisterRT(WBWriteRegister), // testing
         .IFIDMEMRead(IDMemRead),
         .IFIDMEMWrite(IDMemWrite),
         .EXMEMRead(MEMMemRead),
@@ -256,7 +258,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .IDEXRegisterRT(EXRT),
         .IFIDRegisterRS(IDInstruction[25:21]),
         .IFIDRegisterRT(IDInstruction[20:16]),
-        .Branch(IDBranchControlSignal), // put 3 bit branch control signal here
+        .Branch(IDBranchControlSignal),
         .BubbleMuxControl(BubbleMuxControl),
         .PCWrite(PCEnable),
         .IFIDReadEnable(IFIDReadEnable),
@@ -265,7 +267,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     Mux32Bit2To1 BubbleMux(
         .out(BubbleMuxOutput),
         .inA(IDInstruction),
-        .inB(32'b0),
+        .inB(32'd0),
         .sel(BubbleMuxControl)
     );
     Pipe3Reg EXtoM (

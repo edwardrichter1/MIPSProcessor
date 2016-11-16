@@ -48,12 +48,12 @@ module InstructionMemory(Address, Instruction);
         //InstructionReg[2] = 32'h2004000a;    //            addi    $a0, $zero, 10        
         //InstructionReg[2] = 32'h8c900008;    //            lw    $s0, 8($a0)
         //InstructionReg[3] = 32'h02008820;    //            add    $s1, $s0, $zero        
-        //$readmemh("Instruction_memory.txt", InstructionReg);
+        $readmemh("Instruction_memory.txt", InstructionReg);
         //InstructionReg[0] <= 32'b00100000000100010000000000001010; // addi    $s1, $zero, 10
         //InstructionReg[1] <= 32'b00100000000100100000000000001011; // addi    $s2, $zero, 11
         //InstructionReg[2] <= 32'b00100000000100110000000000001100; // addi    $s3, $zero, 12
         //InstructionReg[3] <= 32'b00100000000101000000000000001101; // addi    $s4, $zero, 13
-        InstructionReg[0] = 32'h34040000;	//	main:		ori	$a0, $zero, 0
+        /*InstructionReg[0] = 32'h34040000;	//	main:		ori	$a0, $zero, 0
         InstructionReg[1] = 32'h08000004;    //            j    start
         InstructionReg[2] = 32'h2004000a;    //            addi    $a0, $zero, 10
         InstructionReg[3] = 32'h2004000a;    //            addi    $a0, $zero, 10
@@ -110,7 +110,7 @@ module InstructionMemory(Address, Instruction);
         InstructionReg[54] = 32'h08000037;    //            j    error
         InstructionReg[55] = 32'h00000008;    //    error:        jr    $zero
         InstructionReg[56] = 32'h3402000a;    //            ori    $v0, $zero, 10
-        InstructionReg[57] = 32'h00000000;    //            nop
+        InstructionReg[57] = 32'h00000000;    //            nop*/
 
 
         /*InstructionReg[0] <= 32'b00110100000001000000000000000000; //->	main:		ori	$a0, $zero, 0

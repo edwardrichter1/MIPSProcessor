@@ -53,8 +53,9 @@ module ExecuteUnit(
     input Clk, RegDstIn, ALUSrcIn, HiWriteEnableIn, LoWriteEnableIn,
     HiLoOpIn, HiDstIn, LoDstIn, MoveHiLoIn, JumpLinkIn;
     input [31:0]  ReadData1In, ReadData2In, SignExtendIn, MEMAddress, WBWriteData;
-    input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount, WriteRegisterOut;
+    input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
     input [1:0] RTMuxControl, RSMuxControl;
+    output [4:0] WriteRegisterOut;
     output [31:0] HiOut, LoOut, ALUResultOut, MemWriteDataOut;
     
     wire Zero;
@@ -82,12 +83,6 @@ module ExecuteUnit(
         .inB(SignExtendIn),
         .sel(ALUSrcIn)
     );
-    /*Mux32Bit2To1 ForwardingInputMux( // just trying this
-        .out(ForwardingInputMuxOutput), // need to define this
-        .inA(),
-        .inB(),
-        .sel(JumpLinkIn)
-    );*/
     ALU32Bit ALU(
         .ALUControl(ALUControlIn),
         .ShiftAmount(ShiftAmount),

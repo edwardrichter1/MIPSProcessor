@@ -38,6 +38,7 @@ module Mux32Bit7To1(
     input [2:0] sel;
 
     always@(*) begin
+        out <= 32'd0;
         if(sel == 3'd0)
             out <= inA;
         else if(sel == 3'd1)

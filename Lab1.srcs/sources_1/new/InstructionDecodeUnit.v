@@ -25,13 +25,14 @@ module InstructionDecodeUnit(
         MuxInputRS,
         MuxInputRT,
         ALUResult,
-        Address,        
+        Address,
+        WriteBackData,
+        EXPCAddResult,
+        MEMPCAddResult,
+        WBPCAddResult,        
         RD1Output, // outputs
         RD2Output,
         SignExtendOut,
-        RT,
-        RD,
-        RS,
         SignExtendRegisterOut,
         RegDst,
         RegWriteOut,
@@ -64,13 +65,14 @@ module InstructionDecodeUnit(
         S4    
     );
     input Clk, RegWriteIn;
-    input [31:0] PCAddResultIn, Instruction, WriteData, Address, ALUResult;
+    input [31:0] PCAddResultIn, Instruction, WriteData, Address, ALUResult,
+    WriteBackData, EXPCAddResult, MEMPCAddResult, WBPCAddResult;
     input [4:0] WriteRegister;
     output [31:0] RD1Output, RD2Output, SignExtendOut,
     SignExtendRegisterOut, BranchOut, S1, S2, S3, S4;
-    input /*[1:0]*/[2:0] MuxInputRS, MuxInputRT;
+    input [2:0] MuxInputRS, MuxInputRT;
     
-    output [4:0] RT, RD, RS, ALUControl;
+    output [4:0] ALUControl;
     output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
     MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, HiLoOp,
@@ -95,28 +97,14 @@ module InstructionDecodeUnit(
         .S3(S3),
         .S4(S4)        
     );
-    /*Mux32Bit3To1 RD1(
-        .inA(ReadData1),
-        .inB(ALUResult),
-        .inC(Address),
-        .out(RD1Output),
-        .sel(MuxInputRS)
-    );
-    Mux32Bit3To1 RD2(
-        .inA(ReadData2),
-        .inB(ALUResult),
-        .inC(Address),
-        .out(RD2Output),
-        .sel(MuxInputRT)
-    );*/
     Mux32Bit7To1 RD1(
         .inA(ReadData1), 
         .inB(ALUResult), 
         .inC(Address), 
-        .inD(), // WriteBackData 
-        .inE(), // EXPCAddResult
-        .inF(), // MEMPCAddResult
-        .inG(), // WBPCAddResult
+        .inD(WriteBackData), // WriteBackData 
+        .inE(EXPCAddResult), // EXPCAddResult
+        .inF(MEMPCAddResult), // MEMPCAddResult
+        .inG(WBPCAddResult), // WBPCAddResult
         .sel(MuxInputRS), // Forwarding unit will send this
         .out(RD1Output)
     );
@@ -124,11 +112,11 @@ module InstructionDecodeUnit(
         .inA(ReadData2), 
         .inB(ALUResult), 
         .inC(Address), 
-        .inD(), // WriteBackData
-        .inE(), // EXPCAddResult
-        .inF(), // MEMPCAddResult
-        .inG(), // WBPCAddResult
-        .sel(MuxInputRS), // Forwarding unit will send this
+        .inD(WriteBackData), // WriteBackData
+        .inE(EXPCAddResult), // EXPCAddResult
+        .inF(MEMPCAddResult), // MEMPCAddResult
+        .inG(WBPCAddResult), // WBPCAddResult
+        .sel(MuxInputRT), // Forwarding unit will send this
         .out(RD2Output)
     );
     Comp32 RegComp(

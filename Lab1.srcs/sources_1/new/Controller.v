@@ -36,6 +36,12 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
     
     always@(Instruction) begin // Datapath Controller
         RegWrite <= 0;
+        DataMem <= 0;
+        Jump <= 0;
+        JumpReg <= 0;
+        BranchControlIn <= 3'b000;
+        ForceZero <= 0;
+        HiLoOp <= 0;
         if (Instruction == 32'd0) begin // nop
             Mov <= 0;
             RegWrite <= 0;
@@ -50,6 +56,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
             MoveLo <= 0;
             BranchControlIn <= 3'b000;
             MemtoReg <= 0;
+            HiLoOp = 1;
         end
         else begin
             case(Instruction[31:26])
@@ -210,9 +217,9 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                     LoWriteEnable <= 1;
                                     SignExtendToReg <= 0;
                                     ALUControl <= 5'b00010;
-                                    HiDst = 1;
-                                    LoDst = 1;
-                                    HiLoOp = 1;    
+                                    HiDst <= 1;
+                                    LoDst <= 1;
+                                    HiLoOp <= 1;    
                                     MoveHiLo <= 0; 
                                     MoveHi <= 0;
                                     MoveLo <= 0;                       
