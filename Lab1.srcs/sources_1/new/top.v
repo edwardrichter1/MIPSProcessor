@@ -55,6 +55,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     wire IFIDReset, IFIDReadEnable, PCEnable, BubbleMuxControl, MEMRTMuxControl;
     wire [1:0] EXRTMuxControl, EXRSMuxControl, IDRTMuxControl, IDRSMuxControl;
     wire [31:0] BubbleMuxOutput;
+    wire [2:0] IDBranchControlSignal;
 
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
@@ -121,6 +122,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .Jump(IDJump),
         .JumpReg(IDJumpReg),
         .BranchControlOut(IDBranchControlOut),
+        .BranchControlIn(IDBranchControlSignal),
         .BranchOut(IDBranchOut),
         .S1(S1RegVal),
         .S2(S2RegVal),
@@ -219,7 +221,10 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .WriteRegisterOut(EXWriteRegister)
     );
     ForwardingUnit FU (
+        .IDEXJumpLink(EXJumpLink),
+        .EXMEMJumpLink(MEMJumpLink),
         .MEMWBRegWrite(WBRegWrite),
+        .EXMEMMemRead(MEMMemRead),
         .EXMEMRegWrite(MEMRegWrite),
         .EXMEMRegisterRD(MEMWriteRegister),
         .MEMWBRegisterRD(WBWriteRegister),
@@ -232,7 +237,7 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .IDEXRegWrite(EXRegWrite),
         .IFIDRegisterRS(IDInstruction[25:21]),
         .IFIDRegisterRT(IDInstruction[20:16]),
-        .IDEXRegisterRD(EXRD),
+        .IDEXRegisterRD(EXWriteRegister), // changed from EXRD
         .MEMRTMuxControl(MEMRTMuxControl),
         .WBMemRead(WBMemRead),
         .MEMMemWrite(MEMMemWrite),
@@ -241,11 +246,17 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         
     );
     HazardDetectionUnit HU(
+        .MEMWBMEMRead(WBMemRead), // testing
+        .MEMWBRegisterRT(WBWriteRegister), // testing
+        .IFIDMEMRead(IDMemRead),
+        .IFIDMEMWrite(IDMemWrite),
+        .EXMEMRead(MEMMemRead),
+        .EXMEMRegisterRT(MEMWriteRegister),
         .IDEXMEMRead(EXMemRead),
         .IDEXRegisterRT(EXRT),
         .IFIDRegisterRS(IDInstruction[25:21]),
         .IFIDRegisterRT(IDInstruction[20:16]),
-        .Branch(IDBranchControlOut | IDJumpLink | IDJump),
+        .Branch(IDBranchControlSignal), // put 3 bit branch control signal here
         .BubbleMuxControl(BubbleMuxControl),
         .PCWrite(PCEnable),
         .IFIDReadEnable(IFIDReadEnable),

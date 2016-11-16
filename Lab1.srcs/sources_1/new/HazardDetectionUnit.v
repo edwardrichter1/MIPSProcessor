@@ -21,6 +21,12 @@
 
 
 module HazardDetectionUnit(
+        MEMWBMEMRead, // testing
+        MEMWBRegisterRT, // testing
+        IFIDMEMRead,
+        IFIDMEMWrite,
+        EXMEMRead,
+        EXMEMRegisterRT,
         IDEXMEMRead,
         IDEXRegisterRT,
         IFIDRegisterRS,
@@ -32,23 +38,38 @@ module HazardDetectionUnit(
         IFIDReset
     );
     
-    input IDEXMEMRead, Branch;
-    input [4:0] IDEXRegisterRT, IFIDRegisterRS, IFIDRegisterRT;
+    input EXMEMRead, IDEXMEMRead, IFIDMEMRead, IFIDMEMWrite;
+    input [4:0] IDEXRegisterRT, EXMEMRegisterRT, IFIDRegisterRS, IFIDRegisterRT;
+    input [2:0] Branch;
+    
+    input MEMWBMEMRead; // testin this out
+    input [4:0] MEMWBRegisterRT;
+    
     
     output reg BubbleMuxControl, PCWrite, IFIDReadEnable, IFIDReset;
     
-    always@(*) begin
-        if(Branch == 1) begin
-            IFIDReset <= 1;
-            BubbleMuxControl <= 0;
-            PCWrite <= 1;
-            IFIDReadEnable <= 1;
-        end
-        else if(IDEXMEMRead && ((IDEXRegisterRT == IFIDRegisterRS) || (IDEXRegisterRT == IFIDRegisterRT)) ) begin
+    always@(/*EXMEMRead, EXMEMRegisterRT, IDEXRegisterRT, IFIDRegisterRS, IFIDRegisterRT, IDEXMEMRead, Branch, IFIDMEMRead, IFIDMEMWrite*/*) begin
+        if( (IDEXMEMRead & ~(IFIDMEMRead | IFIDMEMWrite)) & ((IDEXRegisterRT == IFIDRegisterRS) | (IDEXRegisterRT == IFIDRegisterRT)) ) begin
             BubbleMuxControl <= 1;
             PCWrite <= 0;
             IFIDReadEnable <= 0;
-            IFIDReset <= 0;
+            IFIDReset <= 0;        
+        end
+        else if(EXMEMRead & ((EXMEMRegisterRT == IFIDRegisterRS) | (EXMEMRegisterRT == IFIDRegisterRT))) begin
+            if(Branch != 3'd0) begin
+                BubbleMuxControl <= 1;
+                PCWrite <= 0;
+                IFIDReadEnable <= 0;
+                IFIDReset <= 0;                
+            end
+        end
+        else if(MEMWBMEMRead & ((MEMWBRegisterRT == IFIDRegisterRS) | (MEMWBRegisterRT == IFIDRegisterRT))) begin // testing this out
+            if(Branch != 3'd0) begin
+                BubbleMuxControl <= 1;
+                PCWrite <= 0;
+                IFIDReadEnable <= 0;
+                IFIDReset <= 0;                
+            end        
         end
         else begin
             BubbleMuxControl <= 0;

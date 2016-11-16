@@ -82,6 +82,12 @@ module ExecuteUnit(
         .inB(SignExtendIn),
         .sel(ALUSrcIn)
     );
+    /*Mux32Bit2To1 ForwardingInputMux( // just trying this
+        .out(ForwardingInputMuxOutput), // need to define this
+        .inA(),
+        .inB(),
+        .sel(JumpLinkIn)
+    );*/
     ALU32Bit ALU(
         .ALUControl(ALUControlIn),
         .ShiftAmount(ShiftAmount),

@@ -48,7 +48,7 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData, DataMem)
     reg [31:0] memory [1023:0];
     
     initial begin
-        memory[0] = 32'd100;
+        /*memory[0] = 32'd100;
         memory[1] = 32'd200;
         memory[2] = 32'd300;
         memory[3] = 32'd400;
@@ -59,10 +59,16 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData, DataMem)
         memory[8] = 32'd900;
         memory[9] = 32'd1000;
         memory[10] = 32'd1100;
-        memory[11] = 32'd1200;
+        memory[11] = 32'd1200;*/
+        memory[0] = 32'h0;
+        memory[1] = 32'h1;
+        memory[2] = 32'h2;
+        memory[3] = 32'h3;
+        memory[4] = 32'h4;
+        memory[5] = -32'h1;
     end
     
-    always@(posedge Clk) begin // write process
+    always@(negedge Clk) begin // write process
         case(DataMem)
             2'b00: begin
                         if (MemWrite == 1) begin

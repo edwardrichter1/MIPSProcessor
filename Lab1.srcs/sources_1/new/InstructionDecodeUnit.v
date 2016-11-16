@@ -56,6 +56,7 @@ module InstructionDecodeUnit(
         JumpReg,
         Jump,
         BranchControlOut,
+        BranchControlIn,
         BranchOut,
         S1,
         S2,
@@ -67,11 +68,14 @@ module InstructionDecodeUnit(
     input [4:0] WriteRegister;
     output [31:0] RD1Output, RD2Output, SignExtendOut,
     SignExtendRegisterOut, BranchOut, S1, S2, S3, S4;
+    input /*[1:0]*/[2:0] MuxInputRS, MuxInputRT;
+    
     output [4:0] RT, RD, RS, ALUControl;
-    output [1:0] DataMem, MuxInputRS, MuxInputRT;
+    output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
     MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, HiLoOp,
     HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, JumpLink, BranchControlOut, Jump, JumpReg;
+    output [2:0] BranchControlIn;
     
     wire Shift16, ForceZero, Jump, JumpReg, JumpLink, Size, BranchControlOut, Equal;
     wire [31:0] BranchMuxOutput, ReadData1, ReadData2, JumpMuxOutput, SignExtendOut, PCAddResultIn, RD1Output, RD2Output;
@@ -91,7 +95,7 @@ module InstructionDecodeUnit(
         .S3(S3),
         .S4(S4)        
     );
-    Mux32Bit3To1 RD1(
+    /*Mux32Bit3To1 RD1(
         .inA(ReadData1),
         .inB(ALUResult),
         .inC(Address),
@@ -104,6 +108,28 @@ module InstructionDecodeUnit(
         .inC(Address),
         .out(RD2Output),
         .sel(MuxInputRT)
+    );*/
+    Mux32Bit7To1 RD1(
+        .inA(ReadData1), 
+        .inB(ALUResult), 
+        .inC(Address), 
+        .inD(), // WriteBackData 
+        .inE(), // EXPCAddResult
+        .inF(), // MEMPCAddResult
+        .inG(), // WBPCAddResult
+        .sel(MuxInputRS), // Forwarding unit will send this
+        .out(RD1Output)
+    );
+    Mux32Bit7To1 RD2(
+        .inA(ReadData2), 
+        .inB(ALUResult), 
+        .inC(Address), 
+        .inD(), // WriteBackData
+        .inE(), // EXPCAddResult
+        .inF(), // MEMPCAddResult
+        .inG(), // WBPCAddResult
+        .sel(MuxInputRS), // Forwarding unit will send this
+        .out(RD2Output)
     );
     Comp32 RegComp(
         .in1(RD1Output),
