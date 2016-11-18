@@ -4,6 +4,9 @@
 // Overall percent effort of each team meber: 
 // Eddie Richter: 50%
 // Hugo Valdez: 50%
+// Number of pipeline stages: 5
+// Branch Decision: ID
+// Branch Resolution: ID
 // 
 // ECE369 - Computer Architecture
 // Laboratory 3 (PostLab)
@@ -17,7 +20,7 @@
 
 module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
     input Clk, PCReset;
-    output [31:0] S1RegVal, S2RegVal;//, S3RegVal, S4RegVal;
+    output [31:0] S1RegVal, S2RegVal;
     output wire [31:0] CurrentPC;
     
     output [31:0] S3RegVal, S4RegVal;
