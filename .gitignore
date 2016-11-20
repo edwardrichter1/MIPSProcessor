@@ -1,6 +1,0 @@
-# Will ignore everything but the source directory and git ignore
-!.gitignore
-!.md
-/*
-/*/
-!/Lab1.srcs/
