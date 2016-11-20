@@ -1,0 +1,7 @@
+# Will ignore everything but the source directory and git ignore, and vbsme
+/*
+/*/
+!/Lab1.srcs/
+!.gitignore
+!.md
+!.s
