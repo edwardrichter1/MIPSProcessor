@@ -1,7 +1,11 @@
-#  Team Members:    
+#  Team Members:   
+#  		Eddie Richter
+#  		Hugo Valdez 
 #  % Effort    :   
+# 		Eddie Richter : 50%
+# 		Hugo Valdez : 50%
 #
-# ECE369A,  
+# ECE369A  
 # 
 
 ########################################################################################################################
