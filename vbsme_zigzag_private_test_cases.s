@@ -942,6 +942,7 @@ vbsme:
    addi     $t1, $zero, 0                 # j = 0
    addi     $t2, $zero, 0                 # k = 0
    addi     $t3, $zero, 0                 # l = 0
+   addi 	$t7, $zero, 0 				  # direction = 0
    jal      SAD                           # calculating the initial SAD
 
    move     $s1, $s0                      # SupserSAD = SAD
@@ -952,7 +953,7 @@ vbsme:
    or 		$t4, $t4, $t2 				  # setting $t4 = 0 if $t4 = 0 and $t2 = 0
    beq 		$t4, $zero, done
 
-main_loop:                                # while  i < xDiff or j < yDiff:
+main_loop:                             # while  i < xDiff or j < yDiff:
    beq      $t0, $zero, top_or_right      # if at the top (i == 0)
    beq      $t1, $s7, top_or_right        # if at the right (j == yDiff)
    beq      $t1, $zero, bottom_or_left    # if at left (j == 0)
