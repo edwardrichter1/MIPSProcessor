@@ -49,7 +49,18 @@
 // to allow for data multiplexing and setup time.
 ////////////////////////////////////////////////////////////////////////////////
 
-module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegWrite, Clk, ReadData1, ReadData2, S1, S2, S3, S4);
+module RegisterFile(
+    ReadRegister1, 
+    ReadRegister2, 
+    WriteRegister, 
+    WriteData, 
+    RegWrite, 
+    Clk, 
+    ReadData1, 
+    ReadData2, 
+    V0, 
+    V1
+);
     
     input RegWrite, Clk;
 	input[4:0] ReadRegister1, ReadRegister2, WriteRegister;
@@ -57,13 +68,16 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 	
 	output reg [31:0] ReadData1;
 	output reg [31:0] ReadData2;
-	output reg [31:0] S1, S2;
-	(* mark_debug = "true" *)output reg [31:0] S3, S4;
+	output reg [31:0] V0, V1;
 	
+	reg [5:0] i;
 	reg [31:0] RegFile [31:0]; // contents of the reg file
 	
 	initial begin // initializing $0 register equal to zero
-	   RegFile[0] <= 0;
+	   for(i = 6'd0; i < 6'd32; i = i + 1) begin
+	       RegFile[i] <= 32'd0;
+	   end 
+	   //RegFile[0] <= 0;
 	end
 	
 	always@(posedge Clk) begin // write procedure
@@ -78,10 +92,8 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
     end
     
 	always@(*)begin
-       S1 <= RegFile[5'd17];
-       S2 <= RegFile[5'd18];
-       S3 <= RegFile[5'd19];
-       S4 <= RegFile[5'd20];
+       V0 <= RegFile[5'd2];
+       V1 <= RegFile[5'd3];
     end
     
 endmodule

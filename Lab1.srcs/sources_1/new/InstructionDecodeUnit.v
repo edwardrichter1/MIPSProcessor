@@ -59,17 +59,15 @@ module InstructionDecodeUnit(
         BranchControlOut,
         BranchControlIn,
         BranchOut,
-        S1,
-        S2,
-        S3,
-        S4    
+        V0,
+        V1
     );
     input Clk, RegWriteIn;
     input [31:0] PCAddResultIn, Instruction, WriteData, Address, ALUResult,
     WriteBackData, EXPCAddResult, MEMPCAddResult, WBPCAddResult;
     input [4:0] WriteRegister;
     output [31:0] RD1Output, RD2Output, SignExtendOut,
-    SignExtendRegisterOut, BranchOut, S1, S2, S3, S4;
+    SignExtendRegisterOut, BranchOut, V0, V1;
     input [2:0] MuxInputRS, MuxInputRT;
     
     output [4:0] ALUControl;
@@ -92,10 +90,8 @@ module InstructionDecodeUnit(
         .Clk(Clk),
         .ReadData1(ReadData1),
         .ReadData2(ReadData2),
-        .S1(S1),
-        .S2(S2),
-        .S3(S3),
-        .S4(S4)        
+        .V0(V0),
+        .V1(V1)   
     );
     Mux32Bit7To1 RD1(
         .inA(ReadData1), 

@@ -18,12 +18,11 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
+module top(V0RegVal, V1RegVal, Clk, PCReset);
     input Clk, PCReset;
-    output [31:0] S1RegVal, S2RegVal;
-    output wire [31:0] CurrentPC;
+    output [31:0] V0RegVal, V1RegVal;
+    wire [31:0] CurrentPC;
     
-    output [31:0] S3RegVal, S4RegVal;
     wire [31:0] IFInstruction, IFPCAddResult;
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
@@ -130,10 +129,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .BranchControlOut(IDBranchControlOut),
         .BranchControlIn(IDBranchControlSignal),
         .BranchOut(IDBranchOut),
-        .S1(S1RegVal),
-        .S2(S2RegVal),
-        .S3(S3RegVal),
-        .S4(S4RegVal)
+        .V0(V0RegVal),
+        .V1(V1RegVal)
     );
     Pipe2Reg IDtoEx (
         .Clk(Clk),
@@ -249,8 +246,8 @@ module top(S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC, Clk, PCReset);
         .WBMemRead(WBMemRead),
         .MEMMemWrite(MEMMemWrite),
         .MEMWBRegisterRT(WBWriteRegister),
-        .EXMEMRegisterRT(MEMWriteRegister)
-        
+        .EXMEMRegisterRT(MEMWriteRegister),
+        .IFIDJumpReg(IDJumpReg)
     );
     HazardDetectionUnit HU(
         .IFIDMEMRead(IDMemRead),

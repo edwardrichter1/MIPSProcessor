@@ -88,7 +88,7 @@ module WriteBackUnit(
     Mux32Bit2To1 JumpLinkMux(
         .out(WriteData),
         .inA(LoMuxOutput),
-        .inB(DataMemRead),
+        .inB(PCAddResult),
         .sel(JumpLinkOut)
     );
 endmodule

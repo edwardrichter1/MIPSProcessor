@@ -22,14 +22,11 @@
 module top_tb();
 
     reg Clk, PCReset;
-    wire [31:0] S1RegVal, S2RegVal, S3RegVal, S4RegVal, CurrentPC;
+    wire [31:0] V0RegVal, V1RegVal;
 	
 	top u0(
-        .S1RegVal(S1RegVal),
-        .S2RegVal(S2RegVal),
-        .S3RegVal(S3RegVal),
-        .S4RegVal(S4RegVal),
-        .CurrentPC(CurrentPC),
+        .V0RegVal(V0RegVal),
+        .V1RegVal(V1RegVal),
         .PCReset(PCReset),
         .Clk(Clk)
 	);

@@ -43,12 +43,13 @@ module ForwardingUnit(
         WBMemRead,
         MEMMemWrite,
         MEMWBRegisterRT,
-        EXMEMRegisterRT
+        EXMEMRegisterRT,
+        IFIDJumpReg
     );
     
     input MEMWBJumpLink, IDEXJumpLink, EXMEMJumpLink, MEMWBRegWrite, EXMEMRegWrite, IDEXRegWrite, WBMemRead, MEMMemWrite, EXMEMMemRead;
     input [4:0] MEMWBRegisterRD, EXMEMRegisterRD, IDEXRegisterRS, IFIDRegisterRS, IFIDRegisterRT, 
-    IDEXRegisterRD, IDEXRegisterRT, MEMWBRegisterRT, EXMEMRegisterRT;
+    IDEXRegisterRD, IDEXRegisterRT, MEMWBRegisterRT, EXMEMRegisterRT, IFIDJumpReg;
     
     output reg [1:0] EXRSMuxControl, EXRTMuxControl;
     output reg [2:0] IDRSMuxControl, IDRTMuxControl;
@@ -78,11 +79,11 @@ module ForwardingUnit(
             IDRSMuxControl <= 3'd2;
         else if(MEMWBRegWrite && (MEMWBRegisterRD != 0) && (IFIDRegisterRS == MEMWBRegisterRD) & ~MEMWBJumpLink) // WriteData RS WB
             IDRSMuxControl <= 3'd3;
-        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && IDEXJumpLink ) // PCAddResult RS EX
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && IDEXJumpLink && IFIDJumpReg) // PCAddResult RS EX
             IDRSMuxControl <= 3'd4;
-        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && EXMEMJumpLink ) // PCAddResult RS MEM
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && EXMEMJumpLink && IFIDJumpReg ) // PCAddResult RS MEM
             IDRSMuxControl <= 3'd5;
-        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && MEMWBJumpLink ) // PCAddResult RS WB
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && MEMWBJumpLink && IFIDJumpReg ) // PCAddResult RS WB
             IDRSMuxControl <= 3'd6;
         else
             IDRSMuxControl <= 3'd0;
@@ -93,11 +94,11 @@ module ForwardingUnit(
             IDRTMuxControl <= 3'd2;
         else if(MEMWBRegWrite && (IDEXRegisterRD != 0) && (IFIDRegisterRT == MEMWBRegisterRD)) // WriteData RT WB
             IDRTMuxControl <= 3'd3;
-        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && IDEXJumpLink ) // PCAddResult RT EX
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && IDEXJumpLink && IFIDJumpReg ) // PCAddResult RT EX
             IDRTMuxControl <= 3'd4;
-        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && EXMEMJumpLink ) // PCAddResult RT MEM
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && EXMEMJumpLink && IFIDJumpReg ) // PCAddResult RT MEM
             IDRTMuxControl <= 3'd5;
-        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && MEMWBJumpLink ) // PCAddResult RT WB
+        else if(IDEXRegWrite && (IDEXRegisterRD != 0) && MEMWBJumpLink && IFIDJumpReg ) // PCAddResult RT WB
             IDRTMuxControl <= 3'd6;
         else
             IDRTMuxControl <= 3'd0;
