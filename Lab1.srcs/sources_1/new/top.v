@@ -18,10 +18,12 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module top(V0RegVal, V1RegVal, Clk, PCReset);
-    input Clk, PCReset;
-    output [31:0] V0RegVal, V1RegVal;
-    wire [31:0] CurrentPC;
+module top(out7, en_out, Clk, PCReset, CDReset);
+    input Clk, PCReset, CDReset;
+    output [6:0] out7;
+    output [7:0] en_out;
+    wire ClkOut;
+    wire [31:0] CurrentPC, V1RegVal, V0RegVal;
     
     wire [31:0] IFInstruction, IFPCAddResult;
     
@@ -66,7 +68,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .PCResult(CurrentPC),
         .PCAddResult(IFPCAddResult),
         .Reset(PCReset),
-        .Clk(Clk),
+        .Clk(ClkOut),
         .ReadData1(IDReadData1),
         .JumpLink(IDJumpLink),
         .JumpReg(IDJumpReg),
@@ -77,7 +79,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .OldInstruction(IDInstruction)
     );
     Pipe1Reg IFtoID(
-        .Clk(Clk), 
+        .Clk(ClkOut), 
         .Reset(IFIDReset),
         .WriteEnable(1'b1),
         .InstructionIn(IFInstruction),
@@ -86,7 +88,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .PCAddResultOut(IDPCAddResult)
     );
     InstructionDecodeUnit ID (
-        .Clk(Clk),
+        .Clk(ClkOut),
         .PCAddResultIn(IDPCAddResult), // inputs
         .Instruction(BubbleMuxOutput),
         .WriteRegister(WBWriteRegister),
@@ -133,7 +135,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .V1(V1RegVal)
     );
     Pipe2Reg IDtoEx (
-        .Clk(Clk),
+        .Clk(ClkOut),
         .Reset(PCReset),
         .PCAddResultIn(IDPCAddResult), // inputs
         .ReadData1In(IDReadData1),
@@ -195,7 +197,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .JumpLinkOut(EXJumpLink)
     );
     ExecuteUnit EX (
-        .Clk(Clk), // inputs 
+        .Clk(ClkOut), // inputs 
         .ShiftAmount(EXShiftAmount),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
@@ -271,7 +273,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .sel(BubbleMuxControl)
     );
     Pipe3Reg EXtoM (
-        .Clk(Clk), // inputs 
+        .Clk(ClkOut), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(EXPCAddResult),
         .MemWriteDataIn(EXMemWriteData),
@@ -315,7 +317,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .JumpLinkOut(MEMJumpLink)
     );
     MemoryUnit MEM (
-        .Clk(Clk), // inputs 
+        .Clk(ClkOut), // inputs 
         .Address(MEMALUResult),
         .WriteData(MEMMemWriteData),
         .MemWrite(MEMMemWrite),
@@ -326,7 +328,7 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .ReadData(MEMDataMemRead) // outputs
     );
     Pipe4Reg MEMtoWB (
-        .Clk(Clk), // inputs 
+        .Clk(ClkOut), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(MEMPCAddResult), 
         .HiIn(MEMHi),
@@ -386,5 +388,18 @@ module top(V0RegVal, V1RegVal, Clk, PCReset);
         .WriteData(WBWriteData), // outputs
         .CmpOut(WBCmpOut)
     );
+    // FOR FPGA USE
+    Two4DigitDisplay sevenSeg(
+        .Clk(Clk), 
+        .NumberA(V0RegVal), 
+        .NumberB(V1RegVal), 
+        .out7(out7), 
+        .en_out(en_out)
+     );
+     ClkDiv CD(
+        .Clk(Clk), 
+        .Rst(CDReset), 
+        .ClkOut(ClkOut)
+     );
    
 endmodule
