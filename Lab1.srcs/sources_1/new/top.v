@@ -22,9 +22,9 @@ module top(out7, en_out, Clk, PCReset, CDReset);
     input Clk, PCReset, CDReset;
     output [6:0] out7;
     output [7:0] en_out;
+    
     wire ClkOut;
     wire [31:0] CurrentPC, V1RegVal, V0RegVal;
-    
     wire [31:0] IFInstruction, IFPCAddResult;
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
@@ -68,7 +68,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .PCResult(CurrentPC),
         .PCAddResult(IFPCAddResult),
         .Reset(PCReset),
-        .Clk(ClkOut),
+        .Clk(Clk),
         .ReadData1(IDReadData1),
         .JumpLink(IDJumpLink),
         .JumpReg(IDJumpReg),
@@ -79,7 +79,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .OldInstruction(IDInstruction)
     );
     Pipe1Reg IFtoID(
-        .Clk(ClkOut), 
+        .Clk(Clk), 
         .Reset(IFIDReset),
         .WriteEnable(1'b1),
         .InstructionIn(IFInstruction),
@@ -88,7 +88,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .PCAddResultOut(IDPCAddResult)
     );
     InstructionDecodeUnit ID (
-        .Clk(ClkOut),
+        .Clk(Clk),
         .PCAddResultIn(IDPCAddResult), // inputs
         .Instruction(BubbleMuxOutput),
         .WriteRegister(WBWriteRegister),
@@ -135,7 +135,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .V1(V1RegVal)
     );
     Pipe2Reg IDtoEx (
-        .Clk(ClkOut),
+        .Clk(Clk),
         .Reset(PCReset),
         .PCAddResultIn(IDPCAddResult), // inputs
         .ReadData1In(IDReadData1),
@@ -197,7 +197,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .JumpLinkOut(EXJumpLink)
     );
     ExecuteUnit EX (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .ShiftAmount(EXShiftAmount),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
@@ -273,7 +273,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .sel(BubbleMuxControl)
     );
     Pipe3Reg EXtoM (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(EXPCAddResult),
         .MemWriteDataIn(EXMemWriteData),
@@ -317,7 +317,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .JumpLinkOut(MEMJumpLink)
     );
     MemoryUnit MEM (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .Address(MEMALUResult),
         .WriteData(MEMMemWriteData),
         .MemWrite(MEMMemWrite),
@@ -328,7 +328,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .ReadData(MEMDataMemRead) // outputs
     );
     Pipe4Reg MEMtoWB (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(MEMPCAddResult), 
         .HiIn(MEMHi),

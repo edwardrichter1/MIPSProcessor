@@ -4,7 +4,7 @@ module ClkDiv(Clk, Rst, ClkOut);
     input Clk, Rst;
     output reg ClkOut;
     //parameter DivVal1 = 50,000,000; // 1 s
-    parameter DivVal1 = 100000;// 5; // 100 MHz -> 10 MHz
+    parameter DivVal1 = 5; // 100 MHz -> 10 MHz
     reg [25:0] DivCnt;
     reg ClkInt;
     
