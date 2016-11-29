@@ -1,49 +1,36 @@
 `timescale 1ns / 1ps
-////////////////////////////////////////////////////////////////////////////////
-// Team Members:
-// Overall percent effort of each team meber: 
-// Eddie Richter: 50%
-// Hugo Valdez: 50%
-// Number of pipeline stages: 5
-// Branch Decision: ID
-// Branch Resolution: ID
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
 // 
-// ECE369 - Computer Architecture
-// Laboratory 3 (PostLab)
-// Module - top.v
-// Description - Top module for MIPS processor.
-// INPUTS:-
-//
-// OUTPUTS:- 
-// FUNCTIONALITY:-
-////////////////////////////////////////////////////////////////////////////////
+// Create Date: 11/28/2016 04:15:42 PM
+// Design Name: 
+// Module Name: MipsDatapath
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
 
-module top(out7, en_out, Clk, PCReset, CDReset);
-    input Clk, PCReset, CDReset;
-    output [6:0] out7;
-    output [7:0] en_out;
-    wire ClkOut;
-    wire [31:0] Output1, Output2;
 
-    MipsDatapath mdp(
-        .Clk(ClkOut),
-        .PCReset(PCReset),
-        .V0RegVal(Output1),
-        .V1RegVal(Output2)
+module MipsDatapath(
+        Clk,
+        PCReset,
+        V0RegVal,
+        V1RegVal,
     );
-    Two4DigitDisplay sevenSeg(
-        .Clk(Clk), 
-        .NumberA(Output2), 
-        .NumberB(Output1), 
-        .out7(out7), 
-        .en_out(en_out)
-     );
-     ClkDiv CD(
-        .Clk(Clk), 
-        .Rst(CDReset), 
-        .ClkOut(ClkOut)
-     );
-    /*wire [31:0] CurrentPC, V1RegVal, V0RegVal;
+    
+    input Clk, PCReset;
+    output [31:0] V0RegVal, V1RegVal;
+    
+    wire [31:0] CurrentPC;//, V1RegVal, V0RegVal;
     wire [31:0] IFInstruction, IFPCAddResult;
     
     wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
@@ -81,13 +68,13 @@ module top(out7, en_out, Clk, PCReset, CDReset);
     wire [2:0] IDRTMuxControl, IDRSMuxControl;
     wire [31:0] BubbleMuxOutput;
     wire [2:0] IDBranchControlSignal;
-
+    
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
         .PCResult(CurrentPC),
         .PCAddResult(IFPCAddResult),
         .Reset(PCReset),
-        .Clk(ClkOut),
+        .Clk(Clk),
         .ReadData1(IDReadData1),
         .JumpLink(IDJumpLink),
         .JumpReg(IDJumpReg),
@@ -98,7 +85,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .OldInstruction(IDInstruction)
     );
     Pipe1Reg IFtoID(
-        .Clk(ClkOut), 
+        .Clk(Clk), 
         .Reset(IFIDReset),
         .WriteEnable(1'b1),
         .InstructionIn(IFInstruction),
@@ -107,7 +94,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .PCAddResultOut(IDPCAddResult)
     );
     InstructionDecodeUnit ID (
-        .Clk(ClkOut),
+        .Clk(Clk),
         .PCAddResultIn(IDPCAddResult), // inputs
         .Instruction(BubbleMuxOutput),
         .WriteRegister(WBWriteRegister),
@@ -154,7 +141,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .V1(V1RegVal)
     );
     Pipe2Reg IDtoEx (
-        .Clk(ClkOut),
+        .Clk(Clk),
         .Reset(PCReset),
         .PCAddResultIn(IDPCAddResult), // inputs
         .ReadData1In(IDReadData1),
@@ -216,7 +203,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .JumpLinkOut(EXJumpLink)
     );
     ExecuteUnit EX (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .ShiftAmount(EXShiftAmount),
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
@@ -292,7 +279,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .sel(BubbleMuxControl)
     );
     Pipe3Reg EXtoM (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(EXPCAddResult),
         .MemWriteDataIn(EXMemWriteData),
@@ -336,7 +323,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .JumpLinkOut(MEMJumpLink)
     );
     MemoryUnit MEM (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .Address(MEMALUResult),
         .WriteData(MEMMemWriteData),
         .MemWrite(MEMMemWrite),
@@ -347,7 +334,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .ReadData(MEMDataMemRead) // outputs
     );
     Pipe4Reg MEMtoWB (
-        .Clk(ClkOut), // inputs 
+        .Clk(Clk), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(MEMPCAddResult), 
         .HiIn(MEMHi),
@@ -406,6 +393,7 @@ module top(out7, en_out, Clk, PCReset, CDReset);
         .JumpLinkOut(WBJumpLink),
         .WriteData(WBWriteData), // outputs
         .CmpOut(WBCmpOut)
-    );*/
-   
+    );
+    
+    
 endmodule

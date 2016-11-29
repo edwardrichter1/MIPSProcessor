@@ -24,6 +24,7 @@ module top_tb();
     reg Clk, PCReset, CDReset;
     wire [6:0] out7;
     wire [7:0] en_out; 
+    //wire [31:0] CurrentPC;
     //wire [31:0] V0RegVal, V1RegVal;
 	
 	top u0(
@@ -31,6 +32,7 @@ module top_tb();
         //.V0RegVal(V0RegVal),
         //.V1RegVal(V1RegVal),
         .en_out(en_out),
+        //.CurrentPC(CurrentPC),
         .PCReset(PCReset),
         .CDReset(CDReset),
         .Clk(Clk)
