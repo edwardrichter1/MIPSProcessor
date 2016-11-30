@@ -43,7 +43,7 @@ module InstructionMemory(Address, Instruction);
     output reg [31:0] Instruction;    // Instruction at memory location Address
     
     initial begin
-        //$readmemh("Instruction_memory.txt", InstructionReg);
+        $readmemh("Instruction_memory.txt", memory);
         /*memory[0] = 32'b00100000000010000000000000000001;	//	main:		addi	$t0, $zero, 1
         memory[1] = 32'b00100000000010010000000000000010;    //            addi    $t1, $zero, 2
         memory[2] = 32'b00001100000000000000000000001000;    //            jal    end_thang
@@ -122,7 +122,7 @@ module InstructionMemory(Address, Instruction);
         memory[56] = 32'h3402000a;    //            ori    $v0, $zero, 10        
         memory[57] = 32'h00000000;    //            nop*/
 
-        memory[0] = 32'b00100011101111011111111111111100;	//	main:			addi	$sp, $sp, -4
+        /*memory[0] = 32'b00100011101111011111111111111100;	//	main:			addi	$sp, $sp, -4
         memory[1] = 32'b10101111101111110000000000000000;    //                sw    $ra, 0($sp)
         memory[2] = 32'b00110100000001000000000000000000;	//				ori	$a0, $zero, 0
         memory[3] = 32'b00110100000001010000000000010000;    //                ori    $a1, $zero, 16
