@@ -214,14 +214,9 @@ vbsme:
    # insert your code here
    addi     $sp, $sp, -4                  # Make space on stack
    sw       $ra, 0($sp)                   # Save return address
-   addi     $s0, $zero, 0                 # initializing
    addi     $s1, $zero, 32767             # SuperSad = largest 32 bit signed number
    addi     $s6, $zero, 60                # xDiff = 60
    addi     $s7, $zero, 60                # yDiff = 60
-   addi     $t0, $zero, 0                 # i = 0
-   addi     $t1, $zero, 0                 # j = 0
-   addi     $t2, $zero, 0                 # k = 0
-   addi     $t3, $zero, 0                 # l = 0
    jal      SAD                           # calculating the initial SAD
 
    move     $s1, $s0                      # SupserSAD = SAD
