@@ -47,9 +47,9 @@ module ForwardingUnit(
         IFIDJumpReg
     );
     
-    input MEMWBJumpLink, IDEXJumpLink, EXMEMJumpLink, MEMWBRegWrite, EXMEMRegWrite, IDEXRegWrite, WBMemRead, MEMMemWrite, EXMEMMemRead;
+    input MEMWBJumpLink, IDEXJumpLink, EXMEMJumpLink, MEMWBRegWrite, IFIDJumpReg, EXMEMRegWrite, IDEXRegWrite, WBMemRead, MEMMemWrite, EXMEMMemRead;
     input [4:0] MEMWBRegisterRD, EXMEMRegisterRD, IDEXRegisterRS, IFIDRegisterRS, IFIDRegisterRT, 
-    IDEXRegisterRD, IDEXRegisterRT, MEMWBRegisterRT, EXMEMRegisterRT, IFIDJumpReg;
+    IDEXRegisterRD, IDEXRegisterRT, MEMWBRegisterRT, EXMEMRegisterRT;
     
     output reg [1:0] EXRSMuxControl, EXRTMuxControl;
     output reg [2:0] IDRSMuxControl, IDRTMuxControl;

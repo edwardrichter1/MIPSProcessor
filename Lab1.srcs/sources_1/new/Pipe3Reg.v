@@ -24,8 +24,6 @@ module Pipe3Reg(
         Clk, // inputs 
         Reset,
         PCAddResultIn,
-        HiIn,
-        LoIn,
         ALUResultIn,
         MemWriteDataIn,
         WriteRegisterIn,
@@ -39,13 +37,9 @@ module Pipe3Reg(
         SignExtendToRegIn,
         MovIn, 
         CmpSelIn,
-        MoveHiIn,
-        MoveLoIn,
         DataMemIn,
         JumpLinkIn,
         PCAddResultOut, // outputs
-        HiOut,
-        LoOut,
         ALUResultOut,
         MemWriteDataOut,
         WriteRegisterOut,
@@ -59,22 +53,20 @@ module Pipe3Reg(
         SignExtendToRegOut,
         MovOut, 
         CmpSelOut,
-        MoveHiOut,
-        MoveLoOut,
         DataMemOut,
         JumpLinkOut
     );
     
     input Clk, RegWriteIn, MemWriteIn, MemReadIn, MemtoRegIn,
-    SignExtendToRegIn, MovIn, CmpSelIn, MoveHiIn, MoveLoIn, JumpLinkIn, Reset;
-    input [31:0] PCAddResultIn, HiIn, LoIn, ALUResultIn, MemWriteDataIn, 
+    SignExtendToRegIn, MovIn, CmpSelIn,JumpLinkIn, Reset;
+    input [31:0] PCAddResultIn,ALUResultIn, MemWriteDataIn, 
     ReadData1In, ReadData2In, SignExtendRegisterIn;
     input [4:0] WriteRegisterIn;
     input [1:0] DataMemIn;
     
     output reg RegWriteOut, MemWriteOut, MemReadOut, MemtoRegOut,
-    SignExtendToRegOut, MovOut, CmpSelOut, MoveHiOut, MoveLoOut, JumpLinkOut;
-    output reg [31:0] PCAddResultOut, HiOut, LoOut, ALUResultOut, MemWriteDataOut, 
+    SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut;
+    output reg [31:0] PCAddResultOut, ALUResultOut, MemWriteDataOut, 
     ReadData1Out, ReadData2Out, SignExtendRegisterOut;
     output reg [4:0] WriteRegisterOut;
     output reg [1:0] DataMemOut;
@@ -83,8 +75,6 @@ module Pipe3Reg(
     always@(negedge Clk) begin
         if(Reset == 1) begin
             PCAddResultOut <= 0;
-            HiOut <= 0;
-            LoOut <= 0;
             ALUResultOut <= 0;
             MemWriteDataOut <= 0;
             WriteRegisterOut <= 0;
@@ -98,15 +88,11 @@ module Pipe3Reg(
             SignExtendToRegOut <= 0;
             MovOut <= 0;
             CmpSelOut <= 0;
-            MoveHiOut <= 0;
-            MoveLoOut <= 0;
             DataMemOut <= 0;
             JumpLinkOut <= 0;
         end
         else begin
             PCAddResultOut <= PCAddResultIn;
-            HiOut <= HiIn;
-            LoOut <= LoIn;
             ALUResultOut <= ALUResultIn;
             MemWriteDataOut <= MemWriteDataIn;
             WriteRegisterOut <= WriteRegisterIn;
@@ -120,8 +106,6 @@ module Pipe3Reg(
             SignExtendToRegOut <= SignExtendToRegIn;
             MovOut <= MovIn;
             CmpSelOut <= CmpSelIn;
-            MoveHiOut <= MoveHiIn;
-            MoveLoOut <= MoveLoIn;
             DataMemOut <= DataMemIn;
             JumpLinkOut <= JumpLinkIn;
         end

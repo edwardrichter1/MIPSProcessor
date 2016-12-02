@@ -40,17 +40,15 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module ALU32Bit(ALUControl, ShiftAmount, A, B, ALUResult, ALUResultHi, Zero);
+module ALU32Bit(ALUControl, ShiftAmount, A, B, ALUResult);
 
 	input [4:0] ALUControl; // control bits for ALU operation
 	input [31:0] A, B;	    // inputs
 	input [4:0] ShiftAmount; // the amount that we should shift
 
-	output [31:0] ALUResult, ALUResultHi;	// answer 
-	output Zero;	    // Zero=1 if ALUResult == 0
+	output [31:0] ALUResult;	// answer 
 	
-	reg signed [31:0] ALUResult, ALUResultHi; // making it a register
-	reg Zero;
+	reg signed [31:0] ALUResult; // making it a register
 	reg signed [63:0] ALUResult64;
     
     always @ (ALUResult64, ALUControl, A, B, ShiftAmount) begin
@@ -59,7 +57,6 @@ module ALU32Bit(ALUControl, ShiftAmount, A, B, ALUResult, ALUResultHi, Zero);
             5'b00001  : ALUResult <= A - B;
             5'b00010  : begin
                             ALUResult64 <= $signed(A) * $signed(B);
-                            ALUResultHi <= ALUResult64[63:32];
                             ALUResult <= ALUResult64[31:0];
                        end
             5'b00011  : ALUResult <= B << A;
@@ -88,17 +85,9 @@ module ALU32Bit(ALUControl, ShiftAmount, A, B, ALUResult, ALUResultHi, Zero);
             5'b10000  : ALUResult <= $signed(B) >>> A;
             5'b10001  : begin
                           ALUResult64 <= A * B;
-                          ALUResultHi <= ALUResult64[63:32];
                           ALUResult <= ALUResult64[31:0];
                      end
         endcase
-    end
-    
-    always@(*) begin
-        if(ALUResult == 0)
-            Zero <= 1'b1;
-        else
-            Zero <= 1'b0;
     end
 
 endmodule

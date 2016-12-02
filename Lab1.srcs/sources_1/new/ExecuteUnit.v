@@ -21,7 +21,6 @@
 
 
 module ExecuteUnit(
-        Clk, // inputs
         ShiftAmount, 
         ReadData1In,
         ReadData2In,
@@ -32,36 +31,25 @@ module ExecuteUnit(
         RegDstIn,
         ALUSrcIn,
         ALUControlIn,
-        HiWriteEnableIn, 
-        LoWriteEnableIn,
-        HiLoOpIn,
-        HiDstIn,
-        LoDstIn,
-        MoveHiLoIn,
         JumpLinkIn,
         MEMAddress,
         WBWriteData,
         RSMuxControl,
         RTMuxControl,
-        HiOut, // outputs
-        LoOut,
-        ALUResultOut,
+        ALUResultOut, // outputs
         MemWriteDataOut,
         WriteRegisterOut
     );
     
-    input Clk, RegDstIn, ALUSrcIn, HiWriteEnableIn, LoWriteEnableIn,
-    HiLoOpIn, HiDstIn, LoDstIn, MoveHiLoIn, JumpLinkIn;
+    input RegDstIn, ALUSrcIn, JumpLinkIn;
     input [31:0]  ReadData1In, ReadData2In, SignExtendIn, MEMAddress, WBWriteData;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
     input [1:0] RTMuxControl, RSMuxControl;
     output [4:0] WriteRegisterOut;
-    output [31:0] HiOut, LoOut, ALUResultOut, MemWriteDataOut;
+    output [31:0] ALUResultOut, MemWriteDataOut;
     
-    wire Zero;
     wire [4:0] RDRTMuxOutput; 
-    wire [31:0] RSMuxOutput, MemWriteDataOut, ALUResultHi, ALUResultOut, HiALUorOPMuxOutput,
-    LoALUorOPMuxOutput, HiOut, LoOut, HiResult, LoResult, ALUSrcMuxOutput, MoveLoMuxOutput, MoveHiMuxOutput;
+    wire [31:0] RSMuxOutput, MemWriteDataOut, ALUSrcMuxOutput;
     
     Mux32Bit3To1 RSMux(
         .out(RSMuxOutput), 
@@ -88,9 +76,7 @@ module ExecuteUnit(
         .ShiftAmount(ShiftAmount),
         .A(RSMuxOutput),
         .B(ALUSrcMuxOutput),
-        .ALUResult(ALUResultOut),
-        .ALUResultHi(ALUResultHi),
-        .Zero(Zero)
+        .ALUResult(ALUResultOut)
     );
     Mux5Bit2To1 RDRTMux(
         .out(RDRTMuxOutput),
@@ -104,48 +90,5 @@ module ExecuteUnit(
         .inB(5'd31),
         .sel(JumpLinkIn)
     );
-    Mux32Bit2To1 HiALUorOPMux(
-        .out(HiALUorOPMuxOutput),
-        .inA(ALUResultHi),
-        .inB(HiResult),
-        .sel(HiDstIn)
-    );
-    Mux32Bit2To1 LoALUorOPMux(
-        .out(LoALUorOPMuxOutput),
-        .inA(ALUResultOut),
-        .inB(LoResult),
-        .sel(LoDstIn)
-    );
-    Mux32Bit2To1 MoveHiMux(
-        .out(MoveHiMuxOutput),
-        .inA(HiALUorOPMuxOutput),
-        .inB(ReadData1In),
-        .sel(MoveHiLoIn)
-    );
-    Mux32Bit2To1 MoveLoMux(
-        .out(MoveLoMuxOutput),
-        .inA(LoALUorOPMuxOutput),
-        .inB(ReadData1In),
-        .sel(MoveHiLoIn)
-    );
-    Reg32Bit HiRegister(
-        .in(MoveHiMuxOutput),
-        .out(HiOut),
-        .Clk(Clk),
-        .WriteEnable(HiWriteEnableIn)
-    );
-    Reg32Bit LoRegister(
-        .in(MoveLoMuxOutput),
-        .out(LoOut),
-        .Clk(Clk),
-        .WriteEnable(LoWriteEnableIn)
-   );
-   HiLoArith HiLoOp(
-       .A({HiOut, LoOut}), 
-       .B({ALUResultHi, ALUResultOut}), 
-       .outHi(HiResult),
-       .outLo(LoResult), 
-       .op(HiLoOpIn)
-   );
 
 endmodule

@@ -41,17 +41,9 @@ module InstructionDecodeUnit(
         MemRead,
         MemtoReg,
         ALUControl,
-        HiWriteEnable, 
-        LoWriteEnable,
         SignExtendToReg,
         Mov, 
         CmpSel,
-        HiLoOp,
-        HiDst,
-        LoDst,
-        MoveHiLo,
-        MoveHi,
-        MoveLo,
         DataMem,
         JumpLink,
         JumpReg,
@@ -73,8 +65,7 @@ module InstructionDecodeUnit(
     output [4:0] ALUControl;
     output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
-    MemtoReg, HiWriteEnable, LoWriteEnable, SignExtendToReg, Mov, CmpSel, HiLoOp,
-    HiDst, LoDst, MoveHiLo, MoveHi, MoveLo, JumpLink, BranchControlOut, Jump, JumpReg;
+    MemtoReg, SignExtendToReg, Mov, CmpSel, JumpLink, BranchControlOut, Jump, JumpReg;
     output [2:0] BranchControlIn;
     
     wire Shift16, ForceZero, Jump, JumpReg, JumpLink, Size, BranchControlOut, Equal;
@@ -149,18 +140,10 @@ module InstructionDecodeUnit(
         .MemRead(MemRead),
         .MemtoReg(MemtoReg),
         .ALUControl(ALUControl),
-        .HiWriteEnable(HiWriteEnable), 
-        .LoWriteEnable(LoWriteEnable),
         .SignExtendToReg(SignExtendToReg),
         .Mov(Mov), 
         .CmpSel(CmpSel),
         .Size(Size),
-        .HiLoOp(HiLoOp),
-        .HiDst(HiDst),
-        .LoDst(LoDst),
-        .MoveHiLo(MoveHiLo),
-        .MoveHi(MoveHi),
-        .MoveLo(MoveLo),
         .ForceZero(ForceZero),
         .DataMem(DataMem),
         .JumpReg(JumpReg),

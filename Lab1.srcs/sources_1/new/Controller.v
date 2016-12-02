@@ -16,12 +16,30 @@
 // FUNCTIONALITY:-
 ////////////////////////////////////////////////////////////////////////////////
 
-module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, ForceZero, HiLoOp, HiDst, LoDst, Mov, CmpSel, Instruction, Size, RegDst, RegWrite, ALUSrc, MemWrite, MemRead, MemtoReg, ALUControl, HiWriteEnable, LoWriteEnable, SignExtendToReg, MoveHiLo, MoveHi, MoveLo);
+module Controller(
+        DataMem, 
+        JumpReg, 
+        JumpLink, 
+        Shift16, 
+        Jump, 
+        BranchControlIn, 
+        ForceZero, 
+        Mov, 
+        CmpSel, 
+        Instruction, 
+        Size, 
+        RegDst, 
+        RegWrite, 
+        ALUSrc, 
+        MemWrite, 
+        MemRead,
+        MemtoReg, 
+        ALUControl, 
+        SignExtendToReg
+    );
     input[31:0] Instruction;
     output reg Mov, CmpSel, SignExtendToReg, Size, RegDst, 
-    RegWrite, ALUSrc, MemWrite, MemRead, MemtoReg, 
-    HiWriteEnable, LoWriteEnable, HiLoOp, HiDst, LoDst, MoveHiLo,
-    MoveHi, MoveLo, ForceZero, Jump, Shift16, JumpReg, JumpLink;
+    RegWrite, ALUSrc, MemWrite, MemRead, MemtoReg, ForceZero, Jump, Shift16, JumpReg, JumpLink;
     output reg [1:0] DataMem;
     output reg [2:0] BranchControlIn;
     output reg[4:0] ALUControl;
@@ -41,22 +59,17 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
         JumpReg <= 0;
         BranchControlIn <= 3'b000;
         ForceZero <= 0;
-        HiLoOp <= 0;
+        JumpLink <= 0;
         if (Instruction == 32'd0) begin // nop
             Mov <= 0;
             RegWrite <= 0;
             MemWrite <= 0;
             MemRead <= 0;
-            HiWriteEnable <= 0;
-            LoWriteEnable <= 0;
             Jump <= 0;
             JumpReg <= 0;
             JumpLink <= 0;
-            MoveHi <= 0;
-            MoveLo <= 0;
             BranchControlIn <= 3'b000;
             MemtoReg <= 0;
-            HiLoOp = 1;
         end
         else begin
             case(Instruction[31:26])
@@ -73,13 +86,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemtoReg <= 0;
                                 RegWrite <= 1;
                                 MemRead <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 0;
                                 SignExtendToReg <= 0;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                                 case(Instruction[5:0])
                                    6'b100000: ALUControl <= 5'b00000; // Add
                                    6'b100001: ALUControl <= 5'b00000; // Addu
@@ -106,24 +114,6 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                                     Mov <= 1;
                                                     CmpSel <= 1;
                                             end
-                                   6'b011001: begin  // multu
-                                                    HiWriteEnable <= 1;
-                                                    LoWriteEnable <= 1;
-                                                    RegWrite <= 0;
-                                                    Mov <= 0;
-                                                    ALUControl <= 5'b10001;
-                                                    HiDst = 0;
-                                                    LoDst = 0;
-                                             end
-                                   6'b011000: begin  // mult
-                                                    HiWriteEnable <= 1;
-                                                    LoWriteEnable <= 1;
-                                                    RegWrite <= 0;
-                                                    Mov <= 0;
-                                                    ALUControl <= 5'b00010;
-                                                    HiDst = 0;
-                                                    LoDst = 0;
-                                              end
                                    6'b000010: begin 
                                                     if (Instruction[21] == 1'b0)
                                                         ALUControl <= 5'b01100; // Srl
@@ -136,18 +126,6 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                                     else
                                                         ALUControl <= 5'b00100;
                                               end
-                                   6'b010001: begin //MtHi
-                                                    RegWrite <= 0;
-                                                    HiWriteEnable <= 1;
-                                                    MoveHiLo <= 1;
-                                              end
-                                   6'b010011: begin //MtLo
-                                                    RegWrite <= 0;
-                                                    LoWriteEnable <= 1;
-                                                    MoveHiLo <= 1;
-                                              end
-                                   6'b010000: MoveHi <= 1; //MfHi
-                                   6'b010010: MoveLo <= 1; //MfLo
                                    6'b001000: begin // jr
                                                     RegWrite <= 0;
                                                     JumpReg <=1;
@@ -169,13 +147,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 RegWrite <= 1;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 SignExtendToReg <= 0;
                                 ALUControl <= 5'b00000;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                            end
                 6'b001001: begin // Addiu
                                 RegDst <= 0;
@@ -191,85 +164,25 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemRead <= 0;
                                 Mov <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 SignExtendToReg <= 0;
                                 ALUControl <= 5'b00000;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                            end 
-                6'b011100: begin 
-                                if(Instruction[5:0] == 6'b00000) begin // Madd
-                                    ALUSrc <= 0;
-                                    JumpReg <= 0;
-                                    JumpLink <= 0;
-                                    Shift16 <= 0;
-                                    Jump <= 0;
-                                    ForceZero <= 0;
-                                    BranchControlIn <= 3'd0;
-                                    MemtoReg <= 0;
-                                    RegWrite <= 0;
-                                    MemRead <= 0;
-                                    MemWrite <= 0;
-                                    Mov <= 0;
-                                    HiWriteEnable <= 1;
-                                    LoWriteEnable <= 1;
-                                    SignExtendToReg <= 0;
-                                    ALUControl <= 5'b00010;
-                                    HiDst <= 1;
-                                    LoDst <= 1;
-                                    HiLoOp <= 1;    
-                                    MoveHiLo <= 0; 
-                                    MoveHi <= 0;
-                                    MoveLo <= 0;                       
-                                end
-                                else if(Instruction[5:0] == 6'b000100) begin // Msub
-                                    ALUSrc <= 0;
-                                    JumpReg <= 0;
-                                    JumpLink <= 0;
-                                    Shift16 <= 0;
-                                    Jump <= 0;
-                                    ForceZero <= 0;
-                                    BranchControlIn <= 3'd0;
-                                    MemtoReg <= 0;
-                                    RegWrite <= 0;
-                                    MemRead <= 0;
-                                    MemWrite <= 0;
-                                    Mov <= 0;
-                                    HiWriteEnable <= 1;
-                                    LoWriteEnable <= 1;
-                                    SignExtendToReg <= 0;
-                                    ALUControl <= 5'b00010;
-                                    HiDst = 1;
-                                    LoDst = 1;
-                                    HiLoOp = 0;    
-                                    MoveHiLo <= 0;   
-                                    MoveHi <= 0;
-                                    MoveLo <= 0;                                                 
-                                end
-                                else begin // Mul
-                                    RegDst <= 1;
-                                    JumpReg <= 0;
-                                    JumpLink <= 0;
-                                    Shift16 <= 0;
-                                    Jump <= 0;
-                                    ForceZero <= 0;
-                                    BranchControlIn <= 3'd0;
-                                    ALUSrc <= 0;
-                                    MemtoReg <= 0;
-                                    RegWrite <= 1;
-                                    MemRead <= 0;
-                                    MemWrite <= 0;
-                                    Mov <= 0;
-                                    HiWriteEnable <= 0;
-                                    LoWriteEnable <= 0;
-                                    SignExtendToReg <= 0;                          
-                                    ALUControl <= 5'b00010;
-                                    MoveHiLo <= 0;
-                                    MoveHi <= 0;
-                                    MoveLo <= 0;
-                              end
+                6'b011100: begin // Mul
+                                RegDst <= 1;
+                                JumpReg <= 0;
+                                JumpLink <= 0;
+                                Shift16 <= 0;
+                                Jump <= 0;
+                                ForceZero <= 0;
+                                BranchControlIn <= 3'd0;
+                                ALUSrc <= 0;
+                                MemtoReg <= 0;
+                                RegWrite <= 1;
+                                MemRead <= 0;
+                                MemWrite <= 0;
+                                Mov <= 0;
+                                SignExtendToReg <= 0;                          
+                                ALUControl <= 5'b00010;
                           end
                6'b001100: begin // Andi
                                 RegDst <= 0;
@@ -285,13 +198,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemRead <= 0;
                                 MemWrite <= 0;
                                 BranchControlIn <= 3'd0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0; 
                                 SignExtendToReg <= 0;
                                 ALUControl <= 5'b00110;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                           end
                6'b001101: begin // Ori
                                 RegDst <= 0;
@@ -307,13 +215,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 SignExtendToReg <= 0;
                                 ALUControl <= 5'b00111;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                           end
                6'b001110: begin // xori
                                 RegDst <= 0;
@@ -328,14 +231,9 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 RegWrite <= 1;
                                 MemRead <= 0;
                                 Mov <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 SignExtendToReg <= 0;
                                 MemWrite <= 0;
                                 ALUControl <= 5'b01001;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                           end
                6'b001010: begin // slti
                                 RegDst <= 0;
@@ -348,16 +246,11 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemtoReg <= 0;
                                 RegWrite <= 1;
                                 BranchControlIn <= 3'd0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 SignExtendToReg <= 0;
                                 MemRead <= 0;
                                 Mov <= 0;
                                 MemWrite <= 0;
                                 ALUControl <= 5'b00101;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                           end
                6'b001011: begin // sltui
                                 RegDst <= 0;
@@ -370,16 +263,11 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemtoReg <= 0;
                                 BranchControlIn <= 3'd0;
                                 RegWrite <= 1;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 SignExtendToReg <= 0;
                                 MemRead <= 0;
                                 Mov <= 0;
                                 MemWrite <= 0;
                                 ALUControl <= 5'b01111;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                         end
                6'b011111: begin // Seb and Seh
                                 RegDst <= 1;
@@ -390,16 +278,11 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 ForceZero <= 0;
                                 BranchControlIn <= 3'd0;
                                 RegWrite <= 1;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 Mov <= 0;
                                 SignExtendToReg <= 1;
                                 MemRead <= 0;
                                 MemWrite <= 0;
                                 Size <= Instruction[9];
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                           end
                6'b000100: begin // beq
                                 RegDst <= 1;
@@ -414,12 +297,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 ALUControl <= 5'b00001;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                           end
                6'b000101: begin // bne
                                 RegDst <= 1;
@@ -434,12 +312,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 ALUControl <= 5'b00001;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                         end
              6'b000001: begin // bgez or bltz
                                 RegDst <= 1;
@@ -458,12 +331,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 ALUControl <= 5'b00001;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                         end
              6'b000110: begin // blez
                                 RegDst <= 1;
@@ -478,12 +346,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 ALUControl <= 5'b00001;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                         end
              6'b000111: begin // bgtz
                                 RegDst <= 1;
@@ -498,12 +361,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 ALUControl <= 5'b00001;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                         end
              6'b000010: begin // j
                                 Jump <= 1;
@@ -514,11 +372,6 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                         end
              6'b001111: begin // lui
                                 RegDst <= 0;
@@ -533,12 +386,7 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Mov <= 0;
                                 MemRead <= 0;
                                 MemWrite <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 ALUControl <= 5'b00111;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                                 MemtoReg <= 0;
                                 SignExtendToReg <= 0;
                         end       
@@ -550,17 +398,9 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 BranchControlIn <= 3'd0;
                                 ALUSrc <= 1;
                                 Mov <= 0;
-                                //MemtoReg <= 0;
                                 RegWrite <= 0;
                                 MemRead <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 1;
-                                //Branch <= 0;
-                                //SignExtendToReg <= 0;
-                                //MoveHiLo <= 0;
-                                //MoveHi <= 0;
-                                //MoveLo <= 0; 
                                 ALUControl <= 5'b00000;
                                 DataMem <= 2'b00;
                                 JumpReg <=0;
@@ -577,14 +417,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemtoReg <= 1;
                                 RegWrite <= 1;
                                 MemRead <= 1;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 0;
-                                //Branch <= 0;
                                 SignExtendToReg <= 0;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                                 ALUControl <= 5'b00000;
                                 DataMem <= 2'b00;
                                 JumpReg <=0;
@@ -601,14 +435,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemtoReg <= 1;
                                 RegWrite <= 1;
                                 MemRead <= 1;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 0;
-                                //Branch <= 0;
                                 SignExtendToReg <= 0;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                                 ALUControl <= 5'b00000;
                                 DataMem <= 2'b01;
                                 JumpReg <=0;
@@ -622,17 +450,9 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Shift16 <= 0;
                                 Jump <= 0;
                                 BranchControlIn <= 3'd0;
-                                //MemtoReg <= 0;
                                 RegWrite <= 0;
                                 MemRead <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 1;
-                                //Branch <= 0;
-                                //SignExtendToReg <= 0;
-                                //MoveHiLo <= 0;
-                                //MoveHi <= 0;
-                                //MoveLo <= 0; 
                                 ALUControl <= 5'b00000;
                                 DataMem <= 2'b01;
                                 JumpReg <=0;
@@ -649,14 +469,8 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 MemtoReg <= 1;
                                 RegWrite <= 1;
                                 MemRead <= 1;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 0;
-                                //Branch <= 0;
                                 SignExtendToReg <= 0;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
                                 ALUControl <= 5'b00000;
                                 DataMem <= 2'b10;
                                 JumpReg <=0;
@@ -670,43 +484,21 @@ module Controller(DataMem, JumpReg, JumpLink, Shift16, Jump, BranchControlIn, Fo
                                 Shift16 <= 0;
                                 Jump <= 0;
                                 BranchControlIn <= 3'd0;                            
-                                //MemtoReg <= 0;
                                 RegWrite <= 0;
                                 MemRead <= 0;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 1;
-                                //Branch <= 0;
-                                //SignExtendToReg <= 0;
-                                //MoveHiLo <= 0;
-                                //MoveHi <= 0;
-                                //MoveLo <= 0; 
                                 ALUControl <= 5'b00000;
                                 DataMem <= 2'b10;
                                 JumpReg <=0;
                                 JumpLink <= 0;
                         end
              6'b000011: begin //jal
-                                //RegDst <= 0;
-                                //ForceZero <= 0;
-                                //ALUSrc <= 1;
                                 Mov <= 0;
                                 Shift16 <= 0;
                                 Jump <= 0;
                                 BranchControlIn <= 3'd0;
-                                //MemtoReg <= 1;
                                 RegWrite <= 1;
-                                //MemRead <= 1;
-                                HiWriteEnable <= 0;
-                                LoWriteEnable <= 0;
                                 MemWrite <= 0;
-                                //Branch <= 0;
-                                //SignExtendToReg <= 0;
-                                MoveHiLo <= 0;
-                                MoveHi <= 0;
-                                MoveLo <= 0;
-                                //ALUControl <= 5'b00000;
-                                //DataMem <= 2'b10;
                                 JumpReg <= 0;
                                 JumpLink <= 1;
                         end

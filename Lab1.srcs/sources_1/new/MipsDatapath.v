@@ -24,43 +24,41 @@ module MipsDatapath(
         Clk,
         PCReset,
         V0RegVal,
-        V1RegVal,
+        V1RegVal
     );
     
     input Clk, PCReset;
     output [31:0] V0RegVal, V1RegVal;
     
-    wire [31:0] CurrentPC;//, V1RegVal, V0RegVal;
+    wire [31:0] CurrentPC;
     wire [31:0] IFInstruction, IFPCAddResult;
     
-    wire IDHiWriteEnable, IDLoWriteEnable, IDRegWrite, IDRegDst, 
+    wire IDRegWrite, IDRegDst, 
     IDALUSrc, IDMemWrite, IDMemRead, IDMemtoReg, IDSignExtendToReg,
-    IDCmpOut, IDMov, IDCmpSel, IDHiLoOp, IDHiDst, IDLoDst, IDMoveHiLo, IDMoveHi, IDMoveLo, IDJumpLink,
-    IDJump, IDJumpReg, IDBranchControlOut;
+    IDCmpOut, IDMov, IDCmpSel, IDJumpLink, IDJump, IDJumpReg, IDBranchControlOut;
     wire [1:0] IDDataMem;
     wire [4:0] IDALUControl;
     wire [31:0] IDInstruction, IDPCAddResult, IDReadData1, IDReadData2, IDSignExtendOut, 
     IDSignExtendRegisterOut, IDBranchOut;
 
-    wire EXHiWriteEnable, EXLoWriteEnable, EXRegWrite, EXRegDst, 
-    EXALUSrc, EXMemWrite, EXMemRead, EXMemtoReg, EXSignExtendToReg,
-    EXCmpOut, EXMov, EXCmpSel, EXHiLoOp, EXHiDst, EXLoDst, EXMoveHiLo, EXMoveHi, EXMoveLo, EXJumpLink;
+    wire EXRegWrite, EXRegDst, EXALUSrc, EXMemWrite, EXMemRead, EXMemtoReg, EXSignExtendToReg,
+    EXCmpOut, EXMov, EXCmpSel, EXJumpLink;
     wire [1:0] EXDataMem;
     wire [4:0] EXALUControl, EXRT, EXRD, EXRS, EXWriteRegister, EXShiftAmount;
-    wire [31:0] EXPCAddResult, EXReadData1, EXReadData2, EXSignExtendOut, EXSignExtendRegisterOut,
-    EXHi, EXLo, EXALUResult, EXMemWriteData;
+    wire [31:0] EXPCAddResult, EXReadData1, EXReadData2, EXSignExtendOut, EXSignExtendRegisterOut, EXALUResult, 
+    EXMemWriteData;
 
     wire MEMRegWrite, MEMRegDst, MEMMemWrite, MEMMemRead, MEMMemtoReg, MEMSignExtendToReg,
-    MEMCmpOut, MEMMov, MEMCmpSel, MEMMoveHi, MEMMoveLo, MEMJumpLink;
+    MEMCmpOut, MEMMov, MEMCmpSel, MEMJumpLink;
     wire [1:0] MEMDataMem;
     wire [4:0] MEMWriteRegister;
-    wire [31:0] MEMReadData1, MEMReadData2, MEMWriteData, MEMALUResult, MEMHi,
-    MEMLo, MEMSignExtendRegisterOut, MEMPCAddResult, MEMMemWriteData, MEMDataMemRead;
+    wire [31:0] MEMReadData1, MEMReadData2, MEMWriteData, MEMALUResult, MEMSignExtendRegisterOut, 
+    MEMPCAddResult, MEMMemWriteData, MEMDataMemRead;
 
     wire WBRegWrite, WBRegDst, WBMemtoReg, WBSignExtendToReg, WBCmpOut, WBMov, 
-    WBCmpSel, WBMoveHi, WBMoveLo, WBJumpLink, WBMemRead;
+    WBCmpSel,WBJumpLink, WBMemRead;
     wire [4:0] WBWriteRegister;
-    wire [31:0] WBReadData1, WBReadData2, WBPCAddResult, WBHi, WBLo, WBALUResult, WBMemWriteData,
+    wire [31:0] WBReadData1, WBReadData2, WBPCAddResult, WBALUResult, WBMemWriteData,
     WBSignExtendRegisterOut, WBWriteData, WBDataMemRead;
 
     wire IFIDReset, IFIDReadEnable, PCEnable, BubbleMuxControl, MEMRTMuxControl;
@@ -119,17 +117,9 @@ module MipsDatapath(
         .MemRead(IDMemRead),
         .MemtoReg(IDMemtoReg),
         .ALUControl(IDALUControl),
-        .HiWriteEnable(IDHiWriteEnable), 
-        .LoWriteEnable(IDLoWriteEnable),
         .SignExtendToReg(IDSignExtendToReg),
         .Mov(IDMov), 
         .CmpSel(IDCmpSel),
-        .HiLoOp(IDHiLoOp),
-        .HiDst(IDHiDst),
-        .LoDst(IDLoDst),
-        .MoveHiLo(IDMoveHiLo),
-        .MoveHi(IDMoveHi),
-        .MoveLo(IDMoveLo),
         .DataMem(IDDataMem),
         .JumpLink(IDJumpLink),
         .Jump(IDJump),
@@ -159,17 +149,9 @@ module MipsDatapath(
         .MemReadIn(IDMemRead),
         .MemtoRegIn(IDMemtoReg),
         .ALUControlIn(IDALUControl),
-        .HiWriteEnableIn(IDHiWriteEnable), 
-        .LoWriteEnableIn(IDLoWriteEnable),
         .SignExtendToRegIn(IDSignExtendToReg),
         .MovIn(IDMov), 
         .CmpSelIn(IDCmpSel),
-        .HiLoOpIn(IDHiLoOp),
-        .HiDstIn(IDHiDst),
-        .LoDstIn(IDLoDst),
-        .MoveHiLoIn(IDMoveHiLo),
-        .MoveHiIn(IDMoveHi),
-        .MoveLoIn(IDMoveLo),
         .DataMemIn(IDDataMem),
         .JumpLinkIn(IDJumpLink),
         .PCAddResultOut(EXPCAddResult), // outputs
@@ -188,23 +170,14 @@ module MipsDatapath(
         .MemReadOut(EXMemRead),
         .MemtoRegOut(EXMemtoReg),
         .ALUControlOut(EXALUControl),
-        .HiWriteEnableOut(EXHiWriteEnable), 
-        .LoWriteEnableOut(EXLoWriteEnable),
         .SignExtendToRegOut(EXSignExtendToReg),
         .MovOut(EXMov), 
         .CmpSelOut(EXCmpSel),
-        .HiLoOpOut(EXHiLoOp),
-        .HiDstOut(EXHiDst),
-        .LoDstOut(EXLoDst),
-        .MoveHiLoOut(EXMoveHiLo),
-        .MoveHiOut(EXMoveHi),
-        .MoveLoOut(EXMoveLo),
         .DataMemOut(EXDataMem),
         .JumpLinkOut(EXJumpLink)
     );
     ExecuteUnit EX (
-        .Clk(Clk), // inputs 
-        .ShiftAmount(EXShiftAmount),
+        .ShiftAmount(EXShiftAmount), // inputs
         .ReadData1In(EXReadData1),
         .ReadData2In(EXReadData2),
         .SignExtendIn(EXSignExtendOut),
@@ -214,20 +187,12 @@ module MipsDatapath(
         .RegDstIn(EXRegDst),
         .ALUSrcIn(EXALUSrc),
         .ALUControlIn(EXALUControl),
-        .HiWriteEnableIn(EXHiWriteEnable), 
-        .LoWriteEnableIn(EXLoWriteEnable),
-        .HiLoOpIn(EXHiLoOp),
-        .HiDstIn(EXHiDst),
-        .LoDstIn(EXLoDst),
-        .MoveHiLoIn(EXMoveHiLo),
         .JumpLinkIn(EXJumpLink),
         .MEMAddress(MEMALUResult),
         .WBWriteData(WBWriteData),
         .RSMuxControl(EXRSMuxControl),
         .RTMuxControl(EXRTMuxControl),
-        .HiOut(EXHi), // outputs
-        .LoOut(EXLo),
-        .ALUResultOut(EXALUResult),
+        .ALUResultOut(EXALUResult), // outputs
         .MemWriteDataOut(EXMemWriteData),
         .WriteRegisterOut(EXWriteRegister)
     );
@@ -283,8 +248,6 @@ module MipsDatapath(
         .Reset(PCReset),
         .PCAddResultIn(EXPCAddResult),
         .MemWriteDataIn(EXMemWriteData),
-        .HiIn(EXHi),
-        .LoIn(EXLo),
         .ALUResultIn(EXALUResult),
         .WriteRegisterIn(EXWriteRegister),
         .ReadData1In(EXReadData1),
@@ -297,13 +260,9 @@ module MipsDatapath(
         .SignExtendToRegIn(EXSignExtendToReg),
         .MovIn(EXMov), 
         .CmpSelIn(EXCmpSel),
-        .MoveHiIn(EXMoveHi),
-        .MoveLoIn(EXMoveLo),
         .DataMemIn(EXDataMem),
         .JumpLinkIn(EXJumpLink),
         .PCAddResultOut(MEMPCAddResult), // outputs
-        .HiOut(MEMHi),
-        .LoOut(MEMLo),
         .ALUResultOut(MEMALUResult),
         .MemWriteDataOut(MEMMemWriteData),
         .WriteRegisterOut(MEMWriteRegister),
@@ -317,8 +276,6 @@ module MipsDatapath(
         .SignExtendToRegOut(MEMSignExtendToReg),
         .MovOut(MEMMov), 
         .CmpSelOut(MEMCmpSel),
-        .MoveHiOut(MEMMoveHi),
-        .MoveLoOut(MEMMoveLo),
         .DataMemOut(MEMDataMem),
         .JumpLinkOut(MEMJumpLink)
     );
@@ -337,8 +294,6 @@ module MipsDatapath(
         .Clk(Clk), // inputs 
         .Reset(PCReset),
         .PCAddResultIn(MEMPCAddResult), 
-        .HiIn(MEMHi),
-        .LoIn(MEMLo),
         .ALUResultIn(MEMALUResult),
         .MemWriteDataIn(MEMMemWriteData),
         .WriteRegisterIn(MEMWriteRegister),
@@ -350,14 +305,10 @@ module MipsDatapath(
         .SignExtendToRegIn(MEMSignExtendToReg),
         .MovIn(MEMMov), 
         .CmpSelIn(MEMCmpSel),
-        .MoveHiIn(MEMMoveHi),
-        .MoveLoIn(MEMMoveLo),
         .JumpLinkIn(MEMJumpLink),
         .DataMemReadIn(MEMDataMemRead),
         .MemReadIn(MEMMemRead),
         .PCAddResultOut(WBPCAddResult), // outputs 
-        .HiOut(WBHi),
-        .LoOut(WBLo),
         .ALUResultOut(WBALUResult),
         .MemWriteDataOut(WBMemWriteData),
         .WriteRegisterOut(WBWriteRegister),
@@ -369,16 +320,12 @@ module MipsDatapath(
         .SignExtendToRegOut(WBSignExtendToReg),
         .MovOut(WBMov), 
         .CmpSelOut(WBCmpSel),
-        .MoveHiOut(WBMoveHi),
-        .MoveLoOut(WBMoveLo),
         .JumpLinkOut(WBJumpLink),
         .DataMemReadOut(WBDataMemRead),
         .MemReadOut(WBMemRead)
     );
     WriteBackUnit WB (
         .PCAddResult(WBPCAddResult), // inputs
-        .Hi(WBHi),
-        .Lo(WBLo),
         .ALUResult(WBALUResult),
         .DataMemRead(WBDataMemRead),
         .ReadData1(WBReadData1),
@@ -388,8 +335,6 @@ module MipsDatapath(
         .SignExtendToRegOut(WBSignExtendToReg),
         .MovOut(WBMov), 
         .CmpSelOut(WBCmpSel),
-        .MoveHiOut(WBMoveHi),
-        .MoveLoOut(WBMoveLo),
         .JumpLinkOut(WBJumpLink),
         .WriteData(WBWriteData), // outputs
         .CmpOut(WBCmpOut)

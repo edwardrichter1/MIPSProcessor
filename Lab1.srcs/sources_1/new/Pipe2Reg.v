@@ -39,17 +39,9 @@ module Pipe2Reg(
         MemReadIn,
         MemtoRegIn,
         ALUControlIn,
-        HiWriteEnableIn, 
-        LoWriteEnableIn,
         SignExtendToRegIn,
         MovIn, 
         CmpSelIn,
-        HiLoOpIn,
-        HiDstIn,
-        LoDstIn,
-        MoveHiLoIn,
-        MoveHiIn,
-        MoveLoIn,
         DataMemIn,
         JumpLinkIn,
         PCAddResultOut, // outputs
@@ -67,17 +59,9 @@ module Pipe2Reg(
         MemReadOut,
         MemtoRegOut,
         ALUControlOut,
-        HiWriteEnableOut, 
-        LoWriteEnableOut,
         SignExtendToRegOut,
         MovOut, 
         CmpSelOut,
-        HiLoOpOut,
-        HiDstOut,
-        LoDstOut,
-        MoveHiLoOut,
-        MoveHiOut,
-        MoveLoOut,
         DataMemOut,
         JumpLinkOut,
         ShiftAmountIn,
@@ -85,17 +69,13 @@ module Pipe2Reg(
     );
 
     input Clk, RegDstIn, RegWriteIn, ALUSrcIn, MemWriteIn,MemReadIn,
-    MemtoRegIn, LoWriteEnableIn, HiWriteEnableIn, SignExtendToRegIn,
-    MovIn, CmpSelIn, HiLoOpIn, HiDstIn, LoDstIn, MoveHiLoIn,
-    MoveHiIn, MoveLoIn, JumpLinkIn, Reset;
+    MemtoRegIn, SignExtendToRegIn, MovIn, CmpSelIn, JumpLinkIn, Reset;
     input [31:0] SignExtendRegisterIn, PCAddResultIn, ReadData1In, ReadData2In, SignExtendIn;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmountIn;
     input [1:0] DataMemIn;
     
     output reg RegDstOut, RegWriteOut, ALUSrcOut, MemWriteOut, MemReadOut,
-    MemtoRegOut, LoWriteEnableOut, HiWriteEnableOut, SignExtendToRegOut,
-    MovOut, CmpSelOut, HiLoOpOut, HiDstOut, LoDstOut, MoveHiLoOut,
-    MoveHiOut, MoveLoOut, JumpLinkOut;
+    MemtoRegOut, SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut;
     output reg [31:0] SignExtendRegisterOut, PCAddResultOut, ReadData1Out, ReadData2Out, SignExtendOut;
     output reg [4:0] RTOut, RDOut, RSOut, ALUControlOut, ShiftAmountOut;
     output reg [1:0] DataMemOut;
@@ -119,17 +99,9 @@ module Pipe2Reg(
             MemReadOut <= 0;
             MemtoRegOut <= 0;
             ALUControlOut <= 0;
-            HiWriteEnableOut <= 0;
-            LoWriteEnableOut <= 0;
             SignExtendToRegOut <= 0;
             MovOut <= 0;
             CmpSelOut <= 0;
-            HiLoOpOut <= 0;
-            HiDstOut <= 0;
-            LoDstOut <= 0;
-            MoveHiLoOut <= 0;
-            MoveHiOut <= 0;
-            MoveLoOut <= 0;
             DataMemOut <= 0;
             JumpLinkOut <= 0;
         end
@@ -150,17 +122,9 @@ module Pipe2Reg(
             MemReadOut <= MemReadIn;
             MemtoRegOut <= MemtoRegIn;
             ALUControlOut <= ALUControlIn;
-            HiWriteEnableOut <= HiWriteEnableIn;
-            LoWriteEnableOut <= LoWriteEnableIn;
             SignExtendToRegOut <= SignExtendToRegIn;
             MovOut <= MovIn;
             CmpSelOut <= CmpSelIn;
-            HiLoOpOut <= HiLoOpIn;
-            HiDstOut <= HiDstIn;
-            LoDstOut <= LoDstIn;
-            MoveHiLoOut <= MoveHiLoIn;
-            MoveHiOut <= MoveHiIn;
-            MoveLoOut <= MoveLoIn;
             DataMemOut <= DataMemIn;
             JumpLinkOut <= JumpLinkIn;        
         end

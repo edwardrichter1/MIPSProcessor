@@ -64,7 +64,10 @@ module InstructionFetchUnit(
     wire[31:0] PCResult, BranchMuxOutput, JumpMuxOutput,
     JumpRegMuxOutput;
     
-    PCAdder PCAdder1(PCResult, PCAddResult);
+    PCAdder PCAdder1(
+        .PCResult(PCResult), 
+        .PCAddResult(PCAddResult)
+    );
     ProgramCounter ProgramCounter1(
         .Address(JumpRegMuxOutput),
         .PCResult(PCResult),
@@ -72,7 +75,10 @@ module InstructionFetchUnit(
         .Clk(Clk),
         .Enable(PCEnable)
     );
-    InstructionMemory InstructionMemory1(PCResult, Instruction);
+    InstructionMemory InstructionMemory1(
+        .Address(PCResult),
+        .Instruction(Instruction)
+    );
     Mux32Bit2To1 BranchMux(
         .out(BranchMuxOutput),
         .inA(PCAddResult),
