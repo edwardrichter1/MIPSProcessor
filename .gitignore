@@ -1,7 +1,7 @@
 # Will ignore everything but the source directory and git ignore, and vbsme
-!/.gitignore
-!/*.md
-!/*.s
 /*
 /*/
 !/Lab1.srcs/
+!.gitignore
+!*.md
+!*.s
