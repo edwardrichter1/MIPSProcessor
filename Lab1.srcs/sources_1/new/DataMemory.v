@@ -35,14 +35,20 @@
 // of the "Address" input to index any of the 256 words. 
 ////////////////////////////////////////////////////////////////////////////////
 
-module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData, DataMem); 
+module DataMemory(
+    Address, 
+    WriteData, 
+    Clk, 
+    MemWrite, 
+    MemRead, 
+    ReadData, 
+); 
 
     input [31:0] Address; 	// Input Address 
     input [31:0] WriteData; // Data that needs to be written into the address 
     input Clk;
     input MemWrite; 		// Control signal for memory write 
     input MemRead; 			// Control signal for memory read 
-    input [1:0] DataMem;
 
     output reg[31:0] ReadData; // Contents of memory location at Address
     reg [31:0] memory [4119:0]; // Data memory can contain 64x64 frame, 4x4 window, and 4 dimensions
@@ -4167,58 +4173,18 @@ module DataMemory(Address, WriteData, Clk, MemWrite, MemRead, ReadData, DataMem)
         memory[4115] = 32'd1;
     end
     
-    always@(negedge Clk) begin // write process
-        case(DataMem)
-            2'b00: begin
-                        if (MemWrite == 1) begin
-                            memory[Address[14:2]] <= WriteData;
-                        end
-                    end
-            2'b01: begin //byte
-                        if (MemWrite == 1) begin
-                            //memory[Address[11:2]][17+:8] <= 8'b1111111;
-                            memory[Address[14:2]][(Address[1:0]*8)+:8] <= WriteData[7:0];
-                        end
-                   end
-            2'b10: begin //
-                        if (MemWrite == 1)
-                            memory[Address[14:2]][(Address[1:0]*8)+:16] <= WriteData[15:0];
-                   end
-        endcase
+    always@(negedge Clk) begin // Write process
+        if (MemWrite == 1) begin
+            memory[Address[14:2]] <= WriteData;
+        end
     end
     
           
-    always@(MemRead, Address, DataMem) begin
-        case(DataMem)
-            2'b00: begin
-                    if (MemRead == 1)
-                        ReadData <= memory[Address[14:2]];
-                    else
-                        ReadData <= 32'b0;
-                   end
-            2'b01: begin
-                        if (MemRead == 1) begin
-                            ReadData = memory[Address[14:2]][(Address[1:0]*8)+:8];
-                            if (ReadData[7] == 0)
-                                ReadData <= {24'd0, ReadData[7:0]};
-                            else
-                                ReadData <= {24'd16777215, ReadData[7:0]};     
-                        end
-                        else
-                            ReadData <= 32'b0;
-                   end
-            2'b10: begin
-                       if (MemRead == 1) begin
-                           ReadData = memory[Address[14:2]][(Address[1:0]*8)+:16];
-                           if (ReadData[15] == 0)
-                               ReadData <= {16'd0, ReadData[15:0]};
-                           else
-                               ReadData <= {16'd65535, ReadData[15:0]};     
-                       end
-                       else
-                           ReadData <= 32'b0;
-                   end
-        endcase
+    always@(MemRead, Address) begin // Read Process
+        if (MemRead == 1)
+            ReadData <= memory[Address[14:2]];
+        else
+            ReadData <= 32'b0;
     end
 
 endmodule

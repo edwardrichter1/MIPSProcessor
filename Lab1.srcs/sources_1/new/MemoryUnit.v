@@ -26,7 +26,6 @@ module MemoryUnit(
         WriteData,
         MemWrite,
         MemReadOut,
-        DataMemOut,
         WBWriteData,
         WBSel,
         ReadData // outputs
@@ -34,7 +33,6 @@ module MemoryUnit(
     
     input Clk, MemWrite, MemReadOut, WBSel;
     input [31:0] Address, WriteData, WBWriteData;
-    input [1:0] DataMemOut;
     
     wire [31: 0] WDOutput;
     output [31:0] ReadData;
@@ -45,8 +43,7 @@ module MemoryUnit(
          .Clk(Clk),
          .MemWrite(MemWrite),
          .MemRead(MemReadOut),
-         .ReadData(ReadData),
-         .DataMem(DataMemOut)
+         .ReadData(ReadData)
      );
      Mux32Bit2To1 WDMux(
         .inA(WriteData),

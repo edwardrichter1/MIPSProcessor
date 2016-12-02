@@ -235,15 +235,15 @@ done_branching:
    jal      SAD                           # calculating new SAD
    beq      $s1, $s0, equal_to            # if SAD == SuperSAD, calculate new coordiantes
    slt      $t9, $s0, $s1                 # if SAD < SuperSAD, calculate new SuperSAD and coordinates
+   slti     $t8, $t0, 60                  # if i < xDiff go back to the loop
    beq      $t9, $zero, no_new_SAD
 equal_to:   
    move     $s1, $s0                      # SupserSAD = SAD
    move     $v0, $t0                      # v0 =  j
    move     $v1, $t1                      # v1 = i
 no_new_SAD:
-   slti     $t9, $t0, 60                 # if i < xDiff go back to the loop
-   bne      $t9, $zero, main_loop
    slti     $t9, $t1, 60                 # if j < yDiff go back to the loop
+   bne      $t8, $zero, main_loop
    bne      $t9, $zero, main_loop
 done:
    lw       $ra, 0($sp)                   # getting the return address from the stack
@@ -268,16 +268,16 @@ second_loop:
    sll      $t5, $t5, 2                   # byte addressing for window
    add      $t5, $t5, $a2                 # add to the address of the first element of the window array
    lw       $t5, 0($t5)                   # load element [k][l] to t5
+   addi     $t3, $t3, 1                   # l++
    sub      $t4, $t4, $t5                 # subtract window[k][l] from frame[i+k][j+l]
    slt      $t5, $t4, $zero               # if the difference is less than zero set to 1
+   addi     $t2, $t2, 1                   # k++
    beq      $t5, $zero, SKIP              # if positive skip
    sub      $t4, $zero, $t4               # if negative switch signs
 SKIP:
    add      $s0, $s0, $t4                 # SAD = SAD + $t4
-   addi     $t3, $t3, 1                   # l++
    slti     $t4, $t3, 4                   # $t4 = (l < y2)
+   slti     $t7, $t2, 4                   # $t7 = (k < x2)
    bne      $t4, $zero, second_loop       # if l is not less than y2 go through inner loop again
-   addi     $t2, $t2, 1                   # k++
-   slti     $t4, $t2, 4                   # $t4 = (k < x2)
-   bne      $t4, $zero, first_loop        # if k is not less x2 go through outer loop again
+   bne      $t7, $zero, first_loop        # if k is not less x2 go through outer loop again
    jr       $ra                           # jumping back $ra
