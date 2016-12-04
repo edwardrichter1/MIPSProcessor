@@ -44,7 +44,6 @@ module InstructionDecodeUnit(
         SignExtendToReg,
         Mov, 
         CmpSel,
-        DataMem,
         JumpLink,
         JumpReg,
         Jump,
@@ -65,7 +64,6 @@ module InstructionDecodeUnit(
     input [2:0] MuxInputRS, MuxInputRT;
     
     output [4:0] ALUControl;
-    output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
     MemtoReg, SignExtendToReg, Mov, CmpSel, JumpLink, BranchControlOut, Jump, JumpReg, 
     SADWrite, UpperOrLower;

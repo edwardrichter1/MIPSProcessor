@@ -65,6 +65,7 @@ module Controller(
         JumpLink <= 0;
         SADWrite <= 0;
         UpperOrLower <= 0;
+        Shift16 <= 0;
         if (Instruction == 32'd0) begin // nop
             Mov <= 0;
             RegWrite <= 0;
