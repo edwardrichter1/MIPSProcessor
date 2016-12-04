@@ -217,8 +217,9 @@ vbsme:
    addi     $s1, $zero, 32767             # SuperSad = largest 32 bit signed number
    addi     $s6, $zero, 60                # xDiff = 60
    addi     $s7, $zero, 60                # yDiff = 60
-   jal      SAD                           # calculating the initial SAD
-
+   #jal      SAD                           # calculating the initial SAD
+   #SAD 		$t1, $t0, $s0
+   addi 	$t0, t0, 0
    move     $s1, $s0                      # SupserSAD = SAD
    move     $v0, $t1                      # v0 =  j
    move     $v1, $t0                      # v1 = i
@@ -231,8 +232,10 @@ at_right:
     addi    $t1, $zero, 0                 # j = 0
     addi    $t0, $t0, 1                   # i++
 done_branching:
-   addi     $s0, $zero, 0                 # Setting SAD back to 0 for new SAD calculation
-   jal      SAD                           # calculating new SAD
+   #addi     $s0, $zero, 0                 # Setting SAD back to 0 for new SAD calculation
+   #jal      SAD 						  # calculating new SAD
+   #SAD 		$t1, $t0, $s0     
+   addi 	$t0, $t0, 0;                     
    beq      $s1, $s0, equal_to            # if SAD == SuperSAD, calculate new coordiantes
    slt      $t9, $s0, $s1                 # if SAD < SuperSAD, calculate new SuperSAD and coordinates
    slti     $t8, $t0, 60                  # if i < xDiff go back to the loop
