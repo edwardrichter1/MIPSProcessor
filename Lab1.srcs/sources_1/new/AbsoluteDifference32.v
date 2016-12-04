@@ -33,9 +33,9 @@ module AbsoluteDifference32(
     
     
     always@(inA, inB) begin
-        tempDifference <= inA - inB;
+        tempDifference = inA - inB;
         if(tempDifference[31] == 1) 
-            outC <= -tempDifference;
+            outC <= ~tempDifference + 1; // 2's compliment to make positive
         else
             outC <= tempDifference;
     end

@@ -36,12 +36,13 @@ module Controller(
         MemtoReg, 
         ALUControl, 
         SignExtendToReg,
-        SADWrite
+        SADWrite,
+        UpperOrLower
     );
     input[31:0] Instruction;
     output reg Mov, CmpSel, SignExtendToReg, Size, RegDst, 
     RegWrite, ALUSrc, MemWrite, MemRead, MemtoReg, ForceZero, Jump, Shift16, JumpReg, JumpLink,
-    SADWrite;
+    SADWrite, UpperOrLower;
     output reg [1:0] DataMem;
     output reg [2:0] BranchControlIn;
     output reg[4:0] ALUControl;
@@ -62,6 +63,8 @@ module Controller(
         BranchControlIn <= 3'b000;
         ForceZero <= 0;
         JumpLink <= 0;
+        SADWrite <= 0;
+        UpperOrLower <= 0;
         if (Instruction == 32'd0) begin // nop
             Mov <= 0;
             RegWrite <= 0;
@@ -133,24 +136,16 @@ module Controller(
                                                     RegWrite <= 0;
                                                     JumpReg <= 1;
                                               end
-                                   6'b010000: begin // SAD
-                                                    RegDst <= 0;
-                                                    JumpReg <= 0;
-                                                    JumpLink <= 0;
-                                                    Shift16 <= 0;
-                                                    Jump <= 0;
-                                                    ForceZero <= 0;
-                                                    BranchControlIn <= 3'd0;
-                                                    ALUSrc <= 1;
-                                                    MemtoReg <= 0;
-                                                    Mov <= 0;
-                                                    RegWrite <= 1;
-                                                    MemRead <= 0;
-                                                    MemWrite <= 0;
-                                                    SignExtendToReg <= 0;
-                                                    ALUControl <= 5'b00000;
+                                   6'b010000: begin // SAD TOP
                                                     SADWrite <= 1;
+                                                    MemRead <= 1;
+                                                    UpperOrLower <= 1;
                                               end  
+                                   6'b010001: begin // SAD BOTTOM
+                                                    SADWrite <= 1;
+                                                    MemRead <= 1;
+                                                    UpperOrLower <= 0;
+                                              end                                     
                                 endcase
                            end
                 6'b001000: begin // Addi

@@ -53,7 +53,8 @@ module InstructionDecodeUnit(
         BranchOut,
         V0,
         V1,
-        SADWrite
+        SADWrite,
+        UpperOrLower
     );
     input Clk, RegWriteIn;
     input [31:0] PCAddResultIn, Instruction, WriteData, Address, ALUResult,
@@ -66,7 +67,8 @@ module InstructionDecodeUnit(
     output [4:0] ALUControl;
     output [1:0] DataMem;
     output RegDst, RegWriteOut, ALUSrc, MemWrite, MemRead,
-    MemtoReg, SignExtendToReg, Mov, CmpSel, JumpLink, BranchControlOut, Jump, JumpReg, SADWrite;
+    MemtoReg, SignExtendToReg, Mov, CmpSel, JumpLink, BranchControlOut, Jump, JumpReg, 
+    SADWrite, UpperOrLower;
     output [2:0] BranchControlIn;
     
     wire Shift16, ForceZero, Jump, JumpReg, JumpLink, Size, BranchControlOut, Equal;
@@ -149,7 +151,8 @@ module InstructionDecodeUnit(
         .DataMem(DataMem),
         .JumpReg(JumpReg),
         .JumpLink(JumpLink),
-        .SADWrite(SADWrite)
+        .SADWrite(SADWrite),
+        .UpperOrLower(UpperOrLower)
     );
     Adder32Bit adder(
         .A(SignExtendOut << 2),

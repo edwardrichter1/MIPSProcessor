@@ -42,8 +42,14 @@ module DataMemory(
         MemWrite, 
         MemRead, 
         ReadData,
-        xDim,
-        yDim,
+        ZeroZero,
+        OneZero,
+        TwoZero,
+        ThreeZero,
+        ZeroOne,
+        OneOne, 
+        TwoOne, 
+        ThreeOne, 
         ZeroZeroFrame,
         OneZeroFrame,
         TwoZeroFrame,
@@ -52,14 +58,6 @@ module DataMemory(
         OneOneFrame, 
         TwoOneFrame, 
         ThreeOneFrame, 
-        ZeroTwoFrame, 
-        OneTwoFrame, 
-        TwoTwoFrame,
-        ThreeTwoFrame, 
-        ZeroThreeFrame, 
-        OneThreeFrame, 
-        TwoThreeFrame, 
-        ThreeThreeFrame,
         ZeroZeroWindow,
         OneZeroWindow,
         TwoZeroWindow,
@@ -68,31 +66,24 @@ module DataMemory(
         OneOneWindow, 
         TwoOneWindow, 
         ThreeOneWindow, 
-        ZeroTwoWindow, 
-        OneTwoWindow, 
-        TwoTwoWindow,
-        ThreeTwoWindow, 
-        ZeroThreeWindow, 
-        OneThreeWindow, 
-        TwoThreeWindow, 
-        ThreeThreeWindow
+        UpperOrLower
     ); 
 
     input [31:0] Address; 	// Input Address 
     input [31:0] WriteData; // Data that needs to be written into the address 
-    input [31:0] xDim, yDim;
     input Clk;
     input MemWrite; 		// Control signal for memory write 
     input MemRead; 			// Control signal for memory read 
+    input [12:0] ZeroZero, OneZero, TwoZero, ThreeZero,
+    ZeroOne, OneOne, TwoOne, ThreeOne;
     
+    input UpperOrLower;
     output reg [31:0] ReadData; // Contents of memory location at Address
-    output reg [31:0] ZeroZeroFrame, OneZeroFrame, TwoZeroFrame, ThreeZeroFrame, ZeroOneFrame,
-    OneOneFrame, TwoOneFrame, ThreeOneFrame, ZeroTwoFrame, OneTwoFrame, TwoTwoFrame,
-    ThreeTwoFrame, ZeroThreeFrame, OneThreeFrame, TwoThreeFrame, ThreeThreeFrame;
+    output reg [31:0] ZeroZeroFrame, OneZeroFrame, TwoZeroFrame, ThreeZeroFrame,
+    ZeroOneFrame, OneOneFrame, TwoOneFrame, ThreeOneFrame;
     
     output reg [31:0] ZeroZeroWindow, OneZeroWindow, TwoZeroWindow, ThreeZeroWindow, ZeroOneWindow,
-    OneOneWindow, TwoOneWindow, ThreeOneWindow, ZeroTwoWindow, OneTwoWindow, TwoTwoWindow,
-    ThreeTwoWindow, ZeroThreeWindow, OneThreeWindow, TwoThreeWindow, ThreeThreeWindow;
+    OneOneWindow, TwoOneWindow, ThreeOneWindow;
     
     reg [31:0] memory [4119:0]; // Data memory can contain 64x64 frame, 4x4 window, and 4 dimensions
     
@@ -4222,66 +4213,53 @@ module DataMemory(
         end
     end
     
-    /*always begin // accessing elements in the window
-        ZeroZeroWindow <= memory[4100];
-        OneZeroWindow <= memory[4101];
-        TwoZeroWindow <= memory[4102];
-        ThreeZeroWindow <= memory[4103];
-        ZeroOneWindow <= memory[4104];
-        OneOneWindow <= memory[4105];
-        TwoOneWindow <= memory[4106];
-        ThreeOneWindow <= memory[4107];
-        ZeroTwoWindow <= memory[4108];
-        OneTwoWindow <= memory[4109];
-        TwoTwoWindow <= memory[4110];
-        ThreeTwoWindow <= memory[4111];
-        ZeroThreeWindow <= memory[4112];
-        OneThreeWindow <= memory[4113];
-        TwoThreeWindow <= memory[4114];
-        ThreeThreeWindow <= memory[4115];
-    end
-    */
-    always@(xDim, yDim) begin // accessing elements in the frame
-        ZeroZeroWindow <= memory[4100];
-        OneZeroWindow <= memory[4101];
-        TwoZeroWindow <= memory[4102];
-        ThreeZeroWindow <= memory[4103];
-        ZeroOneWindow <= memory[4104];
-        OneOneWindow <= memory[4105];
-        TwoOneWindow <= memory[4106];
-        ThreeOneWindow <= memory[4107];
-        ZeroTwoWindow <= memory[4108];
-        OneTwoWindow <= memory[4109];
-        TwoTwoWindow <= memory[4110];
-        ThreeTwoWindow <= memory[4111];
-        ZeroThreeWindow <= memory[4112];
-        OneThreeWindow <= memory[4113];
-        TwoThreeWindow <= memory[4114];
-        ThreeThreeWindow <= memory[4115];
-        ZeroZeroFrame <= memory[((yDim+0)*4)+(xDim+0)];
-        OneZeroFrame <= memory[((yDim+0)*4)+(xDim+1)];
-        TwoZeroFrame <= memory[((yDim+0)*4)+(xDim+2)];
-        ThreeZeroFrame <= memory[((yDim+0)*4)+(xDim+3)];
-        ZeroOneFrame <= memory[((yDim+1)*4)+(xDim+0)];
-        OneOneFrame <= memory[((yDim+1)*4)+(xDim+1)];
-        TwoOneFrame <= memory[((yDim+1)*4)+(xDim+2)];
-        ThreeOneFrame <= memory[((yDim+1)*4)+(xDim+3)];
-        ZeroTwoFrame <= memory[((yDim+2)*4)+(xDim+0)];
-        OneTwoFrame <= memory[((yDim+2)*4)+(xDim+1)];
-        TwoTwoFrame <= memory[((yDim+2)*4)+(xDim+2)];
-        ThreeTwoFrame <= memory[((yDim+2)*4)+(xDim+3)];
-        ZeroThreeFrame <= memory[((yDim+3)*4)+(xDim+0)];
-        OneThreeFrame <= memory[((yDim+3)*4)+(xDim+1)];
-        TwoThreeFrame <= memory[((yDim+3)*4)+(xDim+2)];
-        ThreeThreeFrame <= memory[((yDim+3)*4)+(xDim+3)];
+    initial begin // accessing the window
+        if(UpperOrLower) begin // the upper part of the window
+            ZeroZeroWindow <= memory[4100];
+            OneZeroWindow <= memory[4101];
+            TwoZeroWindow <= memory[4102];
+            ThreeZeroWindow <= memory[4103];
+            ZeroOneWindow <= memory[4104];
+            OneOneWindow <= memory[4105];
+            TwoOneWindow <= memory[4106];
+            ThreeOneWindow <= memory[4107];
+        end
+        else begin // the lower part of the window
+            ZeroZeroWindow <= memory[4108];
+            OneZeroWindow <= memory[4109];
+            TwoZeroWindow <= memory[4110];
+            ThreeZeroWindow <= memory[4111];
+            ZeroOneWindow <= memory[4112];
+            OneOneWindow <= memory[4113];
+            TwoOneWindow <= memory[4114];
+            ThreeOneWindow <= memory[4115];
+        end
     end
     
           
-    always@(MemRead, Address) begin // Read Process
-        if (MemRead == 1)
+    always@(MemRead, Address, ZeroZero) begin // Read Process
+        if (MemRead == 1) begin
             ReadData <= memory[Address[14:2]];
-        else
+            ZeroZeroFrame <= memory[ZeroZero];
+            OneZeroFrame <= memory[OneZero];
+            TwoZeroFrame <= memory[TwoZero];
+            ThreeZeroFrame <= memory[ThreeZero];
+            ZeroOneFrame <= memory[ZeroOne];
+            OneOneFrame <= memory[OneOne];
+            /*TwoOneFrame <= memory[TwoOne];
+            ThreeOneFrame <= memory[ThreeOne];*/
+        end
+        else begin
             ReadData <= 32'b0;
+            ZeroZeroFrame <= 32'b0;
+            OneZeroFrame <= 32'b0;
+            TwoZeroFrame <= 32'b0;
+            ThreeZeroFrame <= 32'b0;
+            ZeroOneFrame <= 32'b0;
+            OneOneFrame <= 32'b0;
+            /*TwoOneFrame <= 32'b0;
+            ThreeOneFrame <= 32'b0;*/
+        end
     end
 
 endmodule

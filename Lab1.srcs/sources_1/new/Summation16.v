@@ -29,21 +29,14 @@ module Summation16(
         inF,
         inG,
         inH,
-        inI,
-        inJ,
-        inK,
-        inL,
-        inM,
-        inN,
-        inO,
-        inP,
         out
     );
-    input [31:0] inA, inB, inC, inD, inE, inF, inG, inH, inI, inJ, inK, inL, inM, inN, inO, inP;
+    
+    input [31:0] inA, inB, inC, inD, inE, inF, inG, inH;
     output reg [31:0] out;
     
-    always@(inA, inB, inC, inD, inE, inF, inG, inH, inI, inJ, inK, inL, inM, inN, inO, inP) begin
-        out <= inA + inB + inC + inD + inE + inF + inG + inH + inI + inJ + inK + inL + inM + inN + inO + inP;
+    always@(inA, inB, inC, inD, inE, inF, inG, inH) begin
+        out <= inA + inB + inC + inD + inE + inF + inG + inH;
     end
     
 endmodule
