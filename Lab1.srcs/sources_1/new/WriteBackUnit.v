@@ -32,18 +32,20 @@ module WriteBackUnit(
         MovOut, 
         CmpSelOut,
         JumpLinkOut,
+        SAD,
+        SADWrite,
         WriteData, // outputs
         CmpOut
     );
     input [31:0] PCAddResult, ALUResult, DataMemRead, ReadData1,
-    ReadData2, SignExtendRegisterOut;
+    ReadData2, SignExtendRegisterOut, SAD;
     input MemtoRegOut, SignExtendToRegOut, MovOut,
-    CmpSelOut, JumpLinkOut;
+    CmpSelOut, JumpLinkOut, SADWrite;
     
     output [31:0] WriteData;
     output CmpOut;
     
-    wire [31:0] ReadDataMuxOutput, SignExtendMuxOutput, MovMuxOutput; 
+    wire [31:0] ReadDataMuxOutput, SignExtendMuxOutput, MovMuxOutput, JumpLinkMuxOutput; 
     
     ZeroCompSometimes ZCS(
         .in(ReadData2), 
@@ -69,10 +71,16 @@ module WriteBackUnit(
         .sel(MovOut)
     );
     Mux32Bit2To1 JumpLinkMux(
-        .out(WriteData),
+        .out(JumpLinkMuxOutput),
         .inA(MovMuxOutput),
         .inB(PCAddResult),
         .sel(JumpLinkOut)
+    );
+    Mux32Bit2To1 SADMux(
+        .out(WriteData),
+        .inA(JumpLinkMuxOutput),
+        .inB(SAD),
+        .sel(SADWrite)
     );
 endmodule
  

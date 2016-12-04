@@ -40,7 +40,7 @@ module Summation16(
         out
     );
     input [31:0] inA, inB, inC, inD, inE, inF, inG, inH, inI, inJ, inK, inL, inM, inN, inO, inP;
-    output [31:0] out;
+    output reg [31:0] out;
     
     always@(inA, inB, inC, inD, inE, inF, inG, inH, inI, inJ, inK, inL, inM, inN, inO, inP) begin
         out <= inA + inB + inC + inD + inE + inF + inG + inH + inI + inJ + inK + inL + inM + inN + inO + inP;

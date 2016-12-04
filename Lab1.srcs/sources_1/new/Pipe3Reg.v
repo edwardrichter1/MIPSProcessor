@@ -39,6 +39,7 @@ module Pipe3Reg(
         CmpSelIn,
         DataMemIn,
         JumpLinkIn,
+        SADWriteIn,
         PCAddResultOut, // outputs
         ALUResultOut,
         MemWriteDataOut,
@@ -54,18 +55,19 @@ module Pipe3Reg(
         MovOut, 
         CmpSelOut,
         DataMemOut,
-        JumpLinkOut
+        JumpLinkOut,
+        SADWriteOut
     );
     
     input Clk, RegWriteIn, MemWriteIn, MemReadIn, MemtoRegIn,
-    SignExtendToRegIn, MovIn, CmpSelIn,JumpLinkIn, Reset;
+    SignExtendToRegIn, MovIn, CmpSelIn,JumpLinkIn, Reset, SADWriteIn;
     input [31:0] PCAddResultIn,ALUResultIn, MemWriteDataIn, 
     ReadData1In, ReadData2In, SignExtendRegisterIn;
     input [4:0] WriteRegisterIn;
     input [1:0] DataMemIn;
     
     output reg RegWriteOut, MemWriteOut, MemReadOut, MemtoRegOut,
-    SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut;
+    SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut, SADWriteOut;
     output reg [31:0] PCAddResultOut, ALUResultOut, MemWriteDataOut, 
     ReadData1Out, ReadData2Out, SignExtendRegisterOut;
     output reg [4:0] WriteRegisterOut;
@@ -90,6 +92,7 @@ module Pipe3Reg(
             CmpSelOut <= 0;
             DataMemOut <= 0;
             JumpLinkOut <= 0;
+            SADWriteOut <= 0;
         end
         else begin
             PCAddResultOut <= PCAddResultIn;
@@ -108,6 +111,7 @@ module Pipe3Reg(
             CmpSelOut <= CmpSelIn;
             DataMemOut <= DataMemIn;
             JumpLinkOut <= JumpLinkIn;
+            SADWriteOut <= SADWriteIn;
         end
     end
 endmodule

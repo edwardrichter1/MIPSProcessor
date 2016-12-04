@@ -38,6 +38,8 @@ module Pipe4Reg(
         JumpLinkIn,
         DataMemReadIn,
         MemReadIn,
+        SADIn,
+        SADWriteIn,
         PCAddResultOut, // outputs 
         ALUResultOut,
         MemWriteDataOut,
@@ -52,19 +54,21 @@ module Pipe4Reg(
         CmpSelOut,
         JumpLinkOut,
         DataMemReadOut,
-        MemReadOut
+        MemReadOut,
+        SADOut,
+        SADWriteOut
     );
     
     input Clk, RegWriteIn, MemtoRegIn, SignExtendToRegIn, MovIn,
-    CmpSelIn,JumpLinkIn, Reset, MemReadIn;
+    CmpSelIn,JumpLinkIn, Reset, MemReadIn, SADWriteIn;
     input [31:0] PCAddResultIn, ALUResultIn, MemWriteDataIn,
-    ReadData1In, ReadData2In, SignExtendRegisterIn, DataMemReadIn;
+    ReadData1In, ReadData2In, SignExtendRegisterIn, DataMemReadIn, SADIn;
     input [4:0] WriteRegisterIn;
     
     output reg RegWriteOut, MemtoRegOut, SignExtendToRegOut, MovOut,
-    CmpSelOut,JumpLinkOut, MemReadOut;
+    CmpSelOut,JumpLinkOut, MemReadOut, SADWriteOut;
     output reg [31:0] PCAddResultOut,ALUResultOut, MemWriteDataOut,
-    ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut;
+    ReadData1Out, ReadData2Out, SignExtendRegisterOut, DataMemReadOut, SADOut;
     output reg [4:0] WriteRegisterOut;
 
     always@(negedge Clk) begin
@@ -83,7 +87,9 @@ module Pipe4Reg(
             CmpSelOut <= 0;
             JumpLinkOut <= 0;
             DataMemReadOut <= 0;
-            MemReadOut <= 0;        
+            MemReadOut <= 0;     
+            SADOut <= 0;
+            SADWriteOut <= 0;
         end
         else begin
             PCAddResultOut <= PCAddResultIn; 
@@ -101,6 +107,8 @@ module Pipe4Reg(
             JumpLinkOut <= JumpLinkIn;
             DataMemReadOut <= DataMemReadIn;
             MemReadOut <= MemReadIn;
+            SADOut <= SADIn;
+            SADWriteOut <= SADWriteIn;
         end
     end
 

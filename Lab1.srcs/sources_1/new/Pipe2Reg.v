@@ -44,6 +44,7 @@ module Pipe2Reg(
         CmpSelIn,
         DataMemIn,
         JumpLinkIn,
+        SADWriteIn,
         PCAddResultOut, // outputs
         ReadData1Out,
         ReadData2Out,
@@ -65,17 +66,18 @@ module Pipe2Reg(
         DataMemOut,
         JumpLinkOut,
         ShiftAmountIn,
-        ShiftAmountOut
+        ShiftAmountOut,
+        SADWriteOut
     );
 
     input Clk, RegDstIn, RegWriteIn, ALUSrcIn, MemWriteIn,MemReadIn,
-    MemtoRegIn, SignExtendToRegIn, MovIn, CmpSelIn, JumpLinkIn, Reset;
+    MemtoRegIn, SignExtendToRegIn, MovIn, CmpSelIn, JumpLinkIn, Reset, SADWriteIn;
     input [31:0] SignExtendRegisterIn, PCAddResultIn, ReadData1In, ReadData2In, SignExtendIn;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmountIn;
     input [1:0] DataMemIn;
     
     output reg RegDstOut, RegWriteOut, ALUSrcOut, MemWriteOut, MemReadOut,
-    MemtoRegOut, SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut;
+    MemtoRegOut, SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut, SADWriteOut;
     output reg [31:0] SignExtendRegisterOut, PCAddResultOut, ReadData1Out, ReadData2Out, SignExtendOut;
     output reg [4:0] RTOut, RDOut, RSOut, ALUControlOut, ShiftAmountOut;
     output reg [1:0] DataMemOut;
@@ -104,6 +106,7 @@ module Pipe2Reg(
             CmpSelOut <= 0;
             DataMemOut <= 0;
             JumpLinkOut <= 0;
+            SADWriteOut <= 0;
         end
         else begin
             PCAddResultOut <= PCAddResultIn;
@@ -126,7 +129,8 @@ module Pipe2Reg(
             MovOut <= MovIn;
             CmpSelOut <= CmpSelIn;
             DataMemOut <= DataMemIn;
-            JumpLinkOut <= JumpLinkIn;        
+            JumpLinkOut <= JumpLinkIn;
+            SADWriteOut <= SADWriteIn;        
         end
     end
 

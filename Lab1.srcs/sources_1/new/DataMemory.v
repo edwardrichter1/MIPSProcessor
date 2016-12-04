@@ -36,21 +36,64 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 module DataMemory(
-    Address, 
-    WriteData, 
-    Clk, 
-    MemWrite, 
-    MemRead, 
-    ReadData, 
-); 
+        Address, 
+        WriteData, 
+        Clk, 
+        MemWrite, 
+        MemRead, 
+        ReadData,
+        xDim,
+        yDim,
+        ZeroZeroFrame,
+        OneZeroFrame,
+        TwoZeroFrame,
+        ThreeZeroFrame,
+        ZeroOneFrame,
+        OneOneFrame, 
+        TwoOneFrame, 
+        ThreeOneFrame, 
+        ZeroTwoFrame, 
+        OneTwoFrame, 
+        TwoTwoFrame,
+        ThreeTwoFrame, 
+        ZeroThreeFrame, 
+        OneThreeFrame, 
+        TwoThreeFrame, 
+        ThreeThreeFrame,
+        ZeroZeroWindow,
+        OneZeroWindow,
+        TwoZeroWindow,
+        ThreeZeroWindow,
+        ZeroOneWindow,
+        OneOneWindow, 
+        TwoOneWindow, 
+        ThreeOneWindow, 
+        ZeroTwoWindow, 
+        OneTwoWindow, 
+        TwoTwoWindow,
+        ThreeTwoWindow, 
+        ZeroThreeWindow, 
+        OneThreeWindow, 
+        TwoThreeWindow, 
+        ThreeThreeWindow
+    ); 
 
     input [31:0] Address; 	// Input Address 
     input [31:0] WriteData; // Data that needs to be written into the address 
+    input [31:0] xDim, yDim;
     input Clk;
     input MemWrite; 		// Control signal for memory write 
     input MemRead; 			// Control signal for memory read 
-
-    output reg[31:0] ReadData; // Contents of memory location at Address
+    
+    output reg [31:0] ReadData; // Contents of memory location at Address
+    output reg [31:0] ZeroZeroFrame, OneZeroFrame, TwoZeroFrame, ThreeZeroFrame, ZeroOneFrame,
+    OneOneFrame, TwoOneFrame, ThreeOneFrame, ZeroTwoFrame, OneTwoFrame, TwoTwoFrame,
+    ThreeTwoFrame, ZeroThreeFrame, OneThreeFrame, TwoThreeFrame, ThreeThreeFrame;
+    
+    output reg [31:0] ZeroZeroWindow, OneZeroWindow, TwoZeroWindow, ThreeZeroWindow, ZeroOneWindow,
+    OneOneWindow, TwoOneWindow, ThreeOneWindow, ZeroTwoWindow, OneTwoWindow, TwoTwoWindow,
+    ThreeTwoWindow, ZeroThreeWindow, OneThreeWindow, TwoThreeWindow, ThreeThreeWindow;
+    
     reg [31:0] memory [4119:0]; // Data memory can contain 64x64 frame, 4x4 window, and 4 dimensions
     
     initial begin
@@ -4177,6 +4220,44 @@ module DataMemory(
         if (MemWrite == 1) begin
             memory[Address[14:2]] <= WriteData;
         end
+    end
+    
+    always begin // accessing elements in the window
+        ZeroZeroWindow <= memory[4100];
+        OneZeroWindow <= memory[4101];
+        TwoZeroWindow <= memory[4102];
+        ThreeZeroWindow <= memory[4103];
+        ZeroOneWindow <= memory[4104];
+        OneOneWindow <= memory[4105];
+        TwoOneWindow <= memory[4106];
+        ThreeOneWindow <= memory[4107];
+        ZeroTwoWindow <= memory[4108];
+        OneTwoWindow <= memory[4109];
+        TwoTwoWindow <= memory[4110];
+        ThreeTwoWindow <= memory[4111];
+        ZeroThreeWindow <= memory[4112];
+        OneThreeWindow <= memory[4113];
+        TwoThreeWindow <= memory[4114];
+        ThreeThreeWindow <= memory[4115];
+    end
+    
+    always@(xDim, yDim) begin // accessing elements in the frame
+        ZeroZeroFrame <= memory[((yDim+0)*4)+(xDim+0)];
+        OneZeroFrame <= memory[((yDim+0)*4)+(xDim+1)];
+        TwoZeroFrame <= memory[((yDim+0)*4)+(xDim+2)];
+        ThreeZeroFrame <= memory[((yDim+0)*4)+(xDim+3)];
+        ZeroOneFrame <= memory[((yDim+1)*4)+(xDim+0)];
+        OneOneFrame <= memory[((yDim+1)*4)+(xDim+1)];
+        TwoOneFrame <= memory[((yDim+1)*4)+(xDim+2)];
+        ThreeOneFrame <= memory[((yDim+1)*4)+(xDim+3)];
+        ZeroTwoFrame <= memory[((yDim+2)*4)+(xDim+0)];
+        OneTwoFrame <= memory[((yDim+2)*4)+(xDim+1)];
+        TwoTwoFrame <= memory[((yDim+2)*4)+(xDim+2)];
+        ThreeTwoFrame <= memory[((yDim+2)*4)+(xDim+3)];
+        ZeroThreeFrame <= memory[((yDim+3)*4)+(xDim+0)];
+        OneThreeFrame <= memory[((yDim+3)*4)+(xDim+1)];
+        TwoThreeFrame <= memory[((yDim+3)*4)+(xDim+2)];
+        ThreeThreeFrame <= memory[((yDim+3)*4)+(xDim+3)];
     end
     
           
