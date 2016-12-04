@@ -4222,7 +4222,7 @@ module DataMemory(
         end
     end
     
-    always begin // accessing elements in the window
+    /*always begin // accessing elements in the window
         ZeroZeroWindow <= memory[4100];
         OneZeroWindow <= memory[4101];
         TwoZeroWindow <= memory[4102];
@@ -4240,8 +4240,24 @@ module DataMemory(
         TwoThreeWindow <= memory[4114];
         ThreeThreeWindow <= memory[4115];
     end
-    
+    */
     always@(xDim, yDim) begin // accessing elements in the frame
+        ZeroZeroWindow <= memory[4100];
+        OneZeroWindow <= memory[4101];
+        TwoZeroWindow <= memory[4102];
+        ThreeZeroWindow <= memory[4103];
+        ZeroOneWindow <= memory[4104];
+        OneOneWindow <= memory[4105];
+        TwoOneWindow <= memory[4106];
+        ThreeOneWindow <= memory[4107];
+        ZeroTwoWindow <= memory[4108];
+        OneTwoWindow <= memory[4109];
+        TwoTwoWindow <= memory[4110];
+        ThreeTwoWindow <= memory[4111];
+        ZeroThreeWindow <= memory[4112];
+        OneThreeWindow <= memory[4113];
+        TwoThreeWindow <= memory[4114];
+        ThreeThreeWindow <= memory[4115];
         ZeroZeroFrame <= memory[((yDim+0)*4)+(xDim+0)];
         OneZeroFrame <= memory[((yDim+0)*4)+(xDim+1)];
         TwoZeroFrame <= memory[((yDim+0)*4)+(xDim+2)];
