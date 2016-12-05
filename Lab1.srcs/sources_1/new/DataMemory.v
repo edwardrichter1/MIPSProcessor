@@ -65,7 +65,15 @@ module DataMemory(
         ZeroOneWindow,
         OneOneWindow, 
         TwoOneWindow, 
-        ThreeOneWindow, 
+        ThreeOneWindow,
+        ZeroTwoWindow,
+        OneTwoWindow,
+        TwoTwoWindow,
+        ThreeTwoWindow,
+        ZeroThreeWindow,
+        OneThreeWindow, 
+        TwoThreeWindow, 
+        ThreeThreeWindow, 
         UpperOrLower
     ); 
 
@@ -96,7 +104,15 @@ module DataMemory(
     output reg [31:0] ZeroOneWindow;
     output reg [31:0] OneOneWindow;
     output reg [31:0] TwoOneWindow;
-    output reg [31:0] ThreeOneWindow;   
+    output reg [31:0] ThreeOneWindow;
+    output reg [31:0] ZeroTwoWindow;
+    output reg [31:0] OneTwoWindow;
+    output reg [31:0] TwoTwoWindow;
+    output reg [31:0] ThreeTwoWindow;
+    output reg [31:0] ZeroThreeWindow;
+    output reg [31:0] OneThreeWindow;
+    output reg [31:0] TwoThreeWindow;
+    output reg [31:0] ThreeThreeWindow;   
     
     
     reg [31:0] memory [4119:0]; // Data memory can contain 64x64 frame, 4x4 window, and 4 dimensions
@@ -4283,26 +4299,22 @@ module DataMemory(
     end
 
     initial begin // accessing the window
-            if(UpperOrLower) begin // the upper part of the window
-                ZeroZeroWindow <= memory[4100];
-                OneZeroWindow <= memory[4101];
-                TwoZeroWindow <= memory[4102];
-                ThreeZeroWindow <= memory[4103];
-                ZeroOneWindow <= memory[4104];
-                OneOneWindow <= memory[4105];
-                TwoOneWindow <= memory[4106];
-                ThreeOneWindow <= memory[4107];
-            end
-            else begin // the lower part of the window
-                ZeroZeroWindow <= memory[4108];
-                OneZeroWindow <= memory[4109];
-                TwoZeroWindow <= memory[4110];
-                ThreeZeroWindow <= memory[4111];
-                ZeroOneWindow <= memory[4112];
-                OneOneWindow <= memory[4113];
-                TwoOneWindow <= memory[4114];
-                ThreeOneWindow <= memory[4115];
-            end
+        ZeroZeroWindow <= memory[4100];
+        OneZeroWindow <= memory[4101];
+        TwoZeroWindow <= memory[4102];
+        ThreeZeroWindow <= memory[4103];
+        ZeroOneWindow <= memory[4104];
+        OneOneWindow <= memory[4105];
+        TwoOneWindow <= memory[4106];
+        ThreeOneWindow <= memory[4107];
+        ZeroTwoWindow <= memory[4108];
+        OneTwoWindow <= memory[4109];
+        TwoTwoWindow <= memory[4110];
+        ThreeTwoWindow <= memory[4111];
+        ZeroThreeWindow <= memory[4112];
+        OneThreeWindow <= memory[4113];
+        TwoThreeWindow <= memory[4114];
+        ThreeThreeWindow <= memory[4115];
     end
     /*always@(negedge Clk) begin // Read Process
         if (MemRead == 1) begin

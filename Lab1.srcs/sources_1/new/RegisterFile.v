@@ -77,7 +77,7 @@ module RegisterFile(
 	   for(i = 6'd0; i < 6'd32; i = i + 1) begin
 	       RegFile[i] <= 32'd0;
 	   end
-	   RegFile[29] <= 32'd4119;
+	   RegFile[29] <= 32'd16476;
 	end
 	
 	always@(posedge Clk) begin // write procedure

@@ -23,20 +23,29 @@
 module AbsoluteDifference32(
         inA,
         inB,
+        inC,
+        TopOrBottom,
         outC
     );
     
-    input [31:0] inA, inB;
+    input [31:0] inA, inB, inC;
+    input TopOrBottom;
     output [31:0] outC;
     
     reg [31:0] tempDifference, outC;
     
     
     always@(inA, inB) begin
-        tempDifference = inA - inB;
+        if(TopOrBottom) begin
+            outC <= inA - inB;
+        end
+        else begin
+            outC <= inA - inC;
+        end
+       /*
         if(tempDifference[31] == 1) 
             outC <= ~tempDifference + 1; // 2's compliment to make positive
         else
-            outC <= tempDifference;
+            outC <= tempDifference;*/
     end
 endmodule

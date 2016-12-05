@@ -93,6 +93,14 @@ module MemoryUnit(
         .OneOneWindow(OneOneWindow), 
         .TwoOneWindow(TwoOneWindow), 
         .ThreeOneWindow(ThreeOneWindow),
+        .ZeroTwoWindow(ZeroTwoWindow),
+        .OneTwoWindow(OneTwoWindow),
+        .TwoTwoWindow(TwoTwoWindow),
+        .ThreeTwoWindow(ThreeTwoWindow),
+        .ZeroThreeWindow(ZeroThreeWindow),
+        .OneThreeWindow(OneThreeWindow), 
+        .TwoThreeWindow(TwoThreeWindow), 
+        .ThreeThreeWindow(ThreeThreeWindow),
         .UpperOrLower(UpperOrLower)
      );
      Mux32Bit2To1 WDMux(
@@ -104,43 +112,91 @@ module MemoryUnit(
      AbsoluteDifference32 ZeroZero1(
          .inA(ZeroZeroFrame),
          .inB(ZeroZeroWindow),
+         .inC(ZeroTwoWindow),
+         .TopOrBottom(UpperOrLower),
          .outC(ZeroZeroOutput)
      );
      AbsoluteDifference32 OneZero1(
          .inA(OneZeroFrame),
          .inB(OneZeroWindow),
+         .inC(OneTwoWindow),
+         .TopOrBottom(UpperOrLower),
          .outC(OneZeroOutput)
      );
      AbsoluteDifference32 TwoZero1(
           .inA(TwoZeroFrame),
           .inB(TwoZeroWindow),
+          .inC(TwoTwoWindow),
+          .TopOrBottom(UpperOrLower),
           .outC(TwoZeroOutput)
       );
      AbsoluteDifference32 ThreeZero1(
          .inA(ThreeZeroFrame),
          .inB(ThreeZeroWindow),
+         .inC(ThreeTwoWindow),
+         .TopOrBottom(UpperOrLower),
          .outC(ThreeZeroOutput)
      );
      AbsoluteDifference32 ZeroOne1(
          .inA(ZeroOneFrame),
          .inB(ZeroOneWindow),
+         .inC(ZeroThreeWindow),
+         .TopOrBottom(UpperOrLower),
          .outC(ZeroOneOutput)
      );
      AbsoluteDifference32 OneOne1(
          .inA(OneOneFrame),
          .inB(OneOneWindow),
+         .inC(OneThreeWindow),
+         .TopOrBottom(UpperOrLower),   
          .outC(OneOneOutput)
      );
      AbsoluteDifference32 TwoOne1(
          .inA(TwoOneFrame),
          .inB(TwoOneWindow),
+         .inC(TwoThreeWindow),
+         .TopOrBottom(UpperOrLower),
          .outC(TwoOneOutput)
      );
      AbsoluteDifference32 ThreeOne1(
          .inA(ThreeOneFrame),
          .inB(ThreeOneWindow),
+         .inC(ThreeThreeWindow),
+         .TopOrBottom(UpperOrLower),
          .outC(ThreeOneOutput)
      );
+    absval thing(
+        .diff(ZeroZeroOutput);
+        .abs(out1);
+    );
+    absval thing(
+        .diff();
+        .abs(out2);
+    );
+    absval thing(
+        .diff();
+        .abs();
+    );
+    absval thing(
+        .diff();
+        .abs();
+    );
+    absval thing(
+        .diff();
+        .abs();
+    );
+    absval thing(
+        .diff();
+        .abs();
+    );
+    absval thing(
+        .diff();
+        .abs();
+    );
+    absval thing(
+        .diff();
+        .abs();
+    );     
      Summation16 sum(
          .inA(ZeroZeroOutput),
          .inB(OneZeroOutput),
