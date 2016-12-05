@@ -66,6 +66,12 @@ module MipsDatapath(
     wire [2:0] IDBranchControlSignal;
     wire [31:0] MEMSAD, WBSAD;
     
+    wire [12:0] EXZeroZero, EXOneZero, EXTwoZero, EXThreeZero,
+    EXZeroOne, EXOneOne, EXTwoOne, EXThreeOne;
+    
+    wire [12:0] MEMZeroZero, MEMOneZero, MEMTwoZero, MEMThreeZero,
+    MEMZeroOne, MEMOneOne, MEMTwoOne, MEMThreeOne;
+    
     InstructionFetchUnit IF (
         .Instruction(IFInstruction),
         .PCResult(CurrentPC),
@@ -194,9 +200,18 @@ module MipsDatapath(
         .WBWriteData(WBWriteData),
         .RSMuxControl(EXRSMuxControl),
         .RTMuxControl(EXRTMuxControl),
+        .UpperOrLower(EXUpperOrLower),
         .ALUResultOut(EXALUResult), // outputs
         .MemWriteDataOut(EXMemWriteData),
-        .WriteRegisterOut(EXWriteRegister)
+        .WriteRegisterOut(EXWriteRegister),
+        .ZeroZero(EXZeroZero),
+        .OneZero(EXOneZero),
+        .TwoZero(EXTwoZero),
+        .ThreeZero(EXThreeZero),
+        .ZeroOne(EXZeroOne),
+        .OneOne(EXOneOne), 
+        .TwoOne(EXTwoOne), 
+        .ThreeOne(EXThreeOne)
     );
     ForwardingUnit FU (
         .IDEXJumpLink(EXJumpLink),
@@ -265,6 +280,14 @@ module MipsDatapath(
         .JumpLinkIn(EXJumpLink),
         .SADWriteIn(EXSADWrite),
         .UpperOrLowerIn(EXUpperOrLower),
+        .ZeroZeroIn(EXZeroZero),
+        .OneZeroIn(EXOneZero),
+        .TwoZeroIn(EXTwoZero),
+        .ThreeZeroIn(EXThreeZero),
+        .ZeroOneIn(EXZeroOne),
+        .OneOneIn(EXOneOne), 
+        .TwoOneIn(EXTwoOne), 
+        .ThreeOneIn(EXThreeOne),
         .PCAddResultOut(MEMPCAddResult), // outputs
         .ALUResultOut(MEMALUResult),
         .MemWriteDataOut(MEMMemWriteData),
@@ -281,7 +304,15 @@ module MipsDatapath(
         .CmpSelOut(MEMCmpSel),
         .JumpLinkOut(MEMJumpLink),
         .SADWriteOut(MEMSADWrite),
-        .UpperOrLowerOut(MEMUpperOrLower)
+        .UpperOrLowerOut(MEMUpperOrLower),
+        .ZeroZeroOut(MEMZeroZero),
+        .OneZeroOut(MEMOneZero),
+        .TwoZeroOut(MEMTwoZero),
+        .ThreeZeroOut(MEMThreeZero),
+        .ZeroOneOut(MEMZeroOne),
+        .OneOneOut(MEMOneOne), 
+        .TwoOneOut(MEMTwoOne), 
+        .ThreeOneOut(MEMThreeOne)
     );
     MemoryUnit MEM (
         .Clk(Clk), // inputs 
@@ -291,8 +322,14 @@ module MipsDatapath(
         .MemReadOut(MEMMemRead),
         .WBWriteData(WBWriteData),
         .WBSel(MEMRTMuxControl),
-        .xDim(MEMReadData1),
-        .yDim(MEMReadData2),
+        .ZeroZero(MEMZeroZero),
+        .OneZero(MEMOneZero),
+        .TwoZero(MEMTwoZero),
+        .ThreeZero(MEMThreeZero),
+        .ZeroOne(MEMZeroOne),
+        .OneOne(MEMOneOne), 
+        .TwoOne(MEMTwoOne), 
+        .ThreeOne(MEMThreeOne),
         .UpperOrLower(MEMUpperOrLower),
         .ReadData(MEMDataMemRead), // outputs
         .SAD(MEMSAD)

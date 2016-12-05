@@ -41,6 +41,14 @@ module Pipe3Reg(
         JumpLinkIn,
         SADWriteIn,
         UpperOrLowerIn,
+        ZeroZeroIn, 
+        OneZeroIn, 
+        TwoZeroIn, 
+        ThreeZeroIn,
+        ZeroOneIn, 
+        OneOneIn, 
+        TwoOneIn, 
+        ThreeOneIn,
         PCAddResultOut, // outputs
         ALUResultOut,
         MemWriteDataOut,
@@ -58,7 +66,15 @@ module Pipe3Reg(
         DataMemOut,
         JumpLinkOut,
         SADWriteOut,
-        UpperOrLowerOut
+        UpperOrLowerOut,
+        ZeroZeroOut, 
+        OneZeroOut, 
+        TwoZeroOut, 
+        ThreeZeroOut,
+        ZeroOneOut, 
+        OneOneOut, 
+        TwoOneOut, 
+        ThreeOneOut,
     );
     
     input Clk, RegWriteIn, MemWriteIn, MemReadIn, MemtoRegIn,
@@ -68,6 +84,8 @@ module Pipe3Reg(
     ReadData1In, ReadData2In, SignExtendRegisterIn;
     input [4:0] WriteRegisterIn;
     input [1:0] DataMemIn;
+    input [12:0] ZeroZeroIn, OneZeroIn, TwoZeroIn, ThreeZeroIn,
+    ZeroOneIn, OneOneIn, TwoOneIn, ThreeOneIn;
     
     output reg RegWriteOut, MemWriteOut, MemReadOut, MemtoRegOut,
     SignExtendToRegOut, MovOut, CmpSelOut, JumpLinkOut, 
@@ -76,6 +94,8 @@ module Pipe3Reg(
     ReadData1Out, ReadData2Out, SignExtendRegisterOut;
     output reg [4:0] WriteRegisterOut;
     output reg [1:0] DataMemOut;
+    output reg [12:0] ZeroZeroOut, OneZeroOut, TwoZeroOut, ThreeZeroOut,
+    ZeroOneOut, OneOneOut, TwoOneOut, ThreeOneOut;
     
     
     always@(negedge Clk) begin
@@ -98,6 +118,14 @@ module Pipe3Reg(
             JumpLinkOut <= 0;
             SADWriteOut <= 0;
             UpperOrLowerOut <= 0;
+            ZeroZeroOut <= 0;
+            OneZeroOut <= 0;
+            TwoZeroOut <= 0;
+            ThreeZeroOut <= 0;
+            ZeroOneOut <= 0;
+            OneOneOut <= 0;
+            TwoOneOut <= 0;
+            ThreeOneOut <= 0;
         end
         else begin
             PCAddResultOut <= PCAddResultIn;
@@ -118,6 +146,14 @@ module Pipe3Reg(
             JumpLinkOut <= JumpLinkIn;
             SADWriteOut <= SADWriteIn;
             UpperOrLowerOut <= UpperOrLowerIn;
+            ZeroZeroOut <= ZeroZeroIn;
+            OneZeroOut <= OneZeroIn;
+            TwoZeroOut <= TwoZeroIn;
+            ThreeZeroOut <= ThreeZeroIn;
+            ZeroOneOut <= ZeroOneIn;
+            OneOneOut <= OneOneIn;
+            TwoOneOut <= TwoOneIn;
+            ThreeOneOut <= ThreeOneIn;
         end
     end
 endmodule

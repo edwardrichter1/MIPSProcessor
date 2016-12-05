@@ -36,15 +36,29 @@ module ExecuteUnit(
         WBWriteData,
         RSMuxControl,
         RTMuxControl,
+        UpperOrLower,
         ALUResultOut, // outputs
         MemWriteDataOut,
-        WriteRegisterOut
+        WriteRegisterOut,
+        ZeroZero,
+        OneZero,
+        TwoZero,
+        ThreeZero,
+        ZeroOne,
+        OneOne, 
+        TwoOne, 
+        ThreeOne,
     );
     
     input RegDstIn, ALUSrcIn, JumpLinkIn;
-    input [31:0]  ReadData1In, ReadData2In, SignExtendIn, MEMAddress, WBWriteData;
+    input [31:0]  ReadData1In, ReadData2In, SignExtendIn, MEMAddress, 
+    WBWriteData;
     input [4:0] RTIn, RDIn, RSIn, ALUControlIn, ShiftAmount;
     input [1:0] RTMuxControl, RSMuxControl;
+    input UpperOrLower;
+    output [12:0] ZeroZero, OneZero, TwoZero, ThreeZero,
+    ZeroOne, OneOne, TwoOne, ThreeOne;
+    
     output [4:0] WriteRegisterOut;
     output [31:0] ALUResultOut, MemWriteDataOut;
     
@@ -89,6 +103,19 @@ module ExecuteUnit(
         .inA(RDRTMuxOutput),
         .inB(5'd31),
         .sel(JumpLinkIn)
+    );
+    GetCoordinates gc(
+        .xDim(ReadData1In),
+        .yDim(ReadData2In),
+        .ZeroZero(ZeroZero),
+        .OneZero(OneZero),
+        .TwoZero(TwoZero),
+        .ThreeZero(ThreeZero),
+        .ZeroOne(ZeroOne),
+        .OneOne(OneOne), 
+        .TwoOne(TwoOne), 
+        .ThreeOne(ThreeOne),
+        .UpperOrLower(UpperOrLower)
     );
 
 endmodule

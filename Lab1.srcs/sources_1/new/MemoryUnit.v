@@ -28,15 +28,23 @@ module MemoryUnit(
         MemReadOut,
         WBWriteData,
         WBSel,
-        xDim,
-        yDim,
+        ZeroZero,
+        OneZero,
+        TwoZero,
+        ThreeZero,
+        ZeroOne,
+        OneOne, 
+        TwoOne, 
+        ThreeOne,
         UpperOrLower,
         ReadData, // outputs
         SAD
     );
     
     input Clk, MemWrite, MemReadOut, WBSel, UpperOrLower;
-    input [31:0] Address, WriteData, WBWriteData, xDim, yDim;
+    input [31:0] Address, WriteData, WBWriteData;
+    input [12:0] ZeroZero, OneZero, TwoZero, ThreeZero, ZeroOne,
+    OneOne, TwoOne, ThreeOne;
     
     wire [31:0] WDOutput;
     
@@ -51,9 +59,6 @@ module MemoryUnit(
     wire [31:0] ZeroZeroWindow, OneZeroWindow, TwoZeroWindow, ThreeZeroWindow, ZeroOneWindow,
     OneOneWindow, TwoOneWindow, ThreeOneWindow, ZeroTwoWindow, OneTwoWindow, TwoTwoWindow,
     ThreeTwoWindow, ZeroThreeWindow, OneThreeWindow, TwoThreeWindow, ThreeThreeWindow;
-    
-    wire [12:0] ZeroZero, ZeroOne, ZeroTwo, ZeroThree, OneZero, OneOne, OneTwo, OneThree,
-    TwoZero, TwoOne, TwoTwo, TwoThree, ThreeZero, ThreeOne, ThreeTwo, ThreeThree;
     
     output [31:0] ReadData, SAD;
     
@@ -135,19 +140,6 @@ module MemoryUnit(
          .inA(ThreeOneFrame),
          .inB(ThreeOneWindow),
          .outC(ThreeOneOutput)
-     );
-     GetCoordinates gc(
-         .xDim(xDim),
-         .yDim(yDim),
-         .ZeroZero(ZeroZero),
-         .OneZero(OneZero),
-         .TwoZero(TwoZero),
-         .ThreeZero(ThreeZero),
-         .ZeroOne(ZeroOne),
-         .OneOne(OneOne), 
-         .TwoOne(TwoOne), 
-         .ThreeOne(ThreeOne),
-         .UpperOrLower(UpperOrLower)
      );
      Summation16 sum(
          .inA(ZeroZeroOutput),
