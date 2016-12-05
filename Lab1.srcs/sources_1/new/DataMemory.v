@@ -4281,6 +4281,7 @@ module DataMemory(
         if(MemRead == 1'b1)
             ThreeOneFrame <= memory[ThreeOne];
     end
+
     initial begin // accessing the window
             if(UpperOrLower) begin // the upper part of the window
                 ZeroZeroWindow <= memory[4100];
