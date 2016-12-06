@@ -212,8 +212,8 @@ vbsme:
     li      $v1, 0
 
    # insert your code here
-   addi     $s2, $s2, 0                   # placeholder for upper sad computation  
-   addi     $s3, $s3, 0                   # placeholder for lower sad computation
+   SADTOP   $s2, $t1, $t0                 # placeholder for upper sad computation  
+   SADBOT   $s3, $t1, $t0                 # placeholder for lower sad computation
    addi     $sp, $sp, -4                  # Make space on stack
    sw       $ra, 0($sp)                   # Save return address
    addi     $s1, $zero, 32767             # SuperSad = largest 32 bit signed number
@@ -232,8 +232,8 @@ at_right:
     addi    $t1, $zero, 0                 # j = 0
     addi    $t0, $t0, 1                   # i++
 done_branching:
-   addi     $s2, $s2, 0                   # placeholder for upper sad computation  
-   addi     $s3, $s3, 0                   # placeholder for lower sad computation
+   SADTOP   $s2, $t1, $t0                 # placeholder for upper sad computation  
+   SADBOT   $s3, $t1, $t0                 # placeholder for lower sad computation
    slti     $t9, $t1, 60                  # if j < yDiff go back to the loop
    slti     $t8, $t0, 60                  # if i < xDiff go back to the loop
    add      $s0, $s3, $s2                 # adding the upper and lower sad into the total sad                     
